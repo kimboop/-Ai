@@ -11,6 +11,24 @@ in both.
 _(Empty repo so far — fill this in as the codebase grows: stack, build/test
 commands, directory layout, conventions.)_
 
+## Roles (strength-based split)
+
+- **Claude Code**: owns the GitHub lifecycle end-to-end — opening and
+  driving PRs, monitoring CI, responding to review comments, merges. Also
+  the default for multistep refactors and changes that need architectural
+  judgment calls, since it stays subscribed to a PR until it's merged or
+  closed.
+- **Gemini CLI**: handles tasks that lean on its very large context window
+  or multimodal input — whole-repo or whole-log analysis in one pass,
+  working from images/video/audio assets, bulk first-draft generation
+  (tests, docs, boilerplate). Also used as a second opinion: Claude can
+  shell out non-interactively (`gemini -p "<prompt>"`) to cross-check a
+  design or diff before finalizing it.
+- This is a default, not a hard rule — either agent can pick up any task
+  when the other is unavailable or the task doesn't fit the split. When in
+  doubt, follow the branch-ownership and handoff rules below rather than
+  the role split.
+
 ## Cross-agent workflow
 
 - **Branch naming**: `<agent>/<short-task-slug>` (e.g. `claude/add-auth`,
