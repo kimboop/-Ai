@@ -13,4 +13,7 @@ This file is only for notes specific to Gemini CLI.
   a fresh Gemini CLI invocation has no memory of prior turns unless you
   pass `--checkpointing` or explicitly feed it prior context.
 - Before editing, re-read `AGENTS.md` for the branch-naming and handoff
-  conventions — they apply to Gemini the same as to Claude.
+  conventions — they apply to Gemini the same as to Claude and ChatGPT.
+- ChatGPT (Codex CLI/cloud) reads `AGENTS.md` natively and needs no
+  `GEMINI.md`/`CLAUDE.md`-style import file — treat it as a third peer
+  with the same branch and handoff rules, not a special case.
