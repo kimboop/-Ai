@@ -19,11 +19,18 @@ natively, so this file alone is enough to brief it.
 - **Layout**: source in `src/channel_toolkit/`, tests in `tests/`.
   - `analytics.py` — collects channel + recent video stats via the YouTube
     Data API v3 (`collect()` writes JSON to disk).
-  - `metadata.py` — template-based title/description/tag generation from a
-    topic; swap in an LLM-backed version later without changing callers.
+  - `metadata.py` — two interchangeable engines returning the same
+    `VideoMetadata` shape: `generate_metadata()` (template-based, no
+    external API) and `generate_metadata_ai()` (Claude-API-backed, needs
+    the `ai` extra + `ANTHROPIC_API_KEY`).
   - `thumbnail.py` — renders a 1280x720 thumbnail with wrapped, centered
-    title text, using a bundled Korean-capable font (`assets/fonts/`).
-  - `cli.py` — `channel-toolkit collect|metadata|thumbnail` entry point.
+    title text; solid/gradient style presets in `TEMPLATES`, optional logo
+    watermark, and a bundled Korean-capable font (`assets/fonts/`).
+  - `batch.py` — runs metadata + thumbnail generation over a JSON list of
+    topics, one output folder per topic; per-topic fields override
+    batch-level defaults (engine, model, template, logo, ...).
+  - `cli.py` — `channel-toolkit collect|metadata|thumbnail|batch` entry
+    point.
 - **Commands**:
   - `pip install -e ".[dev]"` — install package + dev dependencies
   - `pytest` — run tests
