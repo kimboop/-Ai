@@ -10,8 +10,20 @@ natively, so this file alone is enough to brief it.
 
 ## Project facts
 
-_(Empty repo so far — fill this in as the codebase grows: stack, build/test
-commands, directory layout, conventions.)_
+- **Purpose**: YouTube channel growth/expansion project — analytics,
+  metadata/SEO, and content-ops tooling built on the YouTube Data API v3.
+- **Stack**: Python 3.11+, packaged via `pyproject.toml` (hatchling build
+  backend). This is a starting default (most broadly-used stack for
+  scripting + YouTube API automation), not a final choice — revisit once
+  actual feature needs are clearer.
+- **Layout**: source in `src/channel_toolkit/`, tests in `tests/`.
+- **Commands**:
+  - `pip install -e ".[dev]"` — install package + dev dependencies
+  - `pytest` — run tests
+  - `ruff check .` / `ruff format .` — lint / format
+- **Conventions**: keep YouTube API credentials out of the repo — copy
+  `.env.example` to `.env` for local secrets, never commit `.env` or
+  `client_secret.json` (both are gitignored).
 
 ## Roles (strength-based split)
 
