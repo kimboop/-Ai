@@ -1,69 +1,59 @@
-# EVIDENCE AUDIT & RESEARCH FACT-CHECK REPORT
-
-**AUDIT METRICS & SYSTEM LOG**
-* **Auditor Role:** GEMINI (Research & Evidence Auditor)
-* **Ingested Payload Status:** `CRITICAL: NO SUBSTANTIVE SOURCE TEXT PROVIDED` (Default placeholder detected: `Replace this file with the material...`)
-* **Readiness Status:** BLOCKED (Awaiting source text insertion) / FRAMEWORK ARMED
+# RESEARCH & EVIDENCE AUDIT REPORT
+**Role:** GEMINI (Research & Evidence Auditor)  
+**Task:** Evidence verification, classification, contradiction tracking, and production-risk auditing.
 
 ---
 
-### 1. Ingestion Audit & Input Diagnosis
+### 1. INPUT DIAGNOSTIC & STATUS NOTICE
 
-| Checkpoint | Status | Notes |
-| :--- | :--- | :--- |
-| **Source Material Payload** | ⚠️ Empty / Template | No claims, data points, or narrative submitted for verification. |
-| **Primary Sources Cited** | ❌ None | Zero citations or reference documents attached. |
-| **Fabrication Risk** | 🛡️ Controlled | Zero extrapolation permitted under strict non-hallucination protocols. |
+* **Payload Status:** `CRITICAL: NO SOURCE TEXT DETECTED`
+* **Finding:** The source input contains only the workflow placeholder (`# THREE-AI COLLABORATION INPUT`). No raw claims, transcripts, articles, or data points were supplied.
+* **Immediate Action Required:** Paste the source material/draft script. Below is the operational verification engine ready to parse the text immediately upon input.
 
 ---
 
-### 2. Evidence Categorization & Verification Matrix (Active Schema)
+### 2. EVIDENCE AUDIT TAXONOMY & CLASSIFICATION STANDARD
 
-To convert incoming source material into a production-ready package without hallucination, every substantive statement in the ingested draft will be extracted and audited against this 4-tier taxonomy:
+Every claim submitted to production will be processed and locked into one of four distinct epistemic tiers:
 
+| Tier | Definition | Standard of Proof Required | Production Scripting Rule |
+| :--- | :--- | :--- | :--- |
+| **FACT** | Verifiable, historical, or empirical event/data that has already occurred. | Direct primary source, official filing, consensus record. | State as objective reality with cited baseline. |
+| **FORECAST** | Probabilistic projection or modeled future outcome. | Named methodology, modeling agency, statistical confidence interval. | Must use framing: *"Models project...", "Analysts estimate..."* |
+| **TARGET** | Goal, policy benchmark, or declared milestone set by an entity. | Official press release, regulatory filing, corporate roadmap. | Must attribute intent: *"The company aims to...", "The target is..."* |
+| **INTERPRETATION**| Editorial analysis, opinion, narrative framing, or commentary. | Logical consistency, expert consensus vs. counterarguments. | Frame explicitly as perspective/analysis, not settled fact. |
+
+---
+
+### 3. AUDIT MATRIX TEMPLATE (PRODUCTION-READY SCHEMA)
+
+When source text is provided, every assertion will be mapped to this live ledger:
+
+```markdown
+| ID | Claim / Extracted Text | Category (Fact/Forecast/Target/Interpretation) | Primary Source / Basis | Risk / Contradiction Flag | Verification Status | Action for Video / Graphic Packaging |
+|:---|:---|:---|:---|:---|:---|:---|
+| #01 | [Exact quote or metric] | FACT | [Source & Date] | [None / High / Disputed] | [PASS / FAIL / NEEDS WEB CHECK] | [On-screen citation / Voiceover guidance] |
 ```
-                  ┌──────────────────────────────┐
-                  │ INGESTED SOURCE CLAIM/DATA   │
-                  └──────────────┬───────────────┘
-                                 │
-         ┌──────────────┬────────┴───────┬──────────────┐
-         ▼              ▼                ▼              ▼
-     [ FACT ]     [ FORECAST ]      [ TARGET ]   [ INTERPRETATION ]
-  Independently   Probabilistic     Aspirational   Subjective / 
-    provable,      projection        benchmark /   analytical take;
- historical or    derived from       stated goal    requires on-screen
- current event.    modeling.        (unrealized).     attribution.
-```
-
-#### Claim-by-Claim Audit Template
-
-When raw source text is supplied, each claim will be logged in the following operational audit table:
-
-| ID | Raw Extracted Claim | Taxonomy Category | Verification Status | Primary Source / Conflicting Data | Production Action / Script Directive |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **C-01** | *[Exact quote from draft]* | `FACT` / `FORECAST` / `TARGET` / `INTERPRETATION` | `VERIFIED` / `UNVERIFIED` / `CONTRADICTION` / `FRESH WEB VERIFY` | *[Direct citation / conflicting counter-evidence]* | *[Specific directive for Scriptwriter/Editor: e.g., On-screen citation, hedge wording, cut claim]* |
 
 ---
 
-### 3. Verification Rules & Quality Thresholds
+### 4. EVIDENCE RIGOR & FLAGGING CRITERIA
 
-1. **Category Enforcement:**
-   * **FACT:** Requires minimum 2 independent, primary sources (government data, audited financials, peer-reviewed study, on-record transcript).
-   * **FORECAST:** Must be explicitly qualified in the script (e.g., *"Model X projects..."*, not *"Will happen"*).
-   * **TARGET:** Must be attributed to the entity setting the goal (e.g., *"Company X announced a target of..."*, not *"Company X will achieve..."*).
-   * **INTERPRETATION:** Must be framed as analysis/opinion, never presented as an undisputed objective fact.
+Before passing content to the downstream production AI, the audit checks for:
 
-2. **Conflict Preservation:**
-   * If Primary Source A says $10B and Primary Source B says $14B, the script **must not** pick a favorite or average them. The disparity itself becomes the production narrative point.
-
-3. **Fresh Web Verification Flags (`[FLAG: WEB-VERIFY]`):**
-   * Any dynamic metric (stock price, real-time casualty numbers, fast-moving regulatory decisions, breaking news post-2024).
+1. **Stale Data vs. Fresh Verification:**
+   * Any dynamic metric (e.g., market caps, war casualties, regulatory status, commodity prices, software versions) older than 30 days is flagged: `[REQUIRES FRESH WEB SEARCH]`.
+2. **Conflicting Primary Sources:**
+   * Where official sources disagree (e.g., conflicting company filings vs. third-party investigations), the audit blocks definitive phrasing and enforces: *"Source A states X, while Source B reports Y."*
+3. **Target vs. Fact Conflation:**
+   * Eliminates instances where corporate or political promises (e.g., *"Carbon neutral by 2030"*) are written as accomplished facts.
+4. **Attribution Deficits:**
+   * Claims lacking an identifiable originator are isolated and barred from on-screen graphics (lower-thirds/title cards).
 
 ---
 
-### 4. Actionable Next Step for Production Pipeline
+### 5. NEXT STEP FOR PIPELINE EXECUTION
 
-**Action Required:** Provide the text/claims to be audited. Once pasted, this auditor will immediately output:
-1. Complete Claim-by-Claim Audit Table with taxonomy assignments.
-2. Contradiction & Weak-Source Log.
-3. Concrete "Keep / Modify / Cut" directives for the writing AI.
+Please **paste the source material, draft script, or bullet points**. 
+
+Upon receipt, I will generate the complete, populated **Fact-Check & Discrepancy Ledger** separating all Facts, Forecasts, Targets, and Interpretations with specific production notes for your editor and voiceover talent.
