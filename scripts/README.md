@@ -147,6 +147,67 @@ python scripts/video_generator.py scripts/episode.json --no-resume
 | `--voice` | Edge-TTS 보이스 오버라이드 |
 | `--fps` / `--preset` / `--threads` | 인코딩 옵션 |
 
+## 테스트
+
+용도가 다른 테스트 스크립트가 두 개 있다.
+
+| | `scripts/test_mock.py` | `scripts/test_run.py` |
+|---|---|---|
+| 검증 대상 | 자막/타이틀 카드, 크롭, 캐싱, 합성 구조 (Pexels/Edge-TTS는 모킹) | Pexels + Edge-TTS까지 포함한 실제 렌더링 1회 |
+| 네트워크 | 불필요 | 필요 (Pexels REST + Edge-TTS 웹소켓) |
+| API 키 | 불필요 | `PEXELS_API_KEY` 필요 |
+| 언제 쓰나 | 로직을 고칠 때마다, 방화벽/프록시 뒤에서도 | 배포 전 마지막 확인, 새 환경 셋업 직후 |
+
+```bash
+# 로직 검증 — 네트워크/키 없이 어디서나
+python scripts/test_mock.py -v
+
+# 실가동 검증 — 아래 "실가동 검증 가이드" 환경에서만 의미가 있다
+export PEXELS_API_KEY=...
+python scripts/test_run.py
+```
+
+`test_run.py`가 `speech.platform.bing.com` SSL/연결 에러나 `api.pexels.com`
+403으로 실패한다면 보통 코드 문제가 아니라 지금 실행 중인 환경(방화벽·사내
+프록시·제한된 아웃바운드 정책)이 웹소켓이나 해당 호스트를 막고 있다는 뜻이다.
+
+## 실가동 검증 가이드 (로컬 PC / GitHub Actions)
+
+이 파이프라인을 개발한 샌드박스 세션은 `api.pexels.com`이 아웃바운드 정책으로
+차단돼 있고, Edge-TTS가 쓰는 웹소켓 업그레이드 자체를 프록시가 지원하지 않아서
+`test_run.py`의 라이브 렌더링을 끝까지 돌릴 수 없었다 — 둘 다 그 세션 고유의
+네트워크 정책 때문이지 코드 문제가 아니며, `scripts/test_mock.py`로 로직 자체는
+이미 검증했다. 아래 두 환경에는 이런 제약이 없다.
+
+### 로컬 PC
+
+```bash
+pip install -r scripts/requirements.txt
+sudo apt-get install -y fonts-nanum fonts-nanum-extra   # macOS는 위 "폰트" 절 참고
+export PEXELS_API_KEY=발급받은_키
+python scripts/test_run.py                              # 스모크 테스트
+python scripts/video_generator.py scripts/episode.json   # 실제 대본으로 렌더링
+```
+
+### GitHub Actions
+
+1. Settings → Secrets and variables → Actions → **Secrets** 탭(Variables 탭
+   아님 — 평문 노출 사고 사례가 루트 `CLAUDE.md`에 있다)에 `PEXELS_API_KEY` 등록.
+2. 워크플로:
+   ```yaml
+   - uses: actions/setup-python@v5
+     with:
+       python-version: '3.12'
+   - run: pip install -r scripts/requirements.txt
+   - run: sudo apt-get install -y fonts-nanum fonts-nanum-extra
+   - run: python scripts/test_mock.py            # 항상 실행 — 네트워크 불필요
+   - env:
+       PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+     run: python scripts/video_generator.py scripts/episode.json
+   ```
+   `ubuntu-latest` 러너는 아웃바운드 네트워크 제한이 없어서 Pexels REST 호출과
+   Edge-TTS 웹소켓이 둘 다 정상 동작한다.
+
 ## 트러블슈팅
 
 - **`Missing PEXELS_API_KEY`**: 위 "필요한 환경변수" 참고. 시크릿을 코드에
@@ -162,6 +223,10 @@ python scripts/video_generator.py scripts/episode.json --no-resume
   바꾸면 보통 해결된다.
 - **Edge-TTS가 SSL/네트워크 에러를 낸다**: 방화벽·프록시 환경에서 흔하다.
   사내 프록시를 쓰는 경우 해당 프록시의 CA 인증서를 시스템 신뢰 저장소에
-  등록해야 `edge-tts`(aiohttp 기반)가 접속할 수 있다.
+  등록해야 `edge-tts`(aiohttp 기반)가 접속할 수 있다. 단, 프록시가 **웹소켓
+  업그레이드 자체를 지원하지 않는** 경우(정책 기반 아웃바운드 프록시에서
+  흔함)는 인증서를 맞춰도 소용없다 — Edge-TTS는 REST가 아니라 웹소켓으로
+  통신한다. 이럴 땐 우회하려 하지 말고 위 "실가동 검증 가이드"의 환경에서
+  돌릴 것.
 - **렌더링이 중간에 죽었다**: 같은 명령을 다시 실행하면 된다. 내레이션과
   이미 받은 B-roll은 `output/.cache/<episode>/`에서 재사용된다.
