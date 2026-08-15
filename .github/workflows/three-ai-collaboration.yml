@@ -29,25 +29,6 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Debug Gemini call (temporary, no key printed)
-        env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          GEMINI_MODEL: ${{ vars.GEMINI_MODEL }}
-        run: |
-          echo "--- via x-goog-api-key header ---"
-          curl -sS -o /tmp/hdr.json -w "HTTP:%{http_code}\n" \
-            -X POST "https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL:-gemini-2.5-flash}:generateContent" \
-            -H "x-goog-api-key: $GEMINI_API_KEY" \
-            -H "Content-Type: application/json" \
-            -d '{"contents":[{"parts":[{"text":"hi"}]}]}'
-          cat /tmp/hdr.json
-          echo "--- via ?key= query param ---"
-          curl -sS -o /tmp/qp.json -w "HTTP:%{http_code}\n" \
-            -X POST "https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL:-gemini-2.5-flash}:generateContent?key=$GEMINI_API_KEY" \
-            -H "Content-Type: application/json" \
-            -d '{"contents":[{"parts":[{"text":"hi"}]}]}'
-          cat /tmp/qp.json
-
       - name: Run Gemini → Claude → GPT
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
