@@ -5,7 +5,7 @@ Input: a UTF-8 markdown/text file.
 Output: artifacts/01-gemini-research.md and artifacts/02-final-package.md.
 Secrets are supplied only through environment variables.
 """
-import json, os, sys, urllib.request
+import json, os, sys, time, urllib.request, urllib.error
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -18,10 +18,19 @@ if not INPUT.exists():
 source = INPUT.read_text(encoding="utf-8")
 
 
-def post(url, headers, payload):
+def post(url, headers, payload, retries=4, backoff=10):
     req = urllib.request.Request(url, data=json.dumps(payload).encode(), headers={**headers, "Content-Type":"application/json"}, method="POST")
-    with urllib.request.urlopen(req, timeout=180) as r:
-        return json.loads(r.read().decode())
+    for attempt in range(retries):
+        try:
+            with urllib.request.urlopen(req, timeout=180) as r:
+                return json.loads(r.read().decode())
+        except urllib.error.HTTPError as e:
+            if e.code in (429, 503) and attempt < retries - 1:
+                wait = backoff * (2 ** attempt)
+                print(f"{url} returned {e.code}, retrying in {wait}s (attempt {attempt + 1}/{retries})")
+                time.sleep(wait)
+                continue
+            raise
 
 
 def gemini(text):
