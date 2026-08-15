@@ -29,6 +29,18 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Debug secret shape (temporary, no full values printed)
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GEMINI_MODEL: ${{ vars.GEMINI_MODEL }}
+        run: |
+          echo "GEMINI_API_KEY len=${#GEMINI_API_KEY} prefix=${GEMINI_API_KEY:0:4} suffix=${GEMINI_API_KEY: -4}"
+          echo "ANTHROPIC_API_KEY len=${#ANTHROPIC_API_KEY} prefix=${ANTHROPIC_API_KEY:0:4}"
+          echo "OPENAI_API_KEY len=${#OPENAI_API_KEY} prefix=${OPENAI_API_KEY:0:4}"
+          echo "GEMINI_MODEL value=[${GEMINI_MODEL}]"
+
       - name: Run Gemini → Claude → GPT
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
