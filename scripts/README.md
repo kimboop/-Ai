@@ -65,12 +65,15 @@ Pexels 호출은 별도 SDK 없이 표준 라이브러리(`urllib`)로 직접 �
 
 - 기본으로 찾는 순서: `SHORTS_FONT_BOLD`/`SHORTS_FONT_EXTRABOLD` 환경변수 →
   `assets/fonts/NanumGothicBold.ttf` / `NanumGothicExtraBold.ttf` →
-  시스템 경로 `/usr/share/fonts/truetype/nanum/...` (Debian/Ubuntu의
-  `fonts-nanum` 패키지가 설치하는 위치).
+  시스템 경로 `/usr/share/fonts/truetype/nanum/...` (Debian/Ubuntu 패키지가
+  설치하는 위치).
 - 로컬/CI에 나눔고딕을 설치하려면:
   ```bash
-  # Debian/Ubuntu — /usr/share/fonts/truetype/nanum/에 바로 설치됨
-  sudo apt-get install -y fonts-nanum
+  # Debian/Ubuntu — /usr/share/fonts/truetype/nanum/에 바로 설치됨.
+  # NanumGothicBold.ttf는 fonts-nanum에 있지만 NanumGothicExtraBold.ttf(타이틀용)는
+  # 별도 패키지인 fonts-nanum-extra에 들어있다 — 하나만 설치하면 타이틀 카드
+  # 렌더링에서 "Font not found"가 난다. 둘 다 설치할 것.
+  sudo apt-get install -y fonts-nanum fonts-nanum-extra
   # 또는 프로젝트에 직접 배치
   # https://github.com/naver/nanumfont 에서 받아 assets/fonts/에 복사
   ```
@@ -148,7 +151,8 @@ python scripts/video_generator.py scripts/episode.json --no-resume
 
 - **`Missing PEXELS_API_KEY`**: 위 "필요한 환경변수" 참고. 시크릿을 코드에
   하드코딩하지 말 것.
-- **`Font not found`**: 위 "폰트" 절 참고 — `fonts-nanum` 설치 또는
+- **`Font not found`**: 위 "폰트" 절 참고 — `fonts-nanum`과 `fonts-nanum-extra`를
+  둘 다 설치했는지 확인(ExtraBold는 별도 패키지) 또는
   `SHORTS_FONT_BOLD`/`SHORTS_FONT_EXTRABOLD` 지정.
 - **`moviepy could not locate an ffmpeg binary`**: `pip install -r
   scripts/requirements.txt`를 다시 실행(imageio-ffmpeg가 바이너리를 다시
