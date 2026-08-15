@@ -29,21 +29,6 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Debug Claude call (temporary, no key printed)
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          CLAUDE_MODEL: ${{ vars.CLAUDE_MODEL }}
-        run: |
-          MODEL="${CLAUDE_MODEL:-claude-sonnet-4-20250514}"
-          echo "Using model: $MODEL"
-          curl -sS -o /tmp/claude.json -w "HTTP:%{http_code}\n" \
-            -X POST "https://api.anthropic.com/v1/messages" \
-            -H "x-api-key: $ANTHROPIC_API_KEY" \
-            -H "anthropic-version: 2023-06-01" \
-            -H "Content-Type: application/json" \
-            -d "{\"model\":\"$MODEL\",\"max_tokens\":16,\"messages\":[{\"role\":\"user\",\"content\":\"hi\"}]}"
-          cat /tmp/claude.json
-
       - name: Run Gemini → Claude → GPT
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
