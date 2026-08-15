@@ -51,6 +51,14 @@ This file is only for notes specific to Claude Code.
   `claude-sonnet-4-20250514`가 실제로 이렇게 폐기됐다) 더 나은 버전이 나와도 코드를 건드릴
   필요 없이 변수 값만 바꾸면 된다.
 
+## 섹터별 벤치마킹 지침 (Sector-Specific Benchmarking)
+
+- **2차 전지·로봇 섹터 분석 시**: 해당 분야의 글로벌 톱티어 기업(예: Tesla, Boston
+  Dynamics 등)의 최신 뉴스도 반드시 함께 벤치마킹할 것. 국내/특정 기업 자료만으로
+  분석을 끝내지 말고, 그 섹터를 이끄는 글로벌 선두 기업들의 동향(기술 발표, 실적,
+  파트너십, 리콜/사고 등 리스크 이슈 포함)을 리서치 단계(Gemini)에서 함께 수집해
+  비교 기준으로 삼는다.
+
 # AI 협업 파이프라인 가이드 (Gemini → Claude)
 
 ## 구성 파일
