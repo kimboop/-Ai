@@ -59,7 +59,27 @@ base = f"""You are one member of a two-AI Instagram Reels production team.\n\nSO
 
 claude_draft = claude(base + "\n\nROLE: CLAUDE — lead producer and primary author. You own the creative and structural output. Produce the full Reels production package: (1) hook (first 1-3 seconds), (2) full timestamped script/voiceover, (3) shot-by-shot list (shot #, script line, vertical-framing visual direction, on-screen text, duration), (4) caption draft, (5) hashtag set (broad/niche/branded), (6) trending-audio style guidance, (7) cover-frame suggestion, (8) on-screen text/caption-burn-in timing specs, (9) CTA, (10) QC checklist. For anything you cannot verify yourself — live trending-audio names, current hashtag performance, fresh facts/statistics, competitor benchmarks — do not guess. Insert an explicit `[VERIFY-GEMINI: <what is needed>]` marker instead of a value. This draft is the primary deliverable; Gemini will only fill in what you flag, not rewrite it.")
 (Path(OUT / "01-claude-lead-draft.md")).write_text(claude_draft, encoding="utf-8")
+print("WROTE: artifacts/01-claude-lead-draft.md")
 
-final = gemini(base + f"\n\nCLAUDE'S DRAFT:\n{claude_draft}\n\nROLE: GEMINI — support researcher. Do not rewrite Claude's creative or structural choices. Find every `[VERIFY-GEMINI: ...]` marker in the draft and replace it with a researched, sourced answer — or, if it truly cannot be verified without live web access, say so plainly and note it as a pre-publish TODO instead of fabricating a value. Then run a final QC pass: confirm FACT/FORECAST/TARGET/INTERPRETATION labeling is consistent, flag any copyright/music-licensing or Instagram community-guideline risk, and confirm the hashtags/caption stay consistent with the script. Return the complete final Reels production package with every marker resolved, plus a short 'QC & Supplement Notes' section summarizing what you filled in and any remaining risk.")
+# Claude's draft is the expensive, already-verified deliverable. If Gemini's
+# support pass fails (e.g. free-tier 503s), don't let the whole run abort
+# silently with nothing committed -- fall back to publishing Claude's draft
+# with the open markers intact and a clear notice, so the workflow's
+# upload/commit steps (which run with `if: always()`) still have something
+# to save, and exit non-zero so CI still flags that the support pass is owed.
+try:
+    final = gemini(base + f"\n\nCLAUDE'S DRAFT:\n{claude_draft}\n\nROLE: GEMINI — support researcher. Do not rewrite Claude's creative or structural choices. Find every `[VERIFY-GEMINI: ...]` marker in the draft and replace it with a researched, sourced answer — or, if it truly cannot be verified without live web access, say so plainly and note it as a pre-publish TODO instead of fabricating a value. Then run a final QC pass: confirm FACT/FORECAST/TARGET/INTERPRETATION labeling is consistent, flag any copyright/music-licensing or Instagram community-guideline risk, and confirm the hashtags/caption stay consistent with the script. Return the complete final Reels production package with every marker resolved, plus a short 'QC & Supplement Notes' section summarizing what you filled in and any remaining risk.")
+except urllib.error.HTTPError as e:
+    fallback = (
+        "# ⚠️ GEMINI SUPPORT PASS UNAVAILABLE\n\n"
+        f"Gemini failed after retries ({e.code} {e.reason}). Claude's draft below is "
+        "unchanged and still has open `[VERIFY-GEMINI: ...]` markers -- resolve those "
+        "manually or re-run the pipeline once Gemini is available again.\n\n---\n\n"
+        + claude_draft
+    )
+    (Path(OUT / "02-final-reels-package.md")).write_text(fallback, encoding="utf-8")
+    print(f"WROTE FALLBACK: artifacts/02-final-reels-package.md (Gemini failed: {e.code} {e.reason})")
+    raise
+
 (Path(OUT / "02-final-reels-package.md")).write_text(final, encoding="utf-8")
 print("DONE: artifacts/02-final-reels-package.md")

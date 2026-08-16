@@ -41,12 +41,14 @@ jobs:
           python orchestrator/ai_collaboration.py "${{ github.event.inputs.input_file || 'input.md' }}"
 
       - name: Upload collaboration reports
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: ai-collaboration-${{ github.run_number }}
           path: artifacts/
 
       - name: Commit final package
+        if: always()
         run: |
           git config user.name 'ai-orchestrator[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
