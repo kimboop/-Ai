@@ -1,0 +1,29 @@
+{
+  "title": "로봇, 스스로 배터리를 갈다",
+  "scenes": [
+    {
+      "script": "사람 없이, 로봇이 스스로 배터리를 갈아 끼웁니다.",
+      "pexels_query": "humanoid robot factory technology"
+    },
+    {
+      "script": "보스턴 다이내믹스 인간형 로봇 아틀라스, 배터리 교체에 걸리는 시간은 단 3분.",
+      "pexels_query": "robotic arm battery technology closeup"
+    },
+    {
+      "script": "이 로봇, 이미 현대차 공장 생산라인에 투입되고 있습니다.",
+      "pexels_query": "car factory assembly line robots"
+    },
+    {
+      "script": "테슬라도 맞섭니다. 옵티머스 3세대는 배터리 효율을 40퍼센트 끌어올리는 걸 목표로 밝혔습니다.",
+      "pexels_query": "tesla factory production line"
+    },
+    {
+      "script": "그런데 이 배터리 전쟁, 핵심 공급자는 한국 기업입니다. LG에너지솔루션.",
+      "pexels_query": "battery factory manufacturing technology"
+    },
+    {
+      "script": "로봇 시대의 승부는, 결국 배터리에서 갈립니다.",
+      "pexels_query": "future technology robotics innovation"
+    }
+  ]
+}

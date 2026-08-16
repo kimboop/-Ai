@@ -1,0 +1,66 @@
+name: Render Shorts Video
+
+on:
+  workflow_dispatch:
+    inputs:
+      episode_file:
+        description: '렌더링할 대본 JSON 경로 (예: scripts/episode_2026-08-16_robot-battery.json)'
+        required: true
+        default: 'scripts/episode.json'
+      make_thumbnail:
+        description: '썸네일도 같이 만들지 여부'
+        required: false
+        default: 'true'
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Nanum fonts
+        run: sudo apt-get update && sudo apt-get install -y fonts-nanum fonts-nanum-extra
+
+      - name: Install Python dependencies
+        run: pip install -r scripts/requirements.txt
+
+      - name: Check PEXELS_API_KEY secret is set
+        env:
+          PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+        run: test -n "$PEXELS_API_KEY" || (echo 'Missing PEXELS_API_KEY secret — Settings > Secrets and variables > Actions > New repository secret' && exit 1)
+
+      - name: Validate episode JSON
+        run: python scripts/video_generator.py "${{ github.event.inputs.episode_file }}" --validate-only
+
+      - name: Run logic tests (no network needed)
+        run: python scripts/test_mock.py
+
+      - name: Render video
+        env:
+          PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+        run: python scripts/video_generator.py "${{ github.event.inputs.episode_file }}"
+
+      - name: Generate thumbnail
+        if: ${{ github.event.inputs.make_thumbnail == 'true' }}
+        run: |
+          TITLE=$(python3 -c "import json,sys; print(json.load(open('${{ github.event.inputs.episode_file }}'))['title'])")
+          STEM=$(basename "${{ github.event.inputs.episode_file }}" .json)
+          python scripts/make_thumbnail.py \
+            --title "$TITLE" \
+            --kicker "테크 이슈" \
+            --output "output/thumbnails/${STEM}.png"
+
+      - name: Upload rendered video + thumbnail
+        uses: actions/upload-artifact@v4
+        with:
+          name: shorts-${{ github.run_number }}
+          path: |
+            output/*.mp4
+            output/thumbnails/*.png
+          if-no-files-found: error

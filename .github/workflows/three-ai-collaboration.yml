@@ -1,0 +1,55 @@
+name: AI Collaboration
+
+on:
+  workflow_dispatch:
+    inputs:
+      input_file:
+        description: 'Markdown/text file to process'
+        required: true
+        default: 'input.md'
+  push:
+    paths:
+      - 'input.md'
+      - 'inputs/**'
+      - 'orchestrator/**'
+      - '.github/workflows/three-ai-collaboration.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  collaborate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Run Gemini → Claude
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GEMINI_MODEL: ${{ vars.GEMINI_MODEL }}
+          CLAUDE_MODEL: ${{ vars.CLAUDE_MODEL }}
+        run: |
+          test -n "$GEMINI_API_KEY" || (echo 'Missing GEMINI_API_KEY secret' && exit 1)
+          test -n "$ANTHROPIC_API_KEY" || (echo 'Missing ANTHROPIC_API_KEY secret' && exit 1)
+          python orchestrator/ai_collaboration.py "${{ github.event.inputs.input_file || 'input.md' }}"
+
+      - name: Upload collaboration reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-collaboration-${{ github.run_number }}
+          path: artifacts/
+
+      - name: Commit final package
+        run: |
+          git config user.name 'ai-orchestrator[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add artifacts/
+          git diff --cached --quiet || git commit -m 'chore: update AI collaboration package'
+          git push
