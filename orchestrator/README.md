@@ -1,14 +1,12 @@
-# AI Collaboration Orchestrator
+# AI Collaboration Orchestrator (Instagram Reels)
 
 ## Pipeline
-1. Gemini audits research/evidence against `input.md`.
-2. Claude reconciles Gemini's audit with the source material and produces the
-   final production package.
-
-The original design had a third OpenAI/GPT stage; it was dropped for billing
-reasons (see root `CLAUDE.md`). Restoring it means adding an `openai()`
-function to `ai_collaboration.py` and the `OPENAI_API_KEY` secret/guard back
-into the workflow.
+1. **Claude (lead)** authors the full Reels production package from the source
+   material and flags anything it can't verify itself with
+   `[VERIFY-GEMINI: ...]` markers.
+2. **Gemini (support)** resolves only those flagged markers via research and
+   runs a final QC pass. It does not rewrite Claude's creative/structural
+   choices.
 
 ## Required environment variables
 - `GEMINI_API_KEY`
