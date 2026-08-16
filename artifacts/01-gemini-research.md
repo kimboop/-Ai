@@ -1,54 +1,52 @@
-# EVIDENCE AUDIT & FACT-CHECK REPORT
-**Auditor:** Gemini (Research & Evidence Auditor)  
-**Status:** ⚠️ **INPUT MATERIAL PENDING / TEMPLATE ACTIVE**  
-**Alert:** The `SOURCE MATERIAL` section contains placeholder text (`Replace this file with the material to research...`). No raw claims or script drafts were provided for live verification.
+# RESEARCH & EVIDENCE AUDIT REPORT
 
-Below is the operational audit framework, taxonomy, and structured audit ledger ready to process your source material the moment it is provided.
+**Role:** GEMINI (Research & Evidence Auditor)  
+**Status:** ⚠️ **BLOCKED — NO SOURCE MATERIAL PROVIDED (PLACEHOLDER DETECTED)**
 
 ---
 
-## 1. Claim Classification Taxonomy
-
-Every discrete statement in the source material will be categorized into one of four operational buckets:
-
-| Tag | Category | Definition & Handling Rule |
-| :--- | :--- | :--- |
-| **`[FACT]`** | Empirical / Historical | Verifiable via records, primary documentation, or consensus historical data. Must have direct citation. |
-| **`[FORECAST]`** | Predictive Projection | Modeling, analyst estimates, or probabilistic outcomes. Must state methodology, range, and confidence limits. |
-| **`[TARGET]`** | Official Objective | Goals set by an entity (e.g., corporate revenue target, net-zero deadline). Must cite the announcing entity and baseline date. |
-| **`[INTERPRETATION]`** | Opinion / Analysis | Subjective framing, editorial narrative, or value judgments. Must be clearly attributed to the speaker/author, not stated as fact. |
+## 1. Input Analysis & Ingestion Status
+* **Supplied Material:** The provided input contains only the collaboration template instructions (`"Replace this file with the material to research..."`).
+* **Audit State:** Unable to extract factual claims, identify primary sources, or build a contradiction matrix until the target text/script is supplied.
 
 ---
 
-## 2. Evidence Verification Status Tags
+## 2. Audit Framework (Ready for Ingestion)
 
-* **`[VERIFIED]`**: Corroborated by high-tier primary sources (regulatory filings, peer-reviewed data, official transcripts).
-* **`[NEEDS_WEB_VERIFICATION]`**: Plausible, but requires fresh web verification for recent updates, exact statistics, or moving baselines.
-* **`[UNVERIFIED / CONFLICT]`**: Conflicting reports across reputable outlets or primary documentation is missing.
-* **`[DEBUNKED / REJECT]`**: Factually inaccurate, mathematically inconsistent, or demonstrably false. Must be cut from production.
+As soon as you paste the actual source material, it will be processed through the following taxonomy and verification rubric:
+
+### Taxonomy of Claims
+Each substantive assertion will be categorized into one of four strictly isolated buckets:
+* **`[FACT]`**: Historically verifiable events, recorded statistics, empirical data, documented statements.
+* **`[FORECAST]`**: Model-driven or probabilistic projections about future events.
+* **`[TARGET]`**: Stated aspirational goals, quotas, or organizational milestones (non-guaranteed).
+* **`[INTERPRETATION]`**: Editorial commentary, causal framing, narrative synthesis, or subjective analysis.
 
 ---
 
-## 3. Structured Audit Ledger (Production Template)
+## 3. Production Fact-Check Template (Execution Standard)
 
-When you supply the text, the audit will be returned in this actionable table format:
+Once the text is provided, the output will follow this actionable structure:
 
 ```markdown
-### CLAIM AUDIT TABLE
+### A. Claim Extraction & Classification Matrix
+| Claim # | Extracted Statement | Taxonomy Type | Source Cited | Initial Confidence |
+|---|---|---|---|---|
+| C-01 | [Quote/Assertion] | FACT / FORECAST / TARGET / INTERPRETATION | [Source Name/Link] | Verified / Disputed / Unverified |
 
-| # | Raw Claim / Script Line | Taxonomy Class | Audit Status | Evidence / Source Check | Required Production Action |
-|---|---|---|---|---|---|
-| 1 | "[Exact quote from source]" | FACT / FORECAST / TARGET / INTERPRETATION | VERIFIED / NEEDS_WEB_VERIFICATION / CONFLICT / REJECT | [Primary Source / Reference / Discrepancy details] | [Exact rewrite, visual on-screen citation, or CUT command] |
+### B. Contradictions & Source Quality Flags
+* **Direct Contradictions:** Identified conflicts between cited sources or internal script logic.
+* **Low-Quality / Unattributed Sources:** Anonymous claims, circular citations, or PR statements presented as objective facts.
+* **Framing / Conflation Risks:** Instances where a TARGET or FORECAST is masquerading as a settled FACT.
+
+### C. Live Verification Triggers (Requires Fresh Web Check)
+* Specific data points, dates, executive quotes, or breaking numbers that must be verified against primary registries/filings before publication.
+
+### D. Production Action Items for Co-AI (Script Editor)
+* Direct instructions on what to cut, qualify, reword, or provide on-screen citations for in the YouTube package.
 ```
 
 ---
 
-## 4. Immediate Next Step
-
-Please paste your raw script, article, notes, or topic outline. 
-
-Upon receipt, I will immediately execute:
-1. **Line-by-line claim extraction** and taxonomy tagging.
-2. **Contradiction and ambiguity screening**.
-3. **Fresh web verification flagging** (with search queries provided for live checks).
-4. **Actionable production notes** for the second AI (Scriptwriter/Producer) to assemble the final YouTube package.
+## 4. Next Step
+**Please supply the raw source text, outline, or script draft.** I will immediately generate the full, itemized audit report.
