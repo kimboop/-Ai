@@ -138,6 +138,20 @@ python scripts/video_generator.py scripts/episode.json
 python scripts/video_generator.py scripts/episode.json --no-resume
 ```
 
+### 썸네일
+
+`scripts/make_thumbnail.py`는 video_generator.py와 같은 팔레트/폰트로 9:16
+브랜드 썸네일을 만든다. Pexels 등 외부 이미지가 전혀 필요 없어서(순수
+타이포그래피 + PIL 도형) 네트워크가 막힌 환경에서도 바로 쓸 수 있다.
+
+```bash
+python scripts/make_thumbnail.py \
+  --title "헤드라인 첫 줄\n헤드라인 둘째 줄" \
+  --kicker "테크 이슈" \
+  --subtitle "부제목" \
+  --output output/thumbnails/episode-name.png
+```
+
 주요 옵션:
 
 | 옵션 | 설명 |
