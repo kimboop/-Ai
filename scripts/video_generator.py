@@ -31,6 +31,7 @@ import sys
 import textwrap
 import time
 import urllib.error
+import urllib.parse
 import urllib.request
 from pathlib import Path
 from typing import Any
@@ -171,6 +172,8 @@ def crop_to_aspect_ratio(clip, target_w: int = TARGET_SIZE[0], target_h: int = T
 def pick_video_file(video_files: list[dict]) -> str:
     """세로 영상 중 1080폭에 가장 가까운 걸 고른다 — 원본은 video_files[0]을
     그냥 썼는데, Pexels가 가로형/저해상도 파일을 0번으로 줄 때도 있다."""
+    if not video_files:
+        raise ValueError("Pexels returned a video with an empty video_files list")
     portrait = [f for f in video_files if f.get("height", 0) >= f.get("width", 0)]
     candidates = portrait or video_files
     candidates = sorted(candidates, key=lambda f: abs(f.get("width", 0) - TARGET_SIZE[0]))
@@ -186,7 +189,8 @@ def fetch_background_clip(query: str, scene_duration: float, headers: dict, cach
     cache_file = cache_dir / f"bg_{hashlib.sha256(query.encode()).hexdigest()[:16]}.mp4"
 
     if not cache_file.exists():
-        url = f"https://api.pexels.com/videos/search?query={query}&orientation=portrait&per_page=3"
+        url = (f"https://api.pexels.com/videos/search?query={urllib.parse.quote(query)}"
+               "&orientation=portrait&per_page=3")
         try:
             data = get_json_with_retry(url, headers)
             videos = data.get("videos", [])
@@ -321,8 +325,18 @@ def generate_premium_shorts(episode: dict[str, Any], pexels_key: str, voice: str
 
     final_video = CompositeVideoClip([combined_bg, title_clip, *subtitle_clips], size=TARGET_SIZE)
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    final_video.write_videofile(str(output_path), fps=fps, codec="libx264",
-                                 audio_codec="aac", preset=preset, threads=threads)
+    try:
+        final_video.write_videofile(str(output_path), fps=fps, codec="libx264",
+                                     audio_codec="aac", preset=preset, threads=threads)
+    finally:
+        # VideoFileClip/AudioFileClip hold open ffmpeg reader processes and file
+        # handles; close() is a no-op on clip types that don't need it (ColorClip,
+        # CompositeVideoClip, ImageClip), so this is safe to call unconditionally.
+        final_video.close()
+        audio_clip.close()
+        for clip in video_clips:
+            clip.close()
+
     LOG.info("완성: %s", output_path)
 
 

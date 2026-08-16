@@ -63,6 +63,13 @@ class PickVideoFileTests(unittest.TestCase):
         files = [{"width": 1920, "height": 1080, "link": "only-option"}]
         self.assertEqual(vg.pick_video_file(files), "only-option")
 
+    def test_raises_on_empty_video_files(self):
+        # Pexels can return a video entry with no encodes yet (still transcoding);
+        # this must raise so the caller's except-block triggers the ColorClip
+        # fallback, instead of an unhandled IndexError.
+        with self.assertRaises(ValueError):
+            vg.pick_video_file([])
+
 
 class ValidateEpisodeTests(unittest.TestCase):
     def test_rejects_empty_scenes(self):
@@ -143,6 +150,19 @@ class FetchBackgroundClipMockedTests(unittest.TestCase):
         mock_search.return_value = {"videos": []}
         clip = vg.fetch_background_clip("nonexistent query xyz", 0.3, {"Authorization": "x"}, self.cache_dir)
         self.assertIsNone(clip)  # 호출자가 ColorClip으로 대체해야 함
+
+    @patch("video_generator.get_json_with_retry")
+    def test_query_with_spaces_and_korean_is_url_encoded(self, mock_search):
+        # 이전에는 f-string으로 그대로 URL에 꽂아 넣어서 스페이스·한글이 들어간
+        # 검색어(샘플 매니페스트의 "news studio vertical" 포함)마다 urllib이
+        # http.client.InvalidURL을 던졌다 — 모든 씬이 조용히 ColorClip으로만
+        # 대체되던 버그. get_json_with_retry에 실제로 넘어가는 URL을 검사해서
+        # 재발을 막는다.
+        mock_search.return_value = {"videos": []}
+        vg.fetch_background_clip("도시 야경 vertical", 0.3, {"Authorization": "x"}, self.cache_dir)
+        called_url = mock_search.call_args[0][0]
+        self.assertNotIn(" ", called_url)
+        self.assertIn("%20", called_url)
 
 
 # --------------------------------------------------------------------------
