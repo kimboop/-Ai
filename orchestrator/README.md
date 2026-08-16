@@ -1,19 +1,20 @@
-# 3-AI Collaboration Orchestrator
+# AI Collaboration Orchestrator (Instagram Reels)
 
 ## Pipeline
-1. Gemini audits research/evidence.
-2. Claude reviews and reconciles Gemini + source material.
-3. GPT produces the final production package.
+1. **Claude (lead)** authors the full Reels production package from the source
+   material and flags anything it can't verify itself with
+   `[VERIFY-GEMINI: ...]` markers.
+2. **Gemini (support)** resolves only those flagged markers via research and
+   runs a final QC pass. It does not rewrite Claude's creative/structural
+   choices.
 
 ## Required environment variables
 - `GEMINI_API_KEY`
 - `ANTHROPIC_API_KEY`
-- `OPENAI_API_KEY`
 
 Optional model variables:
 - `GEMINI_MODEL`
 - `CLAUDE_MODEL`
-- `OPENAI_MODEL`
 
 ## Run
 ```bash

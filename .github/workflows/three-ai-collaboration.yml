@@ -29,7 +29,7 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Run Gemini → Claude
+      - name: Run Claude (lead) → Gemini (support)
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
