@@ -107,6 +107,39 @@ class SubtitleAndTitleCardTests(unittest.TestCase):
         self.assertEqual(img.mode, "RGBA")
 
 
+# --------------------------------------------------------------------------
+# 썸네일 — 긴 한 줄 제목이 캔버스 밖으로 잘리던 버그의 회귀 테스트
+# --------------------------------------------------------------------------
+@_needs_media_deps
+class ThumbnailHeadlineFitTests(unittest.TestCase):
+    def setUp(self):
+        try:
+            self.font_extrabold = vg.resolve_font("SHORTS_FONT_EXTRABOLD", "NanumGothicExtraBold.ttf")
+            self.font_bold = vg.resolve_font("SHORTS_FONT_BOLD", "NanumGothicBold.ttf")
+        except FileNotFoundError as e:
+            self.skipTest(str(e))
+        import make_thumbnail as mt
+        self.mt = mt
+
+    def test_long_single_line_title_wraps_within_canvas_width(self):
+        # render-shorts.yml는 episode.json의 title을 \n 없이 그대로 넘긴다 —
+        # 줄바꿈 없는 긴 한 줄을 그대로 그려서 좌우로 잘리던 실제 버그 재현.
+        from PIL import Image, ImageDraw
+        draw = ImageDraw.Draw(Image.new("RGB", (1, 1)))
+        title = "테슬라와 보스턴 다이내믹스가 벌이는 인간형 로봇 배터리 기술 경쟁의 모든 것"
+        font, lines, _ = self.mt._fit_headline(draw, title, self.font_extrabold, max_width=1080 - 2 * 70)
+        self.assertGreater(len(lines), 1, "wrapping should split a long single-line title")
+        for line in lines:
+            bbox = draw.textbbox((0, 0), line, font=font)
+            self.assertLessEqual(bbox[2] - bbox[0], 1080 - 2 * 70,
+                                  f"line {line!r} overflows the canvas width")
+
+    def test_thumbnail_image_has_expected_canvas_size(self):
+        img = self.mt.make_thumbnail("로봇, 스스로 배터리를 갈다", "테크 이슈", "",
+                                      self.font_extrabold, self.font_bold)
+        self.assertEqual(img.size, vg.TARGET_SIZE)
+
+
 @_needs_media_deps
 class CropToAspectRatioTests(unittest.TestCase):
     def test_landscape_source_crops_to_9_16(self):

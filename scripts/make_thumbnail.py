@@ -24,10 +24,50 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import video_generator as vg  # noqa: E402
 
 
+def _wrap_to_width(draw, text: str, font, max_width: int) -> list[str]:
+    """공백 단위로 줄바꿈해서 각 줄 렌더링 너비가 max_width를 넘지 않게 한다.
+    (긴 한 줄짜리 제목을 캔버스 밖으로 그냥 흘려보내던 버그의 핵심 수정.)"""
+    words = text.split(" ")
+    lines: list[str] = []
+    current = ""
+    for word in words:
+        candidate = f"{current} {word}".strip()
+        bbox = draw.textbbox((0, 0), candidate, font=font)
+        if bbox[2] - bbox[0] <= max_width or not current:
+            current = candidate
+        else:
+            lines.append(current)
+            current = word
+    if current:
+        lines.append(current)
+    return lines or [""]
+
+
+def _fit_headline(draw, title: str, font_path: str, max_width: int, max_lines: int = 4,
+                   start_size: int = 118, min_size: int = 56, step: int = 8):
+    """명시적 \\n 단락은 유지한 채 단어 단위로 줄바꿈하고, 그래도 줄 수가
+    max_lines를 넘으면 폰트를 줄여서 다시 감싼다. 너비 초과로 잘리는 일과
+    줄이 너무 많아져 아래 요소를 밀어내는 일을 둘 다 막는다."""
+    from PIL import ImageFont
+
+    size = start_size
+    while True:
+        font = ImageFont.truetype(font_path, size)
+        lines: list[str] = []
+        for paragraph in title.split("\n"):
+            lines.extend(_wrap_to_width(draw, paragraph, font, max_width))
+        if len(lines) <= max_lines or size <= min_size:
+            heights = [draw.textbbox((0, 0), ln, font=font)[3] - draw.textbbox((0, 0), ln, font=font)[1]
+                       for ln in lines]
+            return font, lines, heights
+        size -= step
+
+
 def make_thumbnail(title: str, kicker: str, subtitle: str, font_extrabold: str, font_bold: str):
     from PIL import Image, ImageDraw, ImageFont
 
     W, H = vg.TARGET_SIZE
+    MARGIN = 70
     img = Image.new("RGB", (W, H), (8, 12, 24))
     draw = ImageDraw.Draw(img)
 
@@ -56,13 +96,9 @@ def make_thumbnail(title: str, kicker: str, subtitle: str, font_extrabold: str, 
     )
     draw.text((kx, ky), kicker, font=kicker_font, fill=(15, 23, 42, 255))
 
-    # 헤드라인 (여러 줄 지원 — \n으로 줄바꿈)
-    headline_font = ImageFont.truetype(font_extrabold, 118)
-    lines = title.split("\n")
-    line_heights = []
-    for line in lines:
-        bbox = draw.textbbox((0, 0), line, font=headline_font)
-        line_heights.append(bbox[3] - bbox[1])
+    # 헤드라인 — 너비를 넘으면 자동 줄바꿈, 그래도 줄이 너무 많아지면 폰트 축소.
+    # (원인이었던 버그: 긴 제목을 한 줄로 그대로 그려서 캔버스 밖으로 잘렸음.)
+    headline_font, lines, line_heights = _fit_headline(draw, title, font_extrabold, W - 2 * MARGIN)
     y = int(H * 0.47)
     for line, lh in zip(lines, line_heights):
         bbox = draw.textbbox((0, 0), line, font=headline_font)
@@ -73,13 +109,26 @@ def make_thumbnail(title: str, kicker: str, subtitle: str, font_extrabold: str, 
         draw.text((x, y), line, font=headline_font, fill=(248, 250, 252, 255))
         y += lh + 24
 
-    # 서브타이틀
-    sub_font = ImageFont.truetype(font_bold, 52)
-    sb = draw.textbbox((0, 0), subtitle, font=sub_font)
-    sw = sb[2] - sb[0]
-    draw.text(((W - sw) // 2, y + 24), subtitle, font=sub_font, fill=(212, 175, 55, 255))
+    # 서브타이틀 (마찬가지로 너비 초과 시 줄바꿈)
+    if subtitle:
+        sub_font = ImageFont.truetype(font_bold, 52)
+        for line in _wrap_to_width(draw, subtitle, sub_font, W - 2 * MARGIN):
+            sb = draw.textbbox((0, 0), line, font=sub_font)
+            sw = sb[2] - sb[0]
+            sh = sb[3] - sb[1]
+            draw.text(((W - sw) // 2, y + 24), line, font=sub_font, fill=(212, 175, 55, 255))
+            y += sh + 16
 
-    _draw_battery_bolt_icon(draw, center=(W // 2, int(H * 0.80)), scale=1.0)
+    # 아이콘은 텍스트가 끝난 지점 기준으로 남는 공간에만 그린다 — 고정 좌표로
+    # 그렸다가 제목이 길어져 줄이 늘어나면 부제목/아이콘과 겹치던 버그 수정.
+    watermark_top = H - 160
+    content_end = y + 24
+    available = watermark_top - content_end
+    icon_h = 280
+    if available >= icon_h * 0.6:
+        scale = min(1.0, available / (icon_h + 40))
+        icon_cy = content_end + available // 2
+        _draw_battery_bolt_icon(draw, center=(W // 2, icon_cy), scale=scale)
 
     # 채널 워터마크
     mark_font = ImageFont.truetype(font_bold, 40)
