@@ -1,52 +1,54 @@
-### Research & Evidence Audit Report
+# EVIDENCE AUDIT & FACT-CHECK REPORT
+**Auditor:** Gemini (Research & Evidence Auditor)  
+**Status:** ⚠️ **INPUT MATERIAL PENDING / TEMPLATE ACTIVE**  
+**Alert:** The `SOURCE MATERIAL` section contains placeholder text (`Replace this file with the material to research...`). No raw claims or script drafts were provided for live verification.
+
+Below is the operational audit framework, taxonomy, and structured audit ledger ready to process your source material the moment it is provided.
 
 ---
 
-### ⚠️ AUDIT ALERT: Missing Source Payload
-**Status:** **BLOCKED / AWAITING INGESTION**  
-**Issue:** The provided source material contains only placeholder text (*`"Replace this file with the material to research, fact-check, edit, and turn into a production package."`*). No factual claims, statistics, quotes, or narratives were submitted for verification.
+## 1. Claim Classification Taxonomy
 
-To prevent hallucinations and adhere to the strict rule (*"Do not invent sources or verification results"*), no synthetic claims have been generated.
+Every discrete statement in the source material will be categorized into one of four operational buckets:
 
----
-
-### Audit Operational Taxonomy
-
-When you paste your script or research draft, each distinct claim will be ingested, cataloged, and audited against the following taxonomy:
-
-| Category | Definition | Standard of Proof / Verification Requirement |
+| Tag | Category | Definition & Handling Rule |
 | :--- | :--- | :--- |
-| **`[FACT]`** | Verifiable empirical data, historical events, official recorded metrics, direct quotes. | Primary source documentation (SEC filings, peer-reviewed journals, official transcripts, government databases). |
-| **`[FORECAST]`** | Probabilistic outlooks, economic/market projections, model outputs. | Must identify the model, methodology, confidence interval, and underlying assumptions. |
-| **`[TARGET]`** | Corporate goals, political pledges, aspirational timelines. | Must explicitly state the issuing entity and be framed as an objective, *not* a guaranteed outcome. |
-| **`[INTERPRETATION]`** | Narrative framing, editorial synthesis, causal claims, opinion. | Must be labeled as analysis; must present alternative valid interpretations if consensus does not exist. |
+| **`[FACT]`** | Empirical / Historical | Verifiable via records, primary documentation, or consensus historical data. Must have direct citation. |
+| **`[FORECAST]`** | Predictive Projection | Modeling, analyst estimates, or probabilistic outcomes. Must state methodology, range, and confidence limits. |
+| **`[TARGET]`** | Official Objective | Goals set by an entity (e.g., corporate revenue target, net-zero deadline). Must cite the announcing entity and baseline date. |
+| **`[INTERPRETATION]`** | Opinion / Analysis | Subjective framing, editorial narrative, or value judgments. Must be clearly attributed to the speaker/author, not stated as fact. |
 
 ---
 
-### Verification Schema (Ready for Ingestion)
+## 2. Evidence Verification Status Tags
 
-Upon receipt of the source material, the audit output will be structured as follows:
+* **`[VERIFIED]`**: Corroborated by high-tier primary sources (regulatory filings, peer-reviewed data, official transcripts).
+* **`[NEEDS_WEB_VERIFICATION]`**: Plausible, but requires fresh web verification for recent updates, exact statistics, or moving baselines.
+* **`[UNVERIFIED / CONFLICT]`**: Conflicting reports across reputable outlets or primary documentation is missing.
+* **`[DEBUNKED / REJECT]`**: Factually inaccurate, mathematically inconsistent, or demonstrably false. Must be cut from production.
+
+---
+
+## 3. Structured Audit Ledger (Production Template)
+
+When you supply the text, the audit will be returned in this actionable table format:
 
 ```markdown
-### 1. Statement-by-Statement Audit Log
-- **Claim [ID]:** "[Exact quote or claim from source]"
-  - **Classification:** [FACT | FORECAST | TARGET | INTERPRETATION]
-  - **Verification Status:** [VERIFIED | UNVERIFIED | CONTRADICTION FOUND | DISPROVEN]
-  - **Source Quality Rating:** [Tier 1: Primary/Official | Tier 2: Reputable Secondary | Tier 3: Unverified/Rumor]
-  - **Findings & Conflicting Evidence:** [Specific cross-reference analysis]
-  - **Actionable Production Note:** [Exact phrasing or correction required for script/on-screen graphics]
+### CLAIM AUDIT TABLE
 
-### 2. Contradictions & Ambiguities Flagged
-- [List of internal inconsistencies within the text or conflicts between primary sources]
-
-### 3. Fresh Web Verification Triggers
-- [List of high-volatility metrics (e.g., live stock prices, breaking regulatory changes, ongoing litigation) requiring real-time confirmation prior to publish]
-
-### 4. Risk Assessment & Legal/Policy Red Flags
-- [Defamation risks, deceptive financial phrasing, absolute certainty bias on probabilistic forecasts]
+| # | Raw Claim / Script Line | Taxonomy Class | Audit Status | Evidence / Source Check | Required Production Action |
+|---|---|---|---|---|---|
+| 1 | "[Exact quote from source]" | FACT / FORECAST / TARGET / INTERPRETATION | VERIFIED / NEEDS_WEB_VERIFICATION / CONFLICT / REJECT | [Primary Source / Reference / Discrepancy details] | [Exact rewrite, visual on-screen citation, or CUT command] |
 ```
 
 ---
 
-### Next Step
-**Please paste the raw source text or draft script below.** I will execute the line-by-line audit and return the verified production package.
+## 4. Immediate Next Step
+
+Please paste your raw script, article, notes, or topic outline. 
+
+Upon receipt, I will immediately execute:
+1. **Line-by-line claim extraction** and taxonomy tagging.
+2. **Contradiction and ambiguity screening**.
+3. **Fresh web verification flagging** (with search queries provided for live checks).
+4. **Actionable production notes** for the second AI (Scriptwriter/Producer) to assemble the final YouTube package.
