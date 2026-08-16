@@ -200,7 +200,17 @@ def fetch_background_clip(query: str, scene_duration: float, headers: dict, cach
             link = pick_video_file(videos[0]["video_files"])
             download_with_retry(link, cache_file)
         except Exception as e:  # noqa: BLE001 - network/API fallback boundary
-            LOG.warning("Pexels fetch failed for query %r: %s", query, e)
+            code = getattr(e, "code", None)
+            if code in (401, 403):
+                LOG.warning(
+                    "Pexels fetch failed for query %r: %s — this is an auth "
+                    "rejection, not a transient error. Check that PEXELS_API_KEY "
+                    "is a valid key from https://www.pexels.com/api/ with no "
+                    "extra whitespace (every scene will fail identically until "
+                    "this is fixed).", query, e,
+                )
+            else:
+                LOG.warning("Pexels fetch failed for query %r: %s", query, e)
             return None
     else:
         LOG.info("Reusing cached B-roll for query %r", query)
@@ -316,7 +326,9 @@ def generate_premium_shorts(episode: dict[str, Any], pexels_key: str, voice: str
         )
 
     combined_bg = concatenate_videoclips(video_clips, method="compose").with_audio(audio_clip)
-    title_img = create_title_image(f"📌 {title}", title_font)
+    # 이모지(📌 등)는 나눔고딕에 글리프가 없어 깨진 네모(tofu)로 렌더링된다 —
+    # 폰트 cmap에 실제로 있는 기호만 쓴다(fontTools로 확인: U+25CF는 포함됨).
+    title_img = create_title_image(f"● {title}", title_font)
     title_clip = (
         ImageClip(np.array(title_img))
         .with_duration(total_duration)
@@ -409,7 +421,10 @@ def main() -> int:
             LOG.error(p)
         return 1
 
-    pexels_key = os.environ.get("PEXELS_API_KEY")
+    # .strip(): a trailing newline/space from copy-pasting into a GitHub secret
+    # silently corrupts the Authorization header and Pexels returns a plain
+    # 403 with no hint that whitespace was the cause — cheap to guard against.
+    pexels_key = (os.environ.get("PEXELS_API_KEY") or "").strip()
     if not pexels_key:
         LOG.error("Missing PEXELS_API_KEY env var — see scripts/README.md#required-environment-variables")
         return 1
