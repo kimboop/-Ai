@@ -35,6 +35,21 @@ jobs:
           PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
         run: test -n "$PEXELS_API_KEY" || (echo 'Missing PEXELS_API_KEY secret — Settings > Secrets and variables > Actions > New repository secret' && exit 1)
 
+      - name: Debug PEXELS_API_KEY (temporary — remove once 403 is diagnosed)
+        env:
+          PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+        run: |
+          echo "key length: ${#PEXELS_API_KEY}"
+          echo "first 4 chars: ${PEXELS_API_KEY:0:4}"
+          echo "last 4 chars: ${PEXELS_API_KEY: -4}"
+          printf '%s' "$PEXELS_API_KEY" | od -c | grep -E '  \\\\r|  \\\\n|  \s' && echo "WARNING: whitespace/control chars found" || echo "no whitespace/control chars"
+          echo "--- live Pexels API test (direct curl, bypassing our Python code) ---"
+          curl -s -o /tmp/pexels_response.json -w "HTTP status: %{http_code}\n" \
+            -H "Authorization: $PEXELS_API_KEY" \
+            "https://api.pexels.com/v1/search?query=cat&per_page=1"
+          echo "response body:"
+          cat /tmp/pexels_response.json
+
       - name: Validate episode JSON
         run: python scripts/video_generator.py "${{ github.event.inputs.episode_file }}" --validate-only
 
