@@ -52,6 +52,18 @@ jobs:
         run: |
           git config user.name 'ai-orchestrator[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add artifacts/
-          git diff --cached --quiet || git commit -m 'chore: update AI collaboration package'
-          git push
+          for attempt in 1 2 3 4; do
+            git fetch origin "${GITHUB_REF_NAME}"
+            git reset --soft "origin/${GITHUB_REF_NAME}"
+            git add artifacts/
+            if git diff --cached --quiet; then
+              echo 'nothing to commit'
+              exit 0
+            fi
+            git commit -m 'chore: update AI collaboration package'
+            git push && exit 0
+            echo "push rejected (attempt $attempt/4) -- remote moved again, retrying against its new tip"
+            sleep 2
+          done
+          echo "failed to push after 4 attempts" >&2
+          exit 1
