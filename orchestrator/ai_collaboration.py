@@ -113,7 +113,10 @@ if not os.getenv("OPENAI_API_KEY"):
 try:
     distribution = chatgpt(base + f"\n\nFINAL PACKAGE (from Claude):\n{final}\n\nROLE: CHATGPT — distribution and monetization strategist plus independent red-team reviewer. Do not change verified facts or add new claims. Output: (1) red-team review: any factual, legal or tone problems still left in the final package, each with the exact fix; (2) hook variants for the first 0-3 seconds (5 options); (3) platform-specific packaging for YouTube long-form, YouTube Shorts, Instagram Reels and TikTok — title, caption, hashtags, pinned comment and CTA for each; (4) thumbnail text A/B pairs; (5) upload checklist and best posting times with reasoning labeled as INTERPRETATION.")
 except Exception as e:  # noqa: BLE001 - optional stage, report and keep Claude's output
-    print(f"::warning::ChatGPT stage failed, Claude package kept: {e}")
+    # OpenAI's 429 covers both rate limits and an unfunded account
+    # ("insufficient_quota"); only the response body tells them apart.
+    detail = e.read().decode(errors="replace")[:500] if isinstance(e, urllib.error.HTTPError) else ""
+    print(f"::warning::ChatGPT stage failed, Claude package kept: {e} {detail}".rstrip())
     sys.exit(0)
 (Path(OUT / "03-chatgpt-distribution.md")).write_text(distribution, encoding="utf-8")
 print("DONE: artifacts/03-chatgpt-distribution.md")
