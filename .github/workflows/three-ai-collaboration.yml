@@ -29,12 +29,15 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Run Gemini → Claude
+      - name: Run Gemini → Claude → ChatGPT (optional)
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           GEMINI_MODEL: ${{ vars.GEMINI_MODEL }}
           CLAUDE_MODEL: ${{ vars.CLAUDE_MODEL }}
+          # Optional: leave the secret unset to skip the ChatGPT stage.
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_MODEL: ${{ vars.OPENAI_MODEL }}
         run: |
           test -n "$GEMINI_API_KEY" || (echo 'Missing GEMINI_API_KEY secret' && exit 1)
           test -n "$ANTHROPIC_API_KEY" || (echo 'Missing ANTHROPIC_API_KEY secret' && exit 1)

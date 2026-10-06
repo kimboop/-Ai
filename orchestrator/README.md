@@ -4,19 +4,20 @@
 1. Gemini audits research/evidence against `input.md`.
 2. Claude reconciles Gemini's audit with the source material and produces the
    final production package.
-
-The original design had a third OpenAI/GPT stage; it was dropped for billing
-reasons (see root `CLAUDE.md`). Restoring it means adding an `openai()`
-function to `ai_collaboration.py` and the `OPENAI_API_KEY` secret/guard back
-into the workflow.
+3. ChatGPT (optional) red-teams the final package and writes platform-specific
+   distribution copy (hooks, titles, captions, CTAs) to
+   `artifacts/03-chatgpt-distribution.md`. Skipped when `OPENAI_API_KEY` is
+   unset; a failure here only logs a warning and never discards stage 2.
 
 ## Required environment variables
 - `GEMINI_API_KEY`
 - `ANTHROPIC_API_KEY`
 
-Optional model variables:
+Optional:
+- `OPENAI_API_KEY` (enables the ChatGPT stage)
 - `GEMINI_MODEL`
 - `CLAUDE_MODEL`
+- `OPENAI_MODEL` (default `gpt-5`)
 
 ## Run
 ```bash
