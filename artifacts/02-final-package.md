@@ -1,222 +1,176 @@
-# [CLAUDE — 최종 편집/오케스트레이션 리포트]
-## 로봇 시대의 진짜 승부처는 배터리다
+# EDITORIAL REVIEW & FINAL PRODUCTION PACKAGE
+**로봇 시대의 진짜 승부처는 배터리다 — 휴머노이드 로봇 배터리 전쟁**
+Reviewed by: Claude (Senior Editor / Final Orchestrator)
 
 ---
 
-## 0. 편집장 검수 노트 — Gemini 리포트 교차검증 (반드시 먼저 읽을 것)
+## ⚠️ CRITICAL EDITORIAL FLAG — READ BEFORE USING ANYTHING BELOW
 
-Gemini의 1차 팩트체크(주장 1~5 분류)는 방향이 맞고 그대로 채택합니다. 다만 **Part 2 벤치마킹 표와 Shorts 대본에 들어간 구체적 수치(2.3kWh, 4~8시간, 5시간, 50% 밀도 향상, 1~2시간 등)는 브리프가 요구한 "날짜+출처" 태깅이 전혀 붙어있지 않습니다.** 이는 실제 웹 검증이 아니라 일반 지식 기반 추정이므로, 이 상태로는 **FACT로 방송할 수 없습니다.** 규칙("출처를 지어내지 말 것", "검증 안 된 숫자는 훅에 쓰지 말 것")에 따라 저는 더 보수적으로 처리했습니다.
+Gemini's report contains a **self-contradiction that overrides its own content**:
 
-### 최종 처리 기준
-| 판정 | 항목 | 처리 |
+- The body of the report presents claims with confident "FACT" labels, specific dates ("2024.10.30 공식 유튜브 공개"), specific specs ("Figure 02 약 5시간, 2.25kWh", "Unitree G1 9000mAh", "CATL 응축배터리 500Wh/kg"), and named individuals ("이재용 회장이 직접 점검").
+- But the report's own footer states: **"Search grounding was unavailable (HTTP 429)... treat every claim in it as UNVERIFIED."**
+
+This means **none of Gemini's specific dates/numbers/named events are traceable to an actual retrieved source** — they read like plausible background knowledge dressed up as verified fact. Per my instructions, I cannot upgrade a claim to "verified" just because Gemini's prose sounds confident. I am therefore **downgrading every Gemini "FACT" label by one confidence tier** unless it is a very general, low-risk statement.
+
+**Decision rule applied below:**
+| Gemini's label | My treatment |
+|---|---|
+| "FACT" with specific date/number/named company deal | → **UNVERIFIED-PLAUSIBLE**, flagged for mandatory live re-check before publish, specific numbers stripped from script |
+| "FACT" that is general/structural (e.g., "로봇 작동 시간은 제한적이다") | → kept as **FACT (general knowledge)**, safe to use without numbers |
+| "TARGET"/"FORECAST"/"INTERPRETATION" | kept as labeled, language softened further |
+| Anything with no source type attached at all (CATL 500Wh/kg, 이재용 점검, Unitree 9000mAh, LG "비밀리에 공급 논의") | → **REMOVE FROM SCRIPT ENTIRELY**, listed as research TODO only |
+
+This is a **1st-draft research package, not publish-ready**. A human must run live verification (official company newsroom, 10-K/실적발표, Boston Dynamics/Tesla/Figure official channels) before this airs. I've marked exactly what to check in Section 9.
+
+---
+
+## (1) CORRECTED PRODUCTION PLAN
+
+### A. Claim-by-claim final disposition
+
+| # | Original claim | Final classification | Script treatment |
+|---|---|---|---|
+| 1 | Atlas self-swaps battery autonomously | **UNVERIFIED — likely false as stated** | REMOVED. Replace with general trend: "자동 배터리 교체/무선 충전 기술이 업계 공통 개발 과제" |
+| 2 | Atlas swap takes ~3 min | **UNVERIFIED — no traceable source, suspected conflation with EV/AGV swap specs** | REMOVED entirely. No specific duration used anywhere in script. |
+| 3 | Atlas deployed in Hyundai production line | **UNVERIFIED-PLAUSIBLE** (consistent with publicly known Boston Dynamics demo videos involving Hyundai parts, but exact date, "pilot vs. demo-only vs. production line" status NOT confirmed this session) | Use only the safe, hedged version: "보스턴 다이내믹스가 공개한 영상에서 아틀라스가 현대차 부품을 옮기는 모습을 선보였다" — **no claim of production deployment**, no specific date on screen unless re-verified |
+| 4 | Optimus Gen 3 targets 40% battery efficiency gain | **UNVERIFIED — no official source; number removed** | REMOVED. Replace with qualitative TARGET language: "테슬라는 자체 4680 원통형 셀을 로봇에 맞게 최적화하는 방향을 공개 로드맵에서 언급해왔다(구체 수치는 모델별 공식자료 재확인 필요)" |
+| 5 | LG에너지솔루션 = 휴머노이드 배터리 핵심 공급자 | **INTERPRETATION / industry-watch, not a confirmed contract** | Rephrase as sector-level observation only: "K-배터리 기업들이 로봇용 원통형 배터리 개발에 나서고 있다" — no exclusivity or "핵심 공급자" framing, no specific client named |
+| 6 (new, from Gemini research) | Figure 02 deployed at BMW Spartanburg | **UNVERIFIED-PLAUSIBLE**, publicly reported BMW–Figure partnership exists in general, but 2026-current status NOT re-confirmed | Use hedge: "Figure AI는 BMW와의 협력을 공개한 바 있다" — no "완료/실전 투입" wording, flag partnership status for recheck (these deals can lapse/change) |
+| 7 (new) | CATL 응축배터리 500Wh/kg, 로봇사 제안 중 | **UNVERIFIED, no source trail at all** | REMOVE from both short and long form. Research TODO only. |
+| 8 (new) | 삼성SDI 이재용 회장 로봇 배터리 직접 점검 (2024) | **UNVERIFIED, named-individual claim — high reputational risk if wrong** | REMOVE unless independently confirmed via Samsung newsroom. Replace with: "삼성SDI는 로봇용 고밀도 배터리 개발 의지를 밝혀왔다" (generic) |
+| 9 (new) | Unitree G1 9000mAh, ~2hr | **UNVERIFIED spec sheet number** | Either confirm via Unitree official spec page before use, or drop the number and keep Unitree only as a named competitor without a stat |
+| 10 (new) | Digit (Agility) auto-charging dock, GXO warehouse pilot | **UNVERIFIED-PLAUSIBLE** (consistent with publicly known Agility/GXO relationship in general, exact "실전 파일럿" status not reconfirmed) | Hedge: "Agility Robotics는 자동 충전 도크 방식을 공개했고, 물류 현장 시범 적용을 알려왔다" |
+
+### B. Hook rule compliance
+Per brief: **no unverified numbers in the hook.** All duration figures in Gemini's table (2–4h Optimus, 1–2h Atlas, 5h Figure, 1.5–2h Digit, 2h Unitree) are **undated/unsourced company claims at best** — none go in the 0–3s hook. Hook will be purely qualitative + visual-driven.
+
+### C. Long-form outline corrections (summary — applies same fixes as short)
+- Section 2 ("3대 난제") — keep structure, it's conceptual/INTERPRETATION, no numeric risk. ✅ usable as-is.
+- Section 3 (Global players) — strip all specific kWh/hour numbers unless re-verified same day as recording; speak in relative terms ("상대적으로 짧다/길다", not absolute hours).
+- Section 4 (K-battery) — remove "이재용 회장" and "비밀리에 공급 논의" lines entirely; keep 46-series/캐즘 framing, which is industry-level and lower risk.
+- Section 5 (ending) — keep "no stock picks" framing; add on-screen disclaimer per legal note below.
+
+### D. Legal/compliance notes for this plan
+- **No stock tickers, no "buy/sell," no "수혜주" language** anywhere, including thumbnail/title — confirmed compliant design below.
+- **Named individual (이재용) removed** — using an unverified claim about a specific named executive is a defamation/accuracy risk disproportionate to the video's value.
+- **Footage licensing** — see Section (4) below; this is a real production risk Gemini's report never addressed.
+
+---
+
+## (2) FINAL SCRIPT — Shorts (45–60s, 9:16)
+
+> Tone: friendly explainer, hedged where needed via soft captions ("알려졌다", "공개한 영상에서는"), zero investment framing.
+
+| Time | Visual / B-roll search (EN, for Pexels) | On-screen text | Voiceover (KO) |
+|---|---|---|---|
+| **0:00–0:03 (Hook)** | Generic humanoid robot arm close-up, factory ambience | **"로봇은 똑똑해졌다. 근데 하나가 안 풀렸다."** | "로봇은 점점 똑똑해지고 있습니다. 근데 아직도 안 풀린 문제가 있습니다." |
+| **0:03–0:15 (Problem)** | Robot plugged into charging dock, red battery icon | **"오래 못 버틴다, 그리고 쉽게 안 바뀐다"** | "휴머노이드 로봇, 한 번 충전으로 오래 못 버팁니다. 그리고 배터리를 가볍게 빨리 바꾸는 것도 아직 숙제입니다." |
+| **0:15–0:28 (Why it's hard)** | Graphic: battery weight ↔ robot balance diagram | **"배터리를 키우면? 로봇이 무거워진다"** | "배터리를 키우면 오래 가긴 하는데, 로봇이 무거워지고 그만큼 더 많은 힘을 써야 합니다. 그래서 '가볍고 오래가는' 배터리가 핵심 숙제입니다." |
+| **0:28–0:40 (Who's working on it)** | Cylindrical battery cell production line (generic/AI) | **"테슬라도, 보스턴 다이내믹스도 이 문제와 씨름 중"** | "테슬라 옵티머스도, 현대차가 공개한 영상 속 아틀라스도 결국 이 배터리 문제와 씨름하고 있습니다." |
+| **0:40–0:50 (K-battery angle)** | Korean battery cell manufacturing line (generic/AI) | **"그래서 한국 배터리 기업들도 로봇을 보고 있다"** | "그래서 LG에너지솔루션, 삼성SDI 같은 한국 배터리 기업들도 로봇용 차세대 배터리 개발에 뛰어들고 있습니다." |
+| **0:50–0:60 (CTA)** | Robot + human hand silhouette, subscribe graphic | **"로봇 배터리 전쟁, 한국이 이길까요?"** | "로봇이 공장에서 진짜로 쓰이려면 배터리부터 풀려야 합니다. 여러분 생각은 어떠세요? 댓글로 남겨주시고, 아빠모해TV 구독 부탁드립니다." |
+
+**Explicitly removed from script:** "3분 교체," "40% 효율 향상," "LG엔솔 독점 공급," "현대차 생산라인 실전 투입," any specific hour-count, Unitree mAh spec, CATL Wh/kg number, 이재용 회장 mention.
+
+---
+
+## (3) SCENE-BY-SCENE VISUAL INSTRUCTIONS
+
+| Scene | Shot type | Direction notes |
 |---|---|---|
-| ✅ 방송 가능 FACT | 보스턴 다이내믹스 전기식 아틀라스 2024년 4월 공개 / 현대차그룹이 보스턴다이내믹스 지분 인수(2021)·테슬라 옵티머스 Gen2 2023년 12월 공개 / Figure AI–BMW 협업 공식 발표(2024) | 그대로 사용 |
-| ⚠️ 보도는 있으나 2026년 현재 유효성 미확인 | 현대차 공장 아틀라스 "시범 운영", Agility Digit의 "Amazon 물류센터" 투입(= GXO 파트너십과 혼동 가능성 있음, 사명 정확히 구분 필요) | 언급하되 "~로 보도됨", "시범 단계" 수준 헤지. **발행 전 최신 뉴스 재검색 필수** |
-| ❌ 방송 금지(미검증 수치) | 배터리 교체 3분 / 옵티머스 3세대 효율 40% / Gen2 2.3kWh·4~8시간 / Figure 02 5시간·50% 밀도향상 / Atlas 1~2시간 / Digit 1.5~2시간 | **스크립트에서 전부 삭제.** 1차 출처(공식 발표·실적자료) 재확인 없이는 쓰지 않음 |
-| ❌ 과장된 인과관계 | "LG에너지솔루션이 휴머노이드 배터리 핵심 공급자" | "특정 공급계약 공식 확인 없음"으로 수정, 시장 기회 서술로 전환 |
-
-### 저작권/브랜드 리스크 (신규 플래그 — Gemini 리포트에 없던 항목)
-1. 보스턴 다이내믹스·테슬라·현대차 **공식 시연 영상을 그대로 캡처해 B-roll로 쓰면 저작권 침해 소지.** 짧은 발췌+출처자막(뉴스해설/인용 목적) 조건부 사용만 권장, 가급적 AI 생성 이미지/제네릭 스톡으로 대체.
-2. AI 이미지 생성 시 **실제 로고(테슬라, 현대, BD 로고)가 그대로 나오지 않도록 프롬프트에서 명시적으로 배제**("no logos, no brand marks, generic design").
-3. 일론 머스크 등 **실존 인물 얼굴/초상 사용 지양** — 제품(로봇) 중심 비주얼만 사용.
-4. 투자 권유 소지 표현 전면 금지: "~주가", "~사라/팔아라", "수혜주" 류 표현 스크립트·설명란·썸네일 어디에도 사용 안 함.
+| 1 (Hook) | Macro/close-up, slow push-in | Avoid showing a specific brand logo in a way that implies endorsement; keep generic-looking humanoid robot or heavily stylized AI render |
+| 2 (Problem) | Medium shot, robot static at dock | Red/amber color grading cue on battery icon overlay to signal "problem" |
+| 3 (Why hard) | 2D motion graphic | Simple animated seesaw: weight ↑ vs. runtime ↕; keep it diagrammatic, not robot-brand-specific |
+| 4 (Who's working) | Split-screen or quick cut | If using real Tesla/Boston Dynamics footage, must be sourced from their **official public channel** and used in a commentary/news context (see Section 4 legal note) — otherwise substitute AI-generated equivalent |
+| 5 (K-battery) | Industrial b-roll, cylindrical cells on conveyor | Do not show any specific company's factory floor unless footage is confirmed to be official/licensed |
+| 6 (CTA) | Robot turning toward camera + subscribe sticker | Standard channel outro template |
 
 ---
 
-## 1. 수정된 제작 기획안 (Corrected Production Plan)
+## (4) B-ROLL / REAL-vs-AI LIST (with legal risk flags)
 
-**영상 메시지(변경 없음, 확정):** "휴머노이드 로봇이 공장에 들어가려면 배터리(작동 시간·교체·안전)가 먼저 풀려야 한다"
+| Scene | Real footage option | Risk | Recommended | AI-generation prompt (EN) |
+|---|---|---|---|---|
+| Hook | Pexels generic `humanoid robot factory working` | Low (generic stock, no brand) | ✅ Use Pexels | — |
+| Problem | Pexels `robot charging dock` | Low | ✅ Use Pexels | — |
+| Why-hard | None needed (motion graphic) | — | Build in After Effects/Canva | — |
+| Who's working (Tesla/BD footage) | Official Tesla AI Day / Boston Dynamics YouTube clips | **MEDIUM-HIGH** — commentary/news "fair use" is a defensible but not guaranteed position on YouTube's Content ID; short-form reposting of branded demo footage can trigger claims or takedowns | ⚠️ Prefer AI-generated generic robot instead of ripping actual branded clips, OR use only brief (<3s), clearly transformative, commentary-framed clips with on-screen attribution ("영상: Boston Dynamics 공식 채널") | `A sleek futuristic humanoid robot arm placing a mechanical part into a tray, factory setting, cinematic lighting, hyper-realistic, 8k --ar 9:16` |
+| K-battery | Pexels `battery cell production line` | Low (generic) | ✅ Use Pexels/stock | `Cylindrical lithium battery cells on an automated production line, blue industrial lighting, macro shot, photorealistic --ar 9:16` |
+| CTA | Pexels generic robot + in-house subscribe template | Low | ✅ | — |
 
-**구조:** 문제(오래 못 움직인다) → 해법(교체 방식/고밀도 셀) → 누가 이기나(글로벌 vs 한국, 단정 금지·기회로 서술)
-
-**언어 원칙(전 영상 공통 적용)**
-- 숫자는 "범위/정성적 표현"만 사용 (예: "몇 시간이면 방전", "교체 기술이 핵심 승부처")
-- 모든 기업 서술은 "~로 알려졐다", "~시범 운영 중", "~업계는 보고 있다" 톤 유지
-- 결론부 "한국이 이긴다"로 단정하지 않고 질문형으로 열어둠 (CTA와 결합)
-
-**발행 전 게이트:** 아래 "9. 최종 QC 체크리스트"의 검증 항목이 모두 체크되기 전에는 업로드 금지.
-
-**롱폼 아웃라인 수정 포인트(Gemini안 대비)**
-- 2장(기술 한계)·3장(빅테크 전략)에서 구체 스펙 수치 전부 제거, "업계 보도/테스트 결과로 알려진 범위" 식 자막 처리 + 화면 하단에 "수치 미확정, 공식 자료 기준 아님" 고지 배너 삽입
-- 4장 "한국 배터리 블루오션"은 "공식 공급계약 확인 안 됨" 자막 1회 고정 노출
-- 그 외 구조(도입-한계-전략-기회-리스크-결론)는 Gemini안 유지
+**Legal note (new — not addressed by Gemini):** Do **not** caption any AI-generated image/video as if it were real Tesla/Boston Dynamics/Figure footage — this is a trust and potential platform-policy risk (synthetic media disclosure). Label AI scenes internally and, where they could be mistaken for real brand footage, add a small "AI 이미지" watermark/caption per platform guidance.
 
 ---
 
-## 2. 최종 대본 (YouTube Shorts / Reels / TikTok, 9:16, 약 50초)
+## (5) GRAPHICS SPECS
 
-> 톤: 신뢰감 있는 뉴스 해설. 숫자 과장 없음. 투자 권유 없음.
-
-**[S1] 0:00–0:03 — HOOK**
-> "백만 대군처럼 보이는 저 로봇들, 사실 오래 못 버팁니다."
-
-**[S2] 0:03–0:10**
-> "걷고, 들고, 춤까지 추지만 — 배터리가 떨어지면 그냥 멈춰 서는 비싼 고철이 됩니다. 로봇 업계가 지금 가장 머리 싸매는 문제, 바로 배터리입니다."
-
-**[S3] 0:10–0:20**
-> "그래서 두 가지 기술이 승부처로 떠올랐습니다. 하나는 '오래 가는 고밀도 배터리', 하나는 '멈추지 않고 빠르게 교체하거나 충전하는 기술'입니다."
-
-**[S4] 0:20–0:30**
-> "현대차는 보스턴다이내믹스의 아틀라스를 공장에서 시범 운영 중이고, 테슬라는 옵티머스에 자체 배터리 기술을 넣고 있습니다. 둘 다 아직 '양산 완전 투입'이 아니라 테스트 단계입니다."
-
-**[S5] 0:30–0:40**
-> "이 싸움에서 한국 배터리 기업들에도 기회가 보입니다. 전기차에 쓰던 고밀도 원통형 배터리 기술을, 로봇에도 적용하려는 움직임이 커지고 있거든요. 다만 특정 로봇 회사와의 공식 공급 계약이 확인된 건 아직 없습니다."
-
-**[S6] 0:40–0:47 — CTA**
-> "전기차 다음은 로봇, 로봇의 심장도 결국 배터리입니다. 더 깊은 테크 분석, 구독하고 받아보세요."
-
-**[S7 자막 전용] 0:47–0:50**
-> 댓글 질문: "로봇 배터리, 한국이 이길까요?"
-
-(내레이션 총 글자수/속도 기준 50초 내외로 조정됨. 실제 녹음 후 ±3초 싱크 조정 필요)
+- **Safe zone:** keep all text within center 1080×1520px of 1080×1920 canvas (top/bottom 200px reserved for platform UI).
+- **Font:** bold sans-serif (e.g., Pretendard Bold) for captions, min 60px height for mobile legibility.
+- **Color system:** Red/amber = problem state (battery low), Blue = tech/solution state, Gold accent = Korea/K-battery segment.
+- **Lower-third disclaimer tag** (required, small, bottom-left, all scenes referencing company claims): `"기업 공개 자료 기준 · 세부 수치 확인 필요"` — 2026-03-10 semi-transparent, 70% opacity, 28px.
+- **Animated battery icon**: drains left→right in Problem scene; fills with blue "cell" pattern in K-battery scene.
+- **End card**: channel logo + subscribe button + comment prompt text baked in, 3s hold.
 
 ---
 
-## 3. 장면별 비주얼 디렉션
-
-| 씬 | 타임 | 카메라/연출 지시 | 화면 텍스트 |
-|---|---|---|---|
-| S1 | 0:00–0:03 | 로봇이 서 있다가 가슴 인디케이터가 빨갛게 점멸, 정지모션으로 긴장감 | "세계 최강 로봇의 약점?" |
-| S2 | 0:03–0:10 | 로봇 보행/적재 동작 몽타주 → 갑자기 블랙아웃 전환 | "작동 시간, 생각보다 짧다" |
-| S3 | 0:10–0:20 | 분할 화면: ① 배터리 셀 클로즈업 ② 로봇 뒷면 교체 포트 그래픽 | "① 고밀도 배터리  ② 초고속 교체" |
-| S4 | 0:20–0:30 | 자동차 공장 라인 + 로봇 협업 실루엣 (로고 없는 제네릭 디자인) | "시범 운영 중 (양산 아님)" |
-| S5 | 0:30–0:40 | 원통형 배터리 셀 대량 생산 컨베이어 | "한국 배터리, 기회는 있다 (공식 계약 미확인)" |
-| S6 | 0:40–0:47 | 구독 버튼 UI 오버레이 | "구독하고 테크 트렌드 받기" |
-| S7 | 0:47–0:50 | 댓글창 UI 오버레이 | "로봇 배터리, 한국이 이길까요?" |
-
----
-
-## 4. B-roll(실사) vs AI 생성 구분 리스트
-
-| 씬 | 실사 Pexels 키워드 (영문) | AI 생성 프롬프트 (영문) | 사용 권장 |
-|---|---|---|---|
-| S1 | `humanoid robot warehouse`, `robot standing factory` | "A generic sleek humanoid robot standing in a factory, chest indicator light blinking red, no visible brand logos, cinematic lighting, photorealistic, 9:16" | **AI 권장** (실제 BD/테슬라 영상 캡처 금지, 저작권) |
-| S2 | `robot arm warehouse`, `automated logistics robot` | "A generic white humanoid robot lifting a box then powering off, dramatic lighting, no logos, photorealistic, 9:16" | **AI 권장** |
-| S3 | `cylindrical battery cells`, `lithium battery manufacturing` | "Close-up of cylindrical battery cells glowing blue, futuristic clean room, no brand text, 9:16" | **실사 가능** (Pexels generic battery footage 안전) |
-| S4 | `car assembly line robot`, `automated car factory` | "Humanoid robot collaborating with workers on a generic car assembly line, no visible car brand logos, natural light, 9:16" | **AI 권장** (현대차 로고/실제 공장 영상 저작권 리스크 → 제네릭 처리) |
-| S5 | `battery cell production line`, `automated conveyor belt factory` | "Millions of metallic cylindrical battery cells on conveyor belt, clean industrial environment, 8k, 9:16" | **실사 가능** |
-| S6 | `subscribe button phone`, `youtube app smartphone` | "Minimalist UI overlay of subscribe button press, futuristic background, 9:16" | **실사/그래픽 혼합** |
-| S7 | `typing comment smartphone` | "Comment box UI overlay, clean minimal design, 9:16" | **그래픽 자체 제작 권장** |
-
-> **원칙:** 특정 기업의 실제 발표 영상은 "인용 보도" 목적 외 B-roll로 가공 사용하지 않음. 전부 제네릭/논브랜드 AI 생성 또는 범용 스톡으로 대체.
-
----
-
-## 5. 그래픽 스펙
-
-- **폰트:** 자막 — Pretendard Bold (한글), 가독성 최우선, 외곽선 3px 블랙 + 흰색 채움
-- **색상 팔레트:** 메인 블루(#1E6FFF, 테크 신뢰감) + 경고 레드(#FF3B30, 방전/리스크 강조) + 배경 다크네이비(#0B1021)
-- **하단 고지 배너(필수):** S4, S5 구간에 작게 고정 자막 — "수치·계약 관계는 공식 확인 전, 보도 기준" (12pt, 화면 하단 10% 영역)
-- **로고/워터마크:** 채널 로고 우상단 고정, 투명도 70%
-- **차트(롱폼용):** 작동시간 비교는 "약 X~Y시간" 형태의 **범위 막대그래프**만 사용(점추정 수치 금지), 출처 미확정 항목은 반드시 "비공식 추정" 라벨 부착
-
----
-
-## 6. SRT 초안 (Shorts, 한국어)
+## (6) SRT DRAFT
 
 ```
 1
 00:00:00,000 --> 00:00:03,000
-백만 대군처럼 보이는 저 로봇들, 사실 오래 못 버팁니다.
+로봇은 똑똑해졌다. 근데 하나가 안 풀렸다.
 
 2
-00:00:03,000 --> 00:00:10,000
-걷고, 들고, 춤까지 추지만 배터리가 떨어지면
-그냥 멈춰 서는 비싼 고철이 됩니다.
+00:00:03,000 --> 00:00:08,000
+휴머노이드 로봇, 한 번 충전으로 오래 못 버팁니다.
 
 3
-00:00:10,000 --> 00:00:20,000
-그래서 지금 승부처는 두 가지,
-오래가는 고밀도 배터리와 빠른 교체·충전 기술입니다.
+00:00:08,000 --> 00:00:15,000
+그리고 배터리를 가볍게 빨리 바꾸는 것도 아직 숙제입니다.
 
 4
-00:00:20,000 --> 00:00:30,000
-현대차는 아틀라스를 공장에서 시범 운영 중이고
-테슬라도 자체 배터리 기술을 옵티머스에 넣고 있습니다.
-아직 둘 다 테스트 단계입니다.
+00:00:15,000 --> 00:00:21,000
+배터리를 키우면 오래 가긴 하는데, 로봇이 무거워집니다.
 
 5
-00:00:30,000 --> 00:00:40,000
-한국 배터리 기업들에게도 기회가 보입니다.
-다만 특정 로봇 회사와의 공식 공급 계약은
-아직 확인된 바 없습니다.
+00:00:21,000 --> 00:00:28,000
+그래서 '가볍고 오래가는' 배터리가 핵심 숙제입니다.
 
 6
-00:00:40,000 --> 00:00:47,000
-전기차 다음은 로봇, 로봇의 심장도 결국 배터리입니다.
-더 깊은 분석, 구독하고 받아보세요.
+00:00:28,000 --> 00:00:34,000
+테슬라 옵티머스도, 현대차가 공개한 영상 속 아틀라스도
 
 7
-00:00:47,000 --> 00:00:50,000
-댓글로 남겨주세요: 로봇 배터리, 한국이 이길까요?
+00:00:34,000 --> 00:00:40,000
+결국 이 배터리 문제와 씨름하고 있습니다.
+
+8
+00:00:40,000 --> 00:00:45,000
+그래서 LG에너지솔루션, 삼성SDI 같은
+
+9
+00:00:45,000 --> 00:00:50,000
+한국 배터리 기업들도 로봇용 차세대 배터리 개발에 뛰어들고 있습니다.
+
+10
+00:00:50,000 --> 00:00:55,000
+로봇이 공장에서 진짜로 쓰이려면 배터리부터 풀려야 합니다.
+
+11
+00:00:55,000 --> 00:01:00,000
+여러분 생각은요? 댓글 남기고, 아빠모해TV 구독해주세요.
 ```
 
 ---
 
-## 7. 썸네일 / 타이틀 옵션
+## (7) THUMBNAIL / TITLE OPTIONS
 
-**타이틀 후보 (투자 권유 뉘앙스 없음 확인):**
-1. "로봇이 멈추는 진짜 이유 — 배터리였다"
-2. "휴머노이드 로봇의 약점, 아무도 말 안 해준 이것"
-3. "전기차 다음은 로봇, 승부는 배터리가 가른다"
+**Titles (no overclaim, no ticker/투자 언어):**
+1. "로봇이 못 버티는 이유, 아무도 말 안 해주는 약점"
+2. "테슬라·현대차 로봇의 숨겨진 숙제, 배터리"
+3. "휴머노이드 로봇 전쟁, 진짜 승부처는 배터리였다"
 
-**썸네일 문구 후보:**
-- "로봇도 방전되면 고철?"
-- "로봇 시대, 진짜 승부처는 배터리"
-
-**썸네일 비주얼:** AI 생성 제네릭 휴머노이드 로봇(로고 없음) + 적색 배터리 경고 아이콘, 배경 다크블루
-
----
-
-## 8. 영상 설명(Description)
-
-```
-휴머노이드 로봇이 화려하게 걷고 뛰는 영상 뒤에는
-"배터리"라는 숨은 과제가 있습니다.
-
-로봇이 실제 공장에 들어가려면
-① 오래 가는 고밀도 배터리
-② 멈추지 않는 빠른 교체·충전 기술
-이 두 가지가 먼저 풀려야 합니다.
-
-현대차·테슬라 등 글로벌 기업들은 아직 '시범 운영' 단계이며,
-한국 배터리 기업들에게도 새로운 기회가 열리고 있습니다.
-(※ 특정 기업 간 공식 공급 계약은 아직 확인되지 않았습니다.)
-
-댓글로 알려주세요: 로봇 배터리, 한국이 이길까요?
-
-※ 본 영상은 보도된 정보를 바탕으로 한 뉴스 해설이며,
-특정 종목 매수/매도를 권유하지 않습니다. 투자 판단은 본인 책임입니다.
-
-#로봇 #휴머노이드로봇 #배터리 #2차전지 #테슬라옵티머스 #아틀라스 #LG에너지솔루션 #삼성SDI #로봇산업 #테크뉴스
-```
-
----
-
-## 9. 최종 QC 체크리스트 (발행 게이트 — 전부 체크 전 업로드 금지)
-
-**사실관계**
-- [ ] "아틀라스 자동 배터리 교체" 관련 문구 전부 삭제 확인
-- [ ] "교체 3분" 수치 전부 삭제 확인
-- [ ] "옵티머스 3세대 효율 40%" 수치 전부 삭제 확인
-- [ ] "LG에너지솔루션 = 핵심 공급자" 단정 문구 → "공식 계약 미확인" 고지로 치환 확인
-- [ ] 현대차 공장 관련 서술이 "시범 운영"으로만 표기되고 "정식 투입/양산"으로 과장되지 않았는지 확인
-- [ ] Agility Digit "Amazon vs GXO" 파트너사명 재검색 후 정확한 명칭으로 수정했는지 확인
-- [ ] 영상 내 모든 구체 수치(시간/kWh/%)가 "범위+보도 기준" 형태인지, 점추정 수치로 단정하지 않았는지 확인
-
-**법적/저작권**
-- [ ] 실제 기업 공식 시연 영상을 가공 없이 B-roll로 사용하지 않았는지 확인
-- [ ] AI 생성 이미지에 실제 브랜드 로고/워드마크가 노출되지 않았는지 확인
-- [ ] 실존 인물(머스크 등) 초상 미사용 확인
-
-**투자 권유 리스크**
-- [ ] "사라/팔아라/수혜주" 등 표현 전체 영상·설명란에서 0건 확인
-- [ ] 설명란 투자 면책 문구 포함 확인
-
-**포맷**
-- [ ] 쇼츠 러닝타임 45~60초 준수
-- [ ] 훅(0~3초)에 미검증 숫자 없음 확인
-- [ ] 자막/음성 싱크, 하단 고지 배너 노출 확인
-
-**발행 보류 조건**
-- [ ] 위 "사실관계" 항목 중 하나라도 **실제 웹 재검색으로 교차 확인되지 않은 경우, 해당 문장은 영상에서 제외**하고 정성적 서술로 대체할 것.
+**Thumbnail concepts:**
+- A) Robot silhouette + large red battery-low icon + text "못 버틴다?"
+- B) Split image: robot (left) / battery cell macro shot (right), bold text "진
