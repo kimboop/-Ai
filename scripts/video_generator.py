@@ -53,6 +53,16 @@ GOLD_ACCENT = (212, 175, 55, 255)
 TITLE_PANEL = (30, 41, 59, 240)
 TITLE_BORDER = (255, 255, 255, 100)
 
+# Pixabay(Cloudflare 뒤에 있음)는 urllib의 기본 User-Agent("Python-urllib/3.x")를
+# 차단한다 — 같은 GitHub Actions 러너에서 똑같은 키·엔드포인트로 curl(기본 UA든
+# 브라우저 UA든)은 200이 오는데 urllib 기본 UA만 403이 나는 걸 직접 확인했다.
+# IP 차단이나 키 문제가 아니라 순수 UA 기반 WAF 룰이라, 모든 Pixabay 요청에
+# 브라우저 UA를 달아서 우회한다.
+DEFAULT_HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                   "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+}
+
 
 # --------------------------------------------------------------------------
 # Retry helper (orchestrator/ai_collaboration.py의 post()와 동일한 429/503
@@ -74,7 +84,7 @@ def _redact_url(url: str) -> str:
 
 
 def get_json_with_retry(url: str, headers: dict, retries: int = 4, backoff: int = 10) -> dict:
-    req = urllib.request.Request(url, headers=headers, method="GET")
+    req = urllib.request.Request(url, headers={**DEFAULT_HEADERS, **headers}, method="GET")
     for attempt in range(retries):
         try:
             with urllib.request.urlopen(req, timeout=30) as resp:
@@ -91,9 +101,10 @@ def get_json_with_retry(url: str, headers: dict, retries: int = 4, backoff: int 
 
 
 def download_with_retry(url: str, dest: Path, retries: int = 4, backoff: int = 10) -> Path:
+    req = urllib.request.Request(url, headers=DEFAULT_HEADERS, method="GET")
     for attempt in range(retries):
         try:
-            with urllib.request.urlopen(url, timeout=120) as resp:
+            with urllib.request.urlopen(req, timeout=120) as resp:
                 dest.write_bytes(resp.read())
             return dest
         except (urllib.error.URLError, TimeoutError) as e:
@@ -222,7 +233,7 @@ def fetch_background_clip(query: str, scene_duration: float, api_key: str, cache
             if code in (400, 401, 403):
                 LOG.warning(
                     "Pixabay fetch failed for query %r: %s — this looks like an "
-                    "auth rejection, not a transient error. Check that "
+                    "auth/WAF rejection, not a transient error. Check that "
                     "PIXABAY_API_KEY is a valid key from "
                     "https://pixabay.com/api/docs/ with no extra whitespace "
                     "(every scene will fail identically until this is fixed).",
