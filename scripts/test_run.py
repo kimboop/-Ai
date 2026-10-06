@@ -10,7 +10,7 @@ API 키는 절대 이 파일에 하드코딩하지 않는다 — CLAUDE.md의 "A
 채팅/커밋에 붙여넣지 않기" 규칙과 동일하게, 환경변수로만 받는다.
 
 Usage:
-    PEXELS_API_KEY=... python scripts/test_run.py
+    PIXABAY_API_KEY=... python scripts/test_run.py
 """
 import logging
 import os
@@ -23,8 +23,8 @@ import video_generator as vg  # noqa: E402
 SAMPLE_EPISODE = {
     "title": "테스트 리포트",
     "scenes": [
-        {"script": "테스트 첫 번째 문장입니다.", "pexels_query": "city night vertical"},
-        {"script": "테스트 두 번째 문장입니다.", "pexels_query": "ocean waves vertical"},
+        {"script": "테스트 첫 번째 문장입니다.", "broll_query": "city night vertical"},
+        {"script": "테스트 두 번째 문장입니다.", "broll_query": "ocean waves vertical"},
     ],
 }
 
@@ -33,9 +33,9 @@ def main() -> int:
     logging.basicConfig(level="INFO", format="%(asctime)s %(levelname)s %(message)s")
     log = logging.getLogger("test_run")
 
-    pexels_key = os.environ.get("PEXELS_API_KEY")
-    if not pexels_key:
-        log.error("Missing PEXELS_API_KEY env var. Run: PEXELS_API_KEY=... python scripts/test_run.py")
+    pixabay_key = os.environ.get("PIXABAY_API_KEY")
+    if not pixabay_key:
+        log.error("Missing PIXABAY_API_KEY env var. Run: PIXABAY_API_KEY=... python scripts/test_run.py")
         return 1
 
     problems = vg.check_environment()
@@ -49,7 +49,7 @@ def main() -> int:
 
     try:
         vg.generate_premium_shorts(
-            SAMPLE_EPISODE, pexels_key, voice=os.environ.get("SHORTS_TTS_VOICE", "ko-KR-SunHiNeural"),
+            SAMPLE_EPISODE, pixabay_key, voice=os.environ.get("SHORTS_TTS_VOICE", "ko-KR-SunHiNeural"),
             output_path=output, work_dir=work_dir, resume=True,
             fps=24, preset="ultrafast", threads=os.cpu_count() or 2,
         )

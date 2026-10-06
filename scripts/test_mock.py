@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Pexels/Edge-TTS 네트워크 호출을 모킹한 단위 테스트.
+"""Pixabay/Edge-TTS 네트워크 호출을 모킹한 단위 테스트.
 
-이 샌드박스처럼 외부 네트워크(Pexels API, Edge-TTS 웹소켓)가 막힌 환경에서도
+이 샌드박스처럼 외부 네트워크(Pixabay API, Edge-TTS 웹소켓)가 막힌 환경에서도
 자막 카드·타이틀 카드 렌더링, 배경 크롭/루프, 캐싱·재시도 경계, 최종 합성
-구조가 깨지지 않는지 확인하는 용도다. 실제 Pexels/edge-tts 호출이 라이브로
+구조가 깨지지 않는지 확인하는 용도다. 실제 Pixabay/edge-tts 호출이 라이브로
 도는지는 여기서 검증하지 않는다 — 그건 네트워크 제약이 없는 환경에서
 scripts/test_run.py로 확인한다 (README의 "실가동 검증" 절 참고).
 
@@ -36,7 +36,7 @@ _needs_media_deps = unittest.skipUnless(
 
 
 def _make_fake_video(path: Path, duration: float = 0.5, size: tuple = (640, 360), fps: int = 10) -> None:
-    """Pexels 다운로드 대신 로컬에서 즉시 만드는 자리표시자 클립."""
+    """Pixabay 다운로드 대신 로컬에서 즉시 만드는 자리표시자 클립."""
     ColorClip(size=size, color=(40, 80, 120)).with_duration(duration).write_videofile(
         str(path), fps=fps, codec="libx264", audio=False, preset="ultrafast", logger=None,
     )
@@ -50,25 +50,25 @@ def _make_fake_audio(path: Path, duration: float = 1.0) -> None:
 # --------------------------------------------------------------------------
 # 순수 로직 — moviepy/네트워크 없이 바로 검증 가능
 # --------------------------------------------------------------------------
-class PickVideoFileTests(unittest.TestCase):
-    def test_prefers_portrait_closest_to_1080(self):
-        files = [
-            {"width": 1920, "height": 1080, "link": "landscape"},
-            {"width": 720, "height": 1280, "link": "portrait-small"},
-            {"width": 1080, "height": 1920, "link": "portrait-exact"},
-        ]
-        self.assertEqual(vg.pick_video_file(files), "portrait-exact")
+class PickPixabayVideoFileTests(unittest.TestCase):
+    def test_prefers_medium_quality(self):
+        videos = {
+            "large": {"url": "large-url", "width": 1920, "height": 1080},
+            "medium": {"url": "medium-url", "width": 1280, "height": 720},
+            "small": {"url": "small-url", "width": 960, "height": 540},
+        }
+        self.assertEqual(vg.pick_pixabay_video_file(videos), "medium-url")
 
-    def test_falls_back_to_any_file_when_no_portrait(self):
-        files = [{"width": 1920, "height": 1080, "link": "only-option"}]
-        self.assertEqual(vg.pick_video_file(files), "only-option")
+    def test_falls_back_to_large_when_no_medium(self):
+        videos = {"large": {"url": "only-option", "width": 1920, "height": 1080}}
+        self.assertEqual(vg.pick_pixabay_video_file(videos), "only-option")
 
-    def test_raises_on_empty_video_files(self):
-        # Pexels can return a video entry with no encodes yet (still transcoding);
-        # this must raise so the caller's except-block triggers the ColorClip
-        # fallback, instead of an unhandled IndexError.
+    def test_raises_on_empty_videos(self):
+        # Pixabay can in principle return a hit with no renditions; this must
+        # raise so the caller's except-block triggers the ColorClip fallback,
+        # instead of an unhandled KeyError/IndexError.
         with self.assertRaises(ValueError):
-            vg.pick_video_file([])
+            vg.pick_pixabay_video_file({})
 
 
 class ValidateEpisodeTests(unittest.TestCase):
@@ -149,7 +149,7 @@ class CropToAspectRatioTests(unittest.TestCase):
 
 
 # --------------------------------------------------------------------------
-# Pexels 검색/다운로드를 모킹 — 캐싱·재시도 경계 안쪽 로직만 검증
+# Pixabay 검색/다운로드를 모킹 — 캐싱·재시도 경계 안쪽 로직만 검증
 # --------------------------------------------------------------------------
 @_needs_media_deps
 class FetchBackgroundClipMockedTests(unittest.TestCase):
@@ -164,24 +164,24 @@ class FetchBackgroundClipMockedTests(unittest.TestCase):
     @patch("video_generator.get_json_with_retry")
     def test_downloads_once_and_reuses_cache(self, mock_search, mock_download):
         mock_search.return_value = {
-            "videos": [{"video_files": [{"width": 1080, "height": 1920, "link": "https://example/fake.mp4"}]}]
+            "hits": [{"videos": {"medium": {"url": "https://example/fake.mp4", "width": 1280, "height": 720}}}]
         }
         mock_download.side_effect = lambda url, dest, **kw: _make_fake_video(dest) or dest
 
-        clip1 = vg.fetch_background_clip("city night vertical", 0.3, {"Authorization": "x"}, self.cache_dir)
+        clip1 = vg.fetch_background_clip("city night vertical", 0.3, "fake-api-key", self.cache_dir)
         self.assertIsNotNone(clip1)
         self.assertEqual(mock_search.call_count, 1)
         self.assertEqual(mock_download.call_count, 1)
 
-        clip2 = vg.fetch_background_clip("city night vertical", 0.3, {"Authorization": "x"}, self.cache_dir)
+        clip2 = vg.fetch_background_clip("city night vertical", 0.3, "fake-api-key", self.cache_dir)
         self.assertIsNotNone(clip2)
-        self.assertEqual(mock_search.call_count, 1, "캐시가 있으면 Pexels 검색을 다시 호출하면 안 된다")
+        self.assertEqual(mock_search.call_count, 1, "캐시가 있으면 Pixabay 검색을 다시 호출하면 안 된다")
         self.assertEqual(mock_download.call_count, 1, "캐시가 있으면 다시 다운로드하면 안 된다")
 
     @patch("video_generator.get_json_with_retry")
     def test_no_results_falls_back_to_none(self, mock_search):
-        mock_search.return_value = {"videos": []}
-        clip = vg.fetch_background_clip("nonexistent query xyz", 0.3, {"Authorization": "x"}, self.cache_dir)
+        mock_search.return_value = {"hits": []}
+        clip = vg.fetch_background_clip("nonexistent query xyz", 0.3, "fake-api-key", self.cache_dir)
         self.assertIsNone(clip)  # 호출자가 ColorClip으로 대체해야 함
 
     @patch("video_generator.get_json_with_retry")
@@ -191,15 +191,25 @@ class FetchBackgroundClipMockedTests(unittest.TestCase):
         # http.client.InvalidURL을 던졌다 — 모든 씬이 조용히 ColorClip으로만
         # 대체되던 버그. get_json_with_retry에 실제로 넘어가는 URL을 검사해서
         # 재발을 막는다.
-        mock_search.return_value = {"videos": []}
-        vg.fetch_background_clip("도시 야경 vertical", 0.3, {"Authorization": "x"}, self.cache_dir)
+        mock_search.return_value = {"hits": []}
+        vg.fetch_background_clip("도시 야경 vertical", 0.3, "fake-api-key", self.cache_dir)
         called_url = mock_search.call_args[0][0]
         self.assertNotIn(" ", called_url)
         self.assertIn("%20", called_url)
 
+    @patch("video_generator.get_json_with_retry")
+    def test_api_key_is_not_logged_in_retry_warnings(self, mock_search):
+        # Pixabay 키는 Authorization 헤더가 아니라 URL 쿼리파라미터(?key=...)로
+        # 들어가므로, 재시도/에러 로그에 그대로 찍히면 키가 노출된다.
+        # _redact_url()이 실제로 가리는지 확인한다.
+        url = "https://pixabay.com/api/videos/?key=super-secret-key&q=cats"
+        redacted = vg._redact_url(url)
+        self.assertNotIn("super-secret-key", redacted)
+        self.assertIn("key=%2A%2A%2A", redacted)
+
 
 # --------------------------------------------------------------------------
-# 전체 파이프라인 — Pexels/Edge-TTS를 모킹해서 합성·인코딩 구조를 검증
+# 전체 파이프라인 — Pixabay/Edge-TTS를 모킹해서 합성·인코딩 구조를 검증
 # --------------------------------------------------------------------------
 @_needs_media_deps
 class GeneratePremiumShortsMockedTests(unittest.TestCase):
@@ -232,8 +242,8 @@ class GeneratePremiumShortsMockedTests(unittest.TestCase):
         episode = {
             "title": "모킹 테스트",
             "scenes": [
-                {"script": "첫 번째 테스트 문장", "pexels_query": "q1"},
-                {"script": "두 번째 테스트 문장", "pexels_query": "q2"},
+                {"script": "첫 번째 테스트 문장", "broll_query": "q1"},
+                {"script": "두 번째 테스트 문장", "broll_query": "q2"},
             ],
         }
         output = self.root / "out.mp4"
@@ -252,7 +262,7 @@ class GeneratePremiumShortsMockedTests(unittest.TestCase):
         mock_tts.side_effect = self._fake_tts
         mock_fetch_bg.side_effect = self._fake_bg
 
-        episode = {"title": "재실행 테스트", "scenes": [{"script": "동일한 문장", "pexels_query": "q1"}]}
+        episode = {"title": "재실행 테스트", "scenes": [{"script": "동일한 문장", "broll_query": "q1"}]}
         work_dir = self.root / "cache"
 
         vg.generate_premium_shorts(episode, "dummy-key", "ko-KR-SunHiNeural", self.root / "out1.mp4",

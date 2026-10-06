@@ -1,18 +1,24 @@
 #!/usr/bin/env python3
 """아빠모해TV 쇼츠 자동화 파이프라인 (Project AutoShorts).
 
-Pexels API에서 세로형 B-roll을 받아오고, Edge-TTS로 내레이션을 합성하고,
+Pixabay API에서 세로형 B-roll을 받아오고, Edge-TTS로 내레이션을 합성하고,
 MoviePy로 9:16 프리미엄 뉴스 쇼츠(제목 배지 + 자막 카드)를 렌더링한다.
 
-Input: {"title": str, "scenes": [{"script": str, "pexels_query": str}, ...]}
+원래는 Pexels을 썼는데, 대시보드에 보이는 키 값과 바이트 단위로 완전히
+일치하는데도 Pexels API가 계속 "Invalid API key"(401)로 거부해서(계정
+승인/활성화 쪽 문제로 보이며 우리 쪽에서 고칠 수 없음) Pixabay로 교체했다
+— 가입 즉시 키가 바로 활성화되는 경우가 대부분이라 이런 대기 없이 바로
+쓸 수 있다.
+
+Input: {"title": str, "scenes": [{"script": str, "broll_query": str}, ...]}
 형태의 JSON — orchestrator/ai_collaboration.py가 만드는 최종 프로덕션
 패키지의 대본/장면 지시를 구조화한 것. --init으로 샘플을 생성할 수 있다.
 
 설계 원칙 (CLAUDE.md "글로벌 톱 벤치마킹 기준" #1 — 프로덕션 레벨 아키텍처):
-  - 상태 유지: 내레이션 오디오와 씬별 Pexels 다운로드를 work-dir에 캐싱하고
+  - 상태 유지: 내레이션 오디오와 씬별 Pixabay 다운로드를 work-dir에 캐싱하고
     해시로 변경 여부를 판단한다. 재실행 시 이미 받은 자산은 재사용해서
-    (유료/쿼터 제한이 있는) Pexels·Edge-TTS 호출을 불필요하게 반복하지 않는다.
-  - 재시도: Pexels API 호출과 다운로드는 orchestrator/ai_collaboration.py의
+    (유료/쿼터 제한이 있는) Pixabay·Edge-TTS 호출을 불필요하게 반복하지 않는다.
+  - 재시도: Pixabay API 호출과 다운로드는 orchestrator/ai_collaboration.py의
     post()와 같은 429/503 지수 백오프(재시도 최대 4회) 로직을 공유한다.
   - 빠른 실패: 폰트·API 키가 없으면 렌더링을 시작하기 전에 명확한 에러로
     막는다 — 원본 프로토타입처럼 폰트를 못 찾았을 때 조용히 기본 비트맵
@@ -57,6 +63,16 @@ def _is_transient(e: Exception) -> bool:
     return code in (429, 503) or not isinstance(e, urllib.error.HTTPError)
 
 
+def _redact_url(url: str) -> str:
+    """로그에 찍기 전에 쿼리스트링의 key= 값을 가린다. Pexels은 Authorization
+    헤더로 키를 받았지만 Pixabay는 URL 쿼리파라미터(?key=...)로 받기 때문에,
+    재시도/에러 로그가 그대로 키를 노출시키지 않도록 막는 안전장치다."""
+    parsed = urllib.parse.urlsplit(url)
+    params = urllib.parse.parse_qsl(parsed.query, keep_blank_values=True)
+    redacted = [(k, "***" if k.lower() == "key" else v) for k, v in params]
+    return urllib.parse.urlunsplit(parsed._replace(query=urllib.parse.urlencode(redacted)))
+
+
 def get_json_with_retry(url: str, headers: dict, retries: int = 4, backoff: int = 10) -> dict:
     req = urllib.request.Request(url, headers=headers, method="GET")
     for attempt in range(retries):
@@ -67,11 +83,11 @@ def get_json_with_retry(url: str, headers: dict, retries: int = 4, backoff: int 
             if _is_transient(e) and attempt < retries - 1:
                 wait = backoff * (2 ** attempt)
                 LOG.warning("%s failed (%s), retrying in %ss (attempt %d/%d)",
-                            url, e, wait, attempt + 1, retries)
+                            _redact_url(url), e, wait, attempt + 1, retries)
                 time.sleep(wait)
                 continue
             raise
-    raise RuntimeError(f"Exhausted retries for {url}")
+    raise RuntimeError(f"Exhausted retries for {_redact_url(url)}")
 
 
 def download_with_retry(url: str, dest: Path, retries: int = 4, backoff: int = 10) -> Path:
@@ -169,19 +185,21 @@ def crop_to_aspect_ratio(clip, target_w: int = TARGET_SIZE[0], target_h: int = T
     return cropped.resized((target_w, target_h))
 
 
-def pick_video_file(video_files: list[dict]) -> str:
-    """세로 영상 중 1080폭에 가장 가까운 걸 고른다 — 원본은 video_files[0]을
-    그냥 썼는데, Pexels가 가로형/저해상도 파일을 0번으로 줄 때도 있다."""
-    if not video_files:
-        raise ValueError("Pexels returned a video with an empty video_files list")
-    portrait = [f for f in video_files if f.get("height", 0) >= f.get("width", 0)]
-    candidates = portrait or video_files
-    candidates = sorted(candidates, key=lambda f: abs(f.get("width", 0) - TARGET_SIZE[0]))
-    return candidates[0]["link"]
+def pick_pixabay_video_file(videos: dict) -> str:
+    """Pixabay가 주는 large/medium/small/tiny 해상도 중 하나를 고른다. 화질과
+    다운로드 용량의 균형을 위해 medium(보통 1280x720)을 우선한다 — 어차피
+    crop_to_aspect_ratio()가 9:16으로 크롭하므로 원본이 더 클 필요는 없다."""
+    if not videos:
+        raise ValueError("Pixabay returned a hit with no video renditions")
+    for quality in ("medium", "large", "small", "tiny"):
+        rendition = videos.get(quality)
+        if rendition and rendition.get("url"):
+            return rendition["url"]
+    raise ValueError("Pixabay video renditions had no usable url")
 
 
-def fetch_background_clip(query: str, scene_duration: float, headers: dict, cache_dir: Path):
-    """캐시에 없으면 Pexels에서 받아온다. 실패하면 None을 돌려주고 호출자가
+def fetch_background_clip(query: str, scene_duration: float, api_key: str, cache_dir: Path):
+    """캐시에 없으면 Pixabay에서 받아온다. 실패하면 None을 돌려주고 호출자가
     ColorClip 폴백을 쓴다 — 씬 하나가 비어도 전체 렌더링은 계속 진행한다."""
     from moviepy import VideoFileClip, vfx
 
@@ -189,28 +207,29 @@ def fetch_background_clip(query: str, scene_duration: float, headers: dict, cach
     cache_file = cache_dir / f"bg_{hashlib.sha256(query.encode()).hexdigest()[:16]}.mp4"
 
     if not cache_file.exists():
-        url = (f"https://api.pexels.com/videos/search?query={urllib.parse.quote(query)}"
-               "&orientation=portrait&per_page=3")
+        url = (f"https://pixabay.com/api/videos/?key={urllib.parse.quote(api_key)}"
+               f"&q={urllib.parse.quote(query)}&per_page=3&safesearch=true")
         try:
-            data = get_json_with_retry(url, headers)
-            videos = data.get("videos", [])
-            if not videos:
-                LOG.warning("Pexels returned no results for query %r", query)
+            data = get_json_with_retry(url, {})
+            hits = data.get("hits", [])
+            if not hits:
+                LOG.warning("Pixabay returned no results for query %r", query)
                 return None
-            link = pick_video_file(videos[0]["video_files"])
+            link = pick_pixabay_video_file(hits[0]["videos"])
             download_with_retry(link, cache_file)
         except Exception as e:  # noqa: BLE001 - network/API fallback boundary
             code = getattr(e, "code", None)
-            if code in (401, 403):
+            if code in (400, 401, 403):
                 LOG.warning(
-                    "Pexels fetch failed for query %r: %s — this is an auth "
-                    "rejection, not a transient error. Check that PEXELS_API_KEY "
-                    "is a valid key from https://www.pexels.com/api/ with no "
-                    "extra whitespace (every scene will fail identically until "
-                    "this is fixed).", query, e,
+                    "Pixabay fetch failed for query %r: %s — this looks like an "
+                    "auth rejection, not a transient error. Check that "
+                    "PIXABAY_API_KEY is a valid key from "
+                    "https://pixabay.com/api/docs/ with no extra whitespace "
+                    "(every scene will fail identically until this is fixed).",
+                    query, e,
                 )
             else:
-                LOG.warning("Pexels fetch failed for query %r: %s", query, e)
+                LOG.warning("Pixabay fetch failed for query %r: %s", query, e)
             return None
     else:
         LOG.info("Reusing cached B-roll for query %r", query)
@@ -263,8 +282,8 @@ def validate_episode(data: dict[str, Any]) -> None:
 SAMPLE_EPISODE = {
     "title": "글로벌 핵심 이슈 리포트",
     "scenes": [
-        {"script": "오늘의 첫 번째 소식입니다.", "pexels_query": "news studio vertical"},
-        {"script": "두 번째 소식으로 넘어가겠습니다.", "pexels_query": "city skyline night vertical"},
+        {"script": "오늘의 첫 번째 소식입니다.", "broll_query": "news studio vertical"},
+        {"script": "두 번째 소식으로 넘어가겠습니다.", "broll_query": "city skyline night vertical"},
     ],
 }
 
@@ -272,7 +291,7 @@ SAMPLE_EPISODE = {
 # --------------------------------------------------------------------------
 # 렌더링
 # --------------------------------------------------------------------------
-def generate_premium_shorts(episode: dict[str, Any], pexels_key: str, voice: str,
+def generate_premium_shorts(episode: dict[str, Any], pixabay_key: str, voice: str,
                              output_path: Path, work_dir: Path, resume: bool,
                              fps: int, preset: str, threads: int) -> None:
     import numpy as np
@@ -305,14 +324,13 @@ def generate_premium_shorts(episode: dict[str, Any], pexels_key: str, voice: str
     total_duration = audio_clip.duration
     scene_duration = total_duration / len(scenes)
 
-    headers = {"Authorization": pexels_key}
     downloads_dir = work_dir / "downloads"
     video_clips = []
     subtitle_clips = []
 
     for idx, scene in enumerate(scenes):
-        query = scene.get("pexels_query", "news background vertical")
-        clip = fetch_background_clip(query, scene_duration, headers, downloads_dir)
+        query = scene.get("broll_query", "news background vertical")
+        clip = fetch_background_clip(query, scene_duration, pixabay_key, downloads_dir)
         if clip is None:
             clip = ColorClip(size=TARGET_SIZE, color=(15, 23, 42)).with_duration(scene_duration)
         video_clips.append(clip)
@@ -422,18 +440,18 @@ def main() -> int:
         return 1
 
     # .strip(): a trailing newline/space from copy-pasting into a GitHub secret
-    # silently corrupts the Authorization header and Pexels returns a plain
-    # 403 with no hint that whitespace was the cause — cheap to guard against.
-    pexels_key = (os.environ.get("PEXELS_API_KEY") or "").strip()
-    if not pexels_key:
-        LOG.error("Missing PEXELS_API_KEY env var — see scripts/README.md#required-environment-variables")
+    # silently corrupts the ?key= query param and Pixabay returns a plain
+    # 400/401 with no hint that whitespace was the cause — cheap to guard against.
+    pixabay_key = (os.environ.get("PIXABAY_API_KEY") or "").strip()
+    if not pixabay_key:
+        LOG.error("Missing PIXABAY_API_KEY env var — see scripts/README.md#required-environment-variables")
         return 1
 
     output = args.output or (ROOT / "output" / f"{args.input.stem}.mp4")
     work_dir = args.work_dir or (ROOT / "output" / ".cache" / args.input.stem)
 
     try:
-        generate_premium_shorts(episode, pexels_key, args.voice, output, work_dir,
+        generate_premium_shorts(episode, pixabay_key, args.voice, output, work_dir,
                                  resume=not args.no_resume, fps=args.fps,
                                  preset=args.preset, threads=args.threads)
     except Exception as e:  # noqa: BLE001 - top-level command boundary

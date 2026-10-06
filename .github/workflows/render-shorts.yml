@@ -30,10 +30,10 @@ jobs:
       - name: Install Python dependencies
         run: pip install -r scripts/requirements.txt
 
-      - name: Check PEXELS_API_KEY secret is set
+      - name: Check PIXABAY_API_KEY secret is set
         env:
-          PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
-        run: test -n "$PEXELS_API_KEY" || (echo 'Missing PEXELS_API_KEY secret — Settings > Secrets and variables > Actions > New repository secret' && exit 1)
+          PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
+        run: test -n "$PIXABAY_API_KEY" || (echo 'Missing PIXABAY_API_KEY secret — Settings > Secrets and variables > Actions > New repository secret' && exit 1)
 
       - name: Validate episode JSON
         run: python scripts/video_generator.py "${{ github.event.inputs.episode_file }}" --validate-only
@@ -43,7 +43,7 @@ jobs:
 
       - name: Render video
         env:
-          PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+          PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
         run: python scripts/video_generator.py "${{ github.event.inputs.episode_file }}"
 
       - name: Generate thumbnail
