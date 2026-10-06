@@ -35,6 +35,26 @@ jobs:
           PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
         run: test -n "$PIXABAY_API_KEY" || (echo 'Missing PIXABAY_API_KEY secret — Settings > Secrets and variables > Actions > New repository secret' && exit 1)
 
+      - name: Debug PIXABAY_API_KEY (temporary — remove once 403 is diagnosed)
+        env:
+          PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
+        run: |
+          echo "key length: ${#PIXABAY_API_KEY}"
+          echo "first 4 chars: ${PIXABAY_API_KEY:0:4}"
+          echo "last 4 chars: ${PIXABAY_API_KEY: -4}"
+          echo "--- live Pixabay API test (direct curl, bypassing our Python code) ---"
+          curl -s -o /tmp/pixabay_response.json -w "HTTP status: %{http_code}\n" \
+            "https://pixabay.com/api/videos/?key=${PIXABAY_API_KEY}&q=cat&per_page=3"
+          echo "response body:"
+          cat /tmp/pixabay_response.json
+          echo ""
+          echo "--- same test but with a browser-like User-Agent, in case a WAF is blocking default curl/runner UA ---"
+          curl -s -o /tmp/pixabay_response2.json -w "HTTP status: %{http_code}\n" \
+            -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36" \
+            "https://pixabay.com/api/videos/?key=${PIXABAY_API_KEY}&q=cat&per_page=3"
+          echo "response body:"
+          cat /tmp/pixabay_response2.json
+
       - name: Validate episode JSON
         run: python scripts/video_generator.py "${{ github.event.inputs.episode_file }}" --validate-only
 
