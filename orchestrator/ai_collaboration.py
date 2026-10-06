@@ -80,11 +80,16 @@ def gemini_sources(candidate):
     return "\n".join(lines) + "\n"
 
 
-def gemini(text):
+def error_detail(e):
+    return e.read().decode(errors="replace")[:500] if isinstance(e, urllib.error.HTTPError) else ""
+
+
+def gemini_chain(text, grounded):
+    """Try each model in turn; return (model, first candidate)."""
     key = os.environ["GEMINI_API_KEY"]
     models = gemini_models()
     payload = {"contents":[{"parts":[{"text": text}]}]}
-    if grounding_enabled():
+    if grounded:
         # Lets Gemini run live Google searches instead of answering from
         # training data, which is what a fact-check stage is for.
         payload["tools"] = [{"google_search": {}}]
@@ -102,12 +107,35 @@ def gemini(text):
                 raise
             reason = type(e).__name__
         else:
-            print(f"Gemini stage served by {model} (search grounding {'on' if grounding_enabled() else 'off'})")
-            candidate = data["candidates"][0]
-            # Grounded answers can come back split across several text parts.
-            report = "".join(p.get("text", "") for p in candidate["content"]["parts"])
-            return report + gemini_sources(candidate) if grounding_enabled() else report
+            return model, data["candidates"][0]
         print(f"::warning::Gemini model {model} unavailable ({reason}), falling back to {models[i + 1]}")
+
+
+def candidate_text(candidate):
+    # Grounded answers can come back split across several text parts.
+    return "".join(p.get("text", "") for p in candidate["content"]["parts"])
+
+
+def gemini(text):
+    if grounding_enabled():
+        try:
+            model, candidate = gemini_chain(text, grounded=True)
+        except (urllib.error.HTTPError, TimeoutError, urllib.error.URLError) as e:
+            # Search grounding has its own, much smaller free-tier quota: on
+            # 2026-10-06 every model 429'd with it on while the same models
+            # answered fine without it. A fact-check without search beats no
+            # pipeline run, as long as the report says loudly that it's unverified.
+            print(f"::warning::Grounded Gemini call failed on every model ({e} {error_detail(e)}".rstrip() + "); retrying without search")
+            model, candidate = gemini_chain(text, grounded=False)
+            print(f"Gemini stage served by {model} (search grounding FAILED, report marked UNVERIFIED)")
+            return candidate_text(candidate) + (
+                "\n\n---\n## Search grounding\nSearch grounding was unavailable for this run "
+                f"({e}), so this report was written without web search. Treat every claim in it as UNVERIFIED.\n")
+        print(f"Gemini stage served by {model} (search grounding on)")
+        return candidate_text(candidate) + gemini_sources(candidate)
+    model, candidate = gemini_chain(text, grounded=False)
+    print(f"Gemini stage served by {model} (search grounding off)")
+    return candidate_text(candidate)
 
 
 def claude(text):
@@ -146,8 +174,7 @@ try:
 except Exception as e:  # noqa: BLE001 - optional stage, report and keep Claude's output
     # OpenAI's 429 covers both rate limits and an unfunded account
     # ("insufficient_quota"); only the response body tells them apart.
-    detail = e.read().decode(errors="replace")[:500] if isinstance(e, urllib.error.HTTPError) else ""
-    print(f"::warning::ChatGPT stage failed, Claude package kept: {e} {detail}".rstrip())
+    print(f"::warning::ChatGPT stage failed, Claude package kept: {e} {error_detail(e)}".rstrip())
     sys.exit(0)
 (Path(OUT / "03-chatgpt-distribution.md")).write_text(distribution, encoding="utf-8")
 print("DONE: artifacts/03-chatgpt-distribution.md")
