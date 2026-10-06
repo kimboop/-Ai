@@ -1,23 +1,20 @@
-# AI Collaboration Orchestrator
+# AI Collaboration Orchestrator (Instagram Reels)
 
 ## Pipeline
-1. Gemini audits research/evidence against `input.md`.
-2. Claude reconciles Gemini's audit with the source material and produces the
-   final production package.
-3. ChatGPT (optional) red-teams the final package and writes platform-specific
-   distribution copy (hooks, titles, captions, CTAs) to
-   `artifacts/03-chatgpt-distribution.md`. Skipped when `OPENAI_API_KEY` is
-   unset; a failure here only logs a warning and never discards stage 2.
+1. **Claude (lead)** authors the full Reels production package from the source
+   material and flags anything it can't verify itself with
+   `[VERIFY-GEMINI: ...]` markers.
+2. **Gemini (support)** resolves only those flagged markers via research and
+   runs a final QC pass. It does not rewrite Claude's creative/structural
+   choices.
 
 ## Required environment variables
 - `GEMINI_API_KEY`
 - `ANTHROPIC_API_KEY`
 
-Optional:
-- `OPENAI_API_KEY` (enables the ChatGPT stage)
+Optional model variables:
 - `GEMINI_MODEL`
 - `CLAUDE_MODEL`
-- `OPENAI_MODEL` (default `gpt-5`)
 
 ## Run
 ```bash

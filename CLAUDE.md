@@ -22,11 +22,9 @@ This file is only for notes specific to Claude Code.
 - **지양**: 스크립트가 중간에 멈추거나 API 에러 하나로 그냥 꺼져버리는 아마추어식 구조.
 - **기준**: 상태 유지형(Stateful) 파이프라인, 강력한 예외 처리(Error Recovery), 일시적
   오류(429/503 등) 자동 재시도(Retry) 로직을 설계 단계부터 포함한다.
-- **적용 사례**: `orchestrator/ai_collaboration.py`의 `post()`는 429/500/502/503/504와
-  응답 타임아웃·연결 끊김을 지수 백오프(10s → 20s → 40s)로 최대 4회까지 시도한다.
-  Gemini 무료 티어 키가 트래픽이 몰릴 때 503을 자주 반환하고, 응답이 180초를 넘겨
-  타임아웃으로 파이프라인이 통째로 죽는 걸 실제로 겪고 나서 넣은 방어 로직이다
-  (요청당 타임아웃은 300초).
+- **적용 사례**: `orchestrator/ai_collaboration.py`의 `post()`는 429/503을 지수
+  백오프(10s → 20s → 40s → 80s)로 최대 4회 재시도한다. Gemini 무료 티어 키가 트래픽이
+  몰릴 때 503을 자주 반환하는 걸 실제로 겪고 나서 넣은 방어 로직이다.
 
 ## 2. 에이전틱 파이프라인과 역할 분담 (Agentic Workflow)
 
@@ -61,36 +59,37 @@ This file is only for notes specific to Claude Code.
   파트너십, 리콜/사고 등 리스크 이슈 포함)을 리서치 단계(Gemini)에서 함께 수집해
   비교 기준으로 삼는다.
 
-# AI 협업 파이프라인 가이드 (Gemini → Claude → ChatGPT)
+# AI 협업 파이프라인 가이드 (Claude 메인 → Gemini 서포트, 인스타그램 릴스)
+
+파이프라인의 산출물은 **인스타그램 릴스**(세로 9:16, 90초 이하 권장) 전용이다.
+유튜브 롱폼용으로 되돌리려면 `input.md`의 Task와
+`orchestrator/ai_collaboration.py`의 프롬프트를 함께 바꿔야 한다.
 
 ## 구성 파일
 
 | 파일 | 역할 |
 |---|---|
 | `.github/workflows/three-ai-collaboration.yml` | 파이프라인을 실행하는 GitHub Actions 워크플로 |
-| `orchestrator/ai_collaboration.py` | 실제 Gemini → Claude 호출 로직 |
+| `orchestrator/ai_collaboration.py` | 실제 Claude → Gemini 호출 로직 |
 | `input.md` | 파이프라인에 넣을 소스 자료 (기본 입력 파일) |
-| `artifacts/01-gemini-research.md` | Gemini 리서치/팩트체크 리포트 (자동 생성) |
-| `artifacts/02-final-package.md` | Claude가 만든 최종 산출물 (자동 생성) |
-| `artifacts/03-chatgpt-distribution.md` | ChatGPT 배포·수익화 패키지 + 레드팀 리뷰 (선택, 자동 생성) |
+| `artifacts/01-claude-lead-draft.md` | Claude가 만든 릴스 제작 초안 (자동 생성) |
+| `artifacts/02-final-reels-package.md` | Gemini가 갭을 채운 최종 산출물 (자동 생성) |
 
 ## 흐름
 
-1. **Gemini** — 리서치 및 증거 감사관 역할. 소스 자료의 모순, 검증 필요 포인트, 출처
-   품질 문제를 찾아 구조화된 팩트체크 리포트를 만든다.
-2. **Claude** — 시니어 편집자 겸 최종 오케스트레이터 역할. Gemini 리포트를 바탕으로
-   소스를 대조해 정확한 수정 사항, 서사적 리스크, 저작권 리스크를 짚어내고, 최종
-   프로덕션 패키지(대본, 장면별 지시, B-roll 리스트, 그래픽 스펙, SRT 초안, 썸네일/제목
-   옵션, 설명글, 최종 QC 체크리스트)를 완성한다.
+1. **Claude(메인)** — 리드 프로듀서 겸 1차 저작자 역할. 소스 자료를 바탕으로 릴스
+   제작 패키지 전체(훅, 타임스탬프 대본, 샷 리스트, 자막/온스크린 텍스트, 캡션 초안,
+   해시태그, 트렌딩 오디오 방향, 커버 프레임, CTA, QC 체크리스트)를 직접 작성한다.
+   스스로 검증할 수 없는 항목(실시간 트렌딩 오디오명, 최신 해시태그 성과, 최신
+   수치/사실 등)은 지어내지 않고 `[VERIFY-GEMINI: ...]` 마커로 명시적으로 표시한다.
+2. **Gemini(서포트)** — Claude의 창작·구조적 선택은 그대로 두고, 문서 안의
+   `[VERIFY-GEMINI: ...]` 마커만 리서치로 채운 뒤 최종 QC(팩트 라벨링 일관성,
+   저작권/음원 라이선스 리스크, 커뮤니티 가이드라인 리스크, 해시태그·캡션 정합성)를
+   수행해 최종 산출물을 완성한다.
 
-3. **ChatGPT (선택)** — 배포·수익화 전략가 겸 독립 레드팀 리뷰어. Claude 최종 패키지에
-   남은 사실/법적/톤 문제를 짚고, 0~3초 훅 변형, 플랫폼별(유튜브 롱폼·쇼츠·릴스·틱톡)
-   제목·캡션·해시태그·고정 댓글·CTA, 썸네일 A/B 문구, 업로드 체크리스트를 만든다.
-
-ChatGPT 단계는 예전에 결제 문제로 한 번 제거됐던 이력이 있어서 **옵트인**으로 설계했다.
-`OPENAI_API_KEY` 시크릿이 없으면 건너뛰고, 호출이 실패해도 경고만 남긴 채 Claude 패키지는
-그대로 유지된다(워크플로 실패로 처리하지 않음). 그래서 워크플로에 OpenAI 가드 체크는
-일부러 넣지 않았다.
+OpenAI(GPT) 3단계는 원래 있었지만 결제 문제로 제거했다. 필요해지면
+`orchestrator/ai_collaboration.py`에 `openai()` 함수를 다시 추가하고, 워크플로에
+`OPENAI_API_KEY` 시크릿과 가드 체크(`test -n "$OPENAI_API_KEY" || ...`)를 복원하면 된다.
 
 ## 실행 방법
 
@@ -107,16 +106,12 @@ ChatGPT 단계는 예전에 결제 문제로 한 번 제거됐던 이력이 있�
 - `GEMINI_API_KEY` — https://aistudio.google.com 의 "Get API key"에서 발급 (Vertex AI
   콘솔에서 발급한 키는 이 REST 호출 방식과 호환되지 않아 404가 난다)
 - `ANTHROPIC_API_KEY` — https://console.anthropic.com/settings/keys
-- `OPENAI_API_KEY` (선택) — https://platform.openai.com/api-keys . ChatGPT Plus 구독과
-  API 결제는 별개라서, API 크레딧/결제수단이 등록돼 있어야 동작한다(429
-  `insufficient_quota`가 나면 이 문제다).
 
 **Variables** (같은 페이지의 Variables 탭 — 평문, 민감정보 아님):
 
 - `GEMINI_MODEL` — 권장값 `gemini-flash-latest` (특정 버전 대신 별칭을 쓰면 모델이
   세대교체돼도 코드/설정을 안 건드려도 됨)
 - `CLAUDE_MODEL` — 권장값 `claude-sonnet-5`
-- `OPENAI_MODEL` (선택) — 기본값 `gpt-5`. 더 새 모델이 나오면 이 변수만 바꾼다.
 
 ## 겪었던 함정들 (읽고 반복하지 말 것)
 
