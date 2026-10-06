@@ -1,0 +1,29 @@
+{
+  "title": "러시아 연구원 의문사... 페스트 공포 확산",
+  "scenes": [
+    {
+      "script": "러시아 시베리아의 한 연구원이 의문사하면서, 전 세계가 촉각을 곤두세우고 있습니다.",
+      "broll_query": "siberia russia winter landscape"
+    },
+    {
+      "script": "사망자는 이르쿠츠크 항역병연구소 소속 20대 연구원. 당국은 원인불명 폐렴으로 사망했다고 발표했습니다.",
+      "broll_query": "medical laboratory scientist research"
+    },
+    {
+      "script": "접촉자 197명이 파악됐고, 이 중 189명이 즉시 병원 세 곳에 예방 격리됐습니다.",
+      "broll_query": "hospital quarantine medical corridor"
+    },
+    {
+      "script": "소셜미디어에선 페스트균이 든 시험관이 깨졌다는 소문이 퍼지고 있지만, 러시아 당국은 이를 공식 확인하지 않았습니다.",
+      "broll_query": "test tube laboratory virus research"
+    },
+    {
+      "script": "백악관도 이 사태를 예의주시하고 있다고 미국 매체가 보도했습니다.",
+      "broll_query": "breaking news studio broadcast"
+    },
+    {
+      "script": "전문가들은 아직 사람 간 전파 증거는 없다고 말합니다. 하지만 경계는 늦추지 않고 있습니다.",
+      "broll_query": "doctor medical mask hospital"
+    }
+  ]
+}
