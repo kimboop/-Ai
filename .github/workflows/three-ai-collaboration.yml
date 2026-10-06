@@ -34,6 +34,10 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           GEMINI_MODEL: ${{ vars.GEMINI_MODEL }}
+          # Optional comma-separated list tried in order when GEMINI_MODEL is down.
+          GEMINI_FALLBACK_MODELS: ${{ vars.GEMINI_FALLBACK_MODELS }}
+          # Google Search grounding for the fact-check stage; on unless set to "false".
+          GEMINI_GROUNDING: ${{ vars.GEMINI_GROUNDING }}
           CLAUDE_MODEL: ${{ vars.CLAUDE_MODEL }}
           # Optional: leave the secret unset to skip the ChatGPT stage.
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
