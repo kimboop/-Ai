@@ -43,13 +43,40 @@ def post(url, headers, payload, retries=4, backoff=10, timeout=300):
         time.sleep(wait)
 
 
+# Status codes that mean "this model can't serve us right now" rather than
+# "the request itself is wrong": worth trying a different model for. 404
+# covers a retired or misspelled model ID; 400/401/403 (bad key, bad
+# payload) would fail identically on every model, so they still fail fast.
+FALLBACK_STATUS = RETRYABLE_STATUS + (404,)
+
+
+def gemini_models():
+    primary = os.getenv("GEMINI_MODEL") or "gemini-3.6-flash"
+    fallbacks = os.getenv("GEMINI_FALLBACK_MODELS") or "gemini-3.5-flash,gemini-3.5-flash-lite"
+    models = [primary] + [m.strip() for m in fallbacks.split(",") if m.strip()]
+    return list(dict.fromkeys(models))  # dedupe, keep order
+
+
 def gemini(text):
     key = os.environ["GEMINI_API_KEY"]
-    model = os.getenv("GEMINI_MODEL", "gemini-3.6-flash")
-    data = post(f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent",
-                {"x-goog-api-key": key},
-                {"contents":[{"parts":[{"text": text}]}]})
-    return data["candidates"][0]["content"]["parts"][0]["text"]
+    models = gemini_models()
+    for i, model in enumerate(models):
+        try:
+            data = post(f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent",
+                        {"x-goog-api-key": key},
+                        {"contents":[{"parts":[{"text": text}]}]})
+        except urllib.error.HTTPError as e:
+            if e.code not in FALLBACK_STATUS or i == len(models) - 1:
+                raise
+            reason = e.code
+        except (TimeoutError, urllib.error.URLError) as e:
+            if i == len(models) - 1:
+                raise
+            reason = type(e).__name__
+        else:
+            print(f"Gemini stage served by {model}")
+            return data["candidates"][0]["content"]["parts"][0]["text"]
+        print(f"::warning::Gemini model {model} unavailable ({reason}), falling back to {models[i + 1]}")
 
 
 def claude(text):

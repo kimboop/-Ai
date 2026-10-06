@@ -16,6 +16,9 @@
 Optional:
 - `OPENAI_API_KEY` (enables the ChatGPT stage)
 - `GEMINI_MODEL`
+- `GEMINI_FALLBACK_MODELS` (comma-separated, default
+  `gemini-3.5-flash,gemini-3.5-flash-lite`): tried in order when
+  `GEMINI_MODEL` exhausts its retries on 503/429/5xx/timeouts or returns 404.
 - `CLAUDE_MODEL`
 - `OPENAI_MODEL` (default `gpt-5`)
 
