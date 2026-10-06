@@ -1,7 +1,9 @@
 # AI Collaboration Orchestrator
 
 ## Pipeline
-1. Gemini audits research/evidence against `input.md`.
+1. Gemini audits research/evidence against `input.md`, using Google Search
+   grounding (on by default; `GEMINI_GROUNDING=false` turns it off). The
+   search sources the API returns are appended to the report.
 2. Claude reconciles Gemini's audit with the source material and produces the
    final production package.
 3. ChatGPT (optional) red-teams the final package and writes platform-specific

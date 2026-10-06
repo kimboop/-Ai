@@ -57,14 +57,42 @@ def gemini_models():
     return list(dict.fromkeys(models))  # dedupe, keep order
 
 
+def grounding_enabled():
+    return os.getenv("GEMINI_GROUNDING", "true").strip().lower() not in ("0", "false", "no", "off")
+
+
+def gemini_sources(candidate):
+    """Render the URLs Google Search actually returned for this answer.
+
+    Without this, the report only has whatever sources the model chooses to
+    mention in prose, which can't be told apart from remembered (or invented)
+    ones. These come from the API's groundingMetadata, not from the model.
+    """
+    meta = candidate.get("groundingMetadata") or {}
+    queries = meta.get("webSearchQueries") or []
+    chunks = [c["web"] for c in meta.get("groundingChunks") or [] if c.get("web", {}).get("uri")]
+    if not chunks:
+        return "\n\n---\n## Search grounding\nNo web sources were returned for this report. Treat every claim in it as UNVERIFIED.\n"
+    lines = ["", "", "---", "## Search grounding (from Google Search, not model-written)"]
+    if queries:
+        lines.append("Queries: " + " | ".join(queries))
+    lines += [f"{n}. [{c.get('title') or c['uri']}]({c['uri']})" for n, c in enumerate(chunks, 1)]
+    return "\n".join(lines) + "\n"
+
+
 def gemini(text):
     key = os.environ["GEMINI_API_KEY"]
     models = gemini_models()
+    payload = {"contents":[{"parts":[{"text": text}]}]}
+    if grounding_enabled():
+        # Lets Gemini run live Google searches instead of answering from
+        # training data, which is what a fact-check stage is for.
+        payload["tools"] = [{"google_search": {}}]
     for i, model in enumerate(models):
         try:
             data = post(f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent",
                         {"x-goog-api-key": key},
-                        {"contents":[{"parts":[{"text": text}]}]})
+                        payload)
         except urllib.error.HTTPError as e:
             if e.code not in FALLBACK_STATUS or i == len(models) - 1:
                 raise
@@ -74,8 +102,11 @@ def gemini(text):
                 raise
             reason = type(e).__name__
         else:
-            print(f"Gemini stage served by {model}")
-            return data["candidates"][0]["content"]["parts"][0]["text"]
+            print(f"Gemini stage served by {model} (search grounding {'on' if grounding_enabled() else 'off'})")
+            candidate = data["candidates"][0]
+            # Grounded answers can come back split across several text parts.
+            report = "".join(p.get("text", "") for p in candidate["content"]["parts"])
+            return report + gemini_sources(candidate) if grounding_enabled() else report
         print(f"::warning::Gemini model {model} unavailable ({reason}), falling back to {models[i + 1]}")
 
 
@@ -98,10 +129,10 @@ def chatgpt(text):
 
 base = f"""You are one member of a multi-AI production team.\n\nSOURCE MATERIAL:\n{source}\n\nDo not invent facts. Separate FACT / FORECAST / TARGET / INTERPRETATION. Flag anything needing fresh web verification. Return actionable production-ready output."""
 
-gemini_report = gemini(base + "\n\nROLE: GEMINI — research and evidence auditor. Find contradictions, missing verification points, and source-quality problems. Produce a structured fact-check report.")
+gemini_report = gemini(base + "\n\nROLE: GEMINI — research and evidence auditor. Find contradictions, missing verification points, and source-quality problems. Produce a structured fact-check report. Use web search to check every factual claim and every number against current sources; for each one, state the source (publisher and date) you found it in, and mark it UNVERIFIED if search turned up nothing. Never present a number from memory as verified.")
 (Path(OUT / "01-gemini-research.md")).write_text(gemini_report, encoding="utf-8")
 
-final = claude(base + f"\n\nGEMINI REPORT:\n{gemini_report}\n\nROLE: CLAUDE — senior editor and final orchestrator. Reconcile the source with Gemini's report, identify exact corrections, narrative risks, and legal/copyright risks, then produce the final production package. Keep verified facts intact, resolve conflicts conservatively, label uncertainty, and output: (1) corrected production plan, (2) final script, (3) scene-by-scene visual instructions, (4) B-roll/real-vs-AI list, (5) graphics specs, (6) SRT draft, (7) thumbnail/title options, (8) description, (9) final QC checklist. Do not claim a source was verified unless the supplied reports support it.")
+final = claude(base + f"\n\nGEMINI REPORT:\n{gemini_report}\n\nROLE: CLAUDE — senior editor and final orchestrator. Reconcile the source with Gemini's report, identify exact corrections, narrative risks, and legal/copyright risks, then produce the final production package. Keep verified facts intact, resolve conflicts conservatively, label uncertainty, and output: (1) corrected production plan, (2) final script, (3) scene-by-scene visual instructions, (4) B-roll/real-vs-AI list, (5) graphics specs, (6) SRT draft, (7) thumbnail/title options, (8) description, (9) final QC checklist. Do not claim a source was verified unless the supplied reports support it. The 'Search grounding' section at the end of Gemini's report lists the web sources Google Search actually returned; treat a claim as verified only if it can be traced to one of those sources, and cite them in the description where facts are stated.")
 (Path(OUT / "02-final-package.md")).write_text(final, encoding="utf-8")
 print("DONE: artifacts/02-final-package.md")
 
