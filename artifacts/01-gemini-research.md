@@ -1,54 +1,50 @@
 # EVIDENCE AUDIT & FACT-CHECK REPORT
+
 **Auditor:** Gemini (Research & Evidence Auditor)  
-**Status:** ⚠️ **INPUT MATERIAL PENDING / TEMPLATE ACTIVE**  
-**Alert:** The `SOURCE MATERIAL` section contains placeholder text (`Replace this file with the material to research...`). No raw claims or script drafts were provided for live verification.
-
-Below is the operational audit framework, taxonomy, and structured audit ledger ready to process your source material the moment it is provided.
+**Status:** **AUDIT BLOCKED — NO SOURCE PAYLOAD DETECTED**  
+**Integrity Constraint:** Per system rules (*"Do not invent facts / Do not invent sources or verification results"*), this audit cannot manufacture claims, citations, or synthetic verification data.
 
 ---
 
-## 1. Claim Classification Taxonomy
+### 1. Intake Audit Assessment
 
-Every discrete statement in the source material will be categorized into one of four operational buckets:
-
-| Tag | Category | Definition & Handling Rule |
-| :--- | :--- | :--- |
-| **`[FACT]`** | Empirical / Historical | Verifiable via records, primary documentation, or consensus historical data. Must have direct citation. |
-| **`[FORECAST]`** | Predictive Projection | Modeling, analyst estimates, or probabilistic outcomes. Must state methodology, range, and confidence limits. |
-| **`[TARGET]`** | Official Objective | Goals set by an entity (e.g., corporate revenue target, net-zero deadline). Must cite the announcing entity and baseline date. |
-| **`[INTERPRETATION]`** | Opinion / Analysis | Subjective framing, editorial narrative, or value judgments. Must be clearly attributed to the speaker/author, not stated as fact. |
+* **Supplied Material:** 
+  > `"Replace this file with the material to research, fact-check, edit, and turn into a production package."`
+* **Finding:** The source document contains only template placeholder instructions. No factual assertions, data points, quotes, or institutional claims were provided.
+* **Risk Flag:** Any production package generated from this input without the intended source text would be entirely hallucinated.
 
 ---
 
-## 2. Evidence Verification Status Tags
+### 2. Ready-to-Run Audit Framework
 
-* **`[VERIFIED]`**: Corroborated by high-tier primary sources (regulatory filings, peer-reviewed data, official transcripts).
-* **`[NEEDS_WEB_VERIFICATION]`**: Plausible, but requires fresh web verification for recent updates, exact statistics, or moving baselines.
-* **`[UNVERIFIED / CONFLICT]`**: Conflicting reports across reputable outlets or primary documentation is missing.
-* **`[DEBUNKED / REJECT]`**: Factually inaccurate, mathematically inconsistent, or demonstrably false. Must be cut from production.
-
----
-
-## 3. Structured Audit Ledger (Production Template)
-
-When you supply the text, the audit will be returned in this actionable table format:
+Paste your source text (script draft, article, transcripts, or notes). Upon receipt, the audit will immediately output the following production-ready audit schema:
 
 ```markdown
-### CLAIM AUDIT TABLE
+# STRUCTURED FACT-CHECK AUDIT REPORT
 
-| # | Raw Claim / Script Line | Taxonomy Class | Audit Status | Evidence / Source Check | Required Production Action |
-|---|---|---|---|---|---|
-| 1 | "[Exact quote from source]" | FACT / FORECAST / TARGET / INTERPRETATION | VERIFIED / NEEDS_WEB_VERIFICATION / CONFLICT / REJECT | [Primary Source / Reference / Discrepancy details] | [Exact rewrite, visual on-screen citation, or CUT command] |
+## A. Claim Taxonomy & Epistemic Status
+| Claim # | Claim Statement | Category (FACT / FORECAST / TARGET / INTERPRETATION) | Verification Status | Confidence Level |
+|---------|-----------------|------------------------------------------------------|---------------------|------------------|
+| 1       | [Verbatim/Core] | FACT                                                 | Verified / Unverified | High / Med / Low |
+| 2       | [Verbatim/Core] | FORECAST (Projected outcome)                         | Conditional         | N/A              |
+| 3       | [Verbatim/Core] | TARGET (Aspiration/Goal)                             | Stated Objective    | N/A              |
+| 4       | [Verbatim/Core] | INTERPRETATION (Opinion/Analysis)                    | Subjective          | N/A              |
+
+## B. Critical Contradictions & Conflict Matrix
+- [Internal Contradictions between claims in the source]
+- [External Conflicts between source claims and authoritative primary records]
+
+## C. Fresh Web Verification Required (High Risk / Volatile)
+- [Claims involving breaking news, recent regulatory filings, moving markets, or statistics past model cutoff]
+
+## D. Source Quality & Chain-of-Custody Issues
+- [Anonymous attribution, circular reporting, non-primary citations, or missing baseline data]
+
+## E. Production Redlines & Script Adjustments
+- [Actionable guidance for the Editor/Writer: exact phrases that must be qualified, removed, or re-attributed to avoid defamation or misinformation]
 ```
 
 ---
 
-## 4. Immediate Next Step
-
-Please paste your raw script, article, notes, or topic outline. 
-
-Upon receipt, I will immediately execute:
-1. **Line-by-line claim extraction** and taxonomy tagging.
-2. **Contradiction and ambiguity screening**.
-3. **Fresh web verification flagging** (with search queries provided for live checks).
-4. **Actionable production notes** for the second AI (Scriptwriter/Producer) to assemble the final YouTube package.
+### Next Actionable Step
+**Submit the target material.** Paste the raw text, transcript, or topic notes, and I will run the full audit immediately.
