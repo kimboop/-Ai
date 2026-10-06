@@ -19,19 +19,28 @@ if not INPUT.exists():
 source = INPUT.read_text(encoding="utf-8")
 
 
-def post(url, headers, payload, retries=4, backoff=10):
+RETRYABLE_STATUS = (429, 500, 502, 503, 504)
+
+
+def post(url, headers, payload, retries=4, backoff=10, timeout=300):
     req = urllib.request.Request(url, data=json.dumps(payload).encode(), headers={**headers, "Content-Type":"application/json"}, method="POST")
     for attempt in range(retries):
         try:
-            with urllib.request.urlopen(req, timeout=180) as r:
+            with urllib.request.urlopen(req, timeout=timeout) as r:
                 return json.loads(r.read().decode())
         except urllib.error.HTTPError as e:
-            if e.code in (429, 503) and attempt < retries - 1:
-                wait = backoff * (2 ** attempt)
-                print(f"{url} returned {e.code}, retrying in {wait}s (attempt {attempt + 1}/{retries})")
-                time.sleep(wait)
-                continue
-            raise
+            if e.code not in RETRYABLE_STATUS or attempt == retries - 1:
+                raise
+            reason = e.code
+        # Slow model responses surface as read timeouts or dropped connections,
+        # not HTTP errors; they're just as transient, so retry them too.
+        except (TimeoutError, urllib.error.URLError) as e:
+            if attempt == retries - 1:
+                raise
+            reason = type(e).__name__
+        wait = backoff * (2 ** attempt)
+        print(f"{url} failed ({reason}), retrying in {wait}s (attempt {attempt + 1}/{retries})")
+        time.sleep(wait)
 
 
 def gemini(text):
