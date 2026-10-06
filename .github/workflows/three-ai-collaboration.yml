@@ -29,6 +29,9 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Run logic tests (no network needed)
+        run: python orchestrator/test_mock.py
+
       - name: Run Claude (lead) → Gemini (support)
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
