@@ -1,231 +1,222 @@
-# CLAUDE — SENIOR EDITOR / FINAL ORCHESTRATOR
-## Reconciliation Note (Read First)
+# [CLAUDE — 최종 편집/오케스트레이션 리포트]
+## 로봇 시대의 진짜 승부처는 배터리다
 
-**Status check:** No actual source material was supplied — the input file was the empty template. Gemini correctly flagged this and substituted a demonstration topic (Starship Flight 5/6 + 2026 Mars targets) to show the audit framework in action. I am accepting that substitution **for demonstration purposes only** and building the full package around it, but the production team must treat this entire package as a **template/dry-run**, not a cleared-for-air final product, until real source material is dropped in and this pipeline is re-run against it.
+---
 
-**My reconciliation of Gemini's report — exact corrections:**
+## 0. 편집장 검수 노트 — Gemini 리포트 교차검증 (반드시 먼저 읽을 것)
 
-| # | Issue in Gemini's Report | Correction Applied |
+Gemini의 1차 팩트체크(주장 1~5 분류)는 방향이 맞고 그대로 채택합니다. 다만 **Part 2 벤치마킹 표와 Shorts 대본에 들어간 구체적 수치(2.3kWh, 4~8시간, 5시간, 50% 밀도 향상, 1~2시간 등)는 브리프가 요구한 "날짜+출처" 태깅이 전혀 붙어있지 않습니다.** 이는 실제 웹 검증이 아니라 일반 지식 기반 추정이므로, 이 상태로는 **FACT로 방송할 수 없습니다.** 규칙("출처를 지어내지 말 것", "검증 안 된 숫자는 훅에 쓰지 말 것")에 따라 저는 더 보수적으로 처리했습니다.
+
+### 최종 처리 기준
+| 판정 | 항목 | 처리 |
 |---|---|---|
-| R-1 | F-01 ("Facts" list) states Flight 4 achieved soft splashdown of both stages but **omits** the TPS tile loss / flap burn-through that Gemini itself flagged in C-01. | Merged: F-01 must be restated to include both the success AND the damage. Presenting only the clean version while burying the damage in a separate table is a selective-framing risk — corrected below. |
-| R-2 | FOR-01 treats "Flight 5 booster catch attempt" as a forward-looking forecast. | **Flag for team:** widely reported public outcomes exist for Flight 5 (and likely subsequent flights) beyond Gemini's cutoff. **I am not certifying these as verified** — no node in this pipeline performed a live web check. Treat any claim about what *actually happened* on Flight 5 or later as **UNCONFIRMED IN THIS PIPELINE** until someone runs a live search. Do not let script language imply this was fact-checked. |
-| R-3 | Section 2 mixes Musk's Sept 22, 2024 X post (T-01) into "Targets" correctly, but the script must not let VO tone imply these are schedule commitments. | Carried forward as-is; reinforced in script copy with safe-harbor line. |
-| R-4 | I-01/I-02 ("obsolete," "FAA dragging feet") are opinion statements with no attribution in Gemini's draft. | Excluded from narration entirely; may appear only as on-screen labeled "Commentary/Opinion" lower third if used at all. |
-| R-5 | Gemini's "Fresh Web Verification Flag List" items (FAA license, static fires, propellant transfer test) are **still open** — none were resolved by any node. | Carried into QC checklist as hard blockers before publish. |
+| ✅ 방송 가능 FACT | 보스턴 다이내믹스 전기식 아틀라스 2024년 4월 공개 / 현대차그룹이 보스턴다이내믹스 지분 인수(2021)·테슬라 옵티머스 Gen2 2023년 12월 공개 / Figure AI–BMW 협업 공식 발표(2024) | 그대로 사용 |
+| ⚠️ 보도는 있으나 2026년 현재 유효성 미확인 | 현대차 공장 아틀라스 "시범 운영", Agility Digit의 "Amazon 물류센터" 투입(= GXO 파트너십과 혼동 가능성 있음, 사명 정확히 구분 필요) | 언급하되 "~로 보도됨", "시범 단계" 수준 헤지. **발행 전 최신 뉴스 재검색 필수** |
+| ❌ 방송 금지(미검증 수치) | 배터리 교체 3분 / 옵티머스 3세대 효율 40% / Gen2 2.3kWh·4~8시간 / Figure 02 5시간·50% 밀도향상 / Atlas 1~2시간 / Digit 1.5~2시간 | **스크립트에서 전부 삭제.** 1차 출처(공식 발표·실적자료) 재확인 없이는 쓰지 않음 |
+| ❌ 과장된 인과관계 | "LG에너지솔루션이 휴머노이드 배터리 핵심 공급자" | "특정 공급계약 공식 확인 없음"으로 수정, 시장 기회 서술로 전환 |
 
-**Narrative risk:** This is a fast-moving beat. Starship has very likely flown additional missions beyond what either AI can certify in this session. **Any specific flight number, date, or "first-ever" claim in the final script must be re-pulled from a live source within 24–48 hours of publish**, not assumed stable.
-
-**Legal/copyright risks identified:**
-- SpaceX launch webcast footage: generally usable under SpaceX's published media policy for commentary/news, but **confirm current policy text before use**; credit "Footage: SpaceX" on screen.
-- NASA footage: public domain (17 U.S.C. §105) — safe to use with credit.
-- AI-generated Mars/fleet renders: must be clearly watermarked "CONCEPT RENDER" per Gemini's warning; failure to do so creates both a misinformation risk and a potential FTC/platform-policy disclosure issue (synthetic media labeling).
-- Embedded Musk/X posts: fair use for commentary is reasonable but embed natively (don't re-upload screenshots as a standalone asset) to avoid platform ToS friction.
-- No copyrighted music track has been specified — flag as **open item** for the audio lead.
+### 저작권/브랜드 리스크 (신규 플래그 — Gemini 리포트에 없던 항목)
+1. 보스턴 다이내믹스·테슬라·현대차 **공식 시연 영상을 그대로 캡처해 B-roll로 쓰면 저작권 침해 소지.** 짧은 발췌+출처자막(뉴스해설/인용 목적) 조건부 사용만 권장, 가급적 AI 생성 이미지/제네릭 스톡으로 대체.
+2. AI 이미지 생성 시 **실제 로고(테슬라, 현대, BD 로고)가 그대로 나오지 않도록 프롬프트에서 명시적으로 배제**("no logos, no brand marks, generic design").
+3. 일론 머스크 등 **실존 인물 얼굴/초상 사용 지양** — 제품(로봇) 중심 비주얼만 사용.
+4. 투자 권유 소지 표현 전면 금지: "~주가", "~사라/팔아라", "수혜주" 류 표현 스크립트·설명란·썸네일 어디에도 사용 안 함.
 
 ---
 
-## (1) CORRECTED PRODUCTION PLAN
+## 1. 수정된 제작 기획안 (Corrected Production Plan)
 
-**Title of package:** *SpaceX's Mars Timeline: What's Verified, What's a Target, What's a Guess*
-**Format:** Explainer, 6–8 min
-**Core editorial rule carried through every asset:** every on-screen claim gets a color-coded tag (FACT / FORECAST / TARGET / INTERPRETATION). No tag = do not air the line.
-**Mandatory disclaimer (verbatim, must appear in VO + description):**
-> "While SpaceX targets 2026 for the first uncrewed Mars landings, historic aerospace timelines suggest these milestones are subject to regulatory, technical, and developmental delays."
+**영상 메시지(변경 없음, 확정):** "휴머노이드 로봇이 공장에 들어가려면 배터리(작동 시간·교체·안전)가 먼저 풀려야 한다"
 
-**Pre-production blockers (must clear before scripting is finalized against a live date):**
-1. Confirm current Starship flight count/status via live search (this package only has verified-by-nothing knowledge through Flight 4, with Flight 5 details unconfirmed in-pipeline).
-2. Confirm FAA license status for whatever flight is current at publish time.
-3. Confirm whether a booster catch has actually occurred by publish date, and at which flight — do not state a specific outcome without a live source.
+**구조:** 문제(오래 못 움직인다) → 해법(교체 방식/고밀도 셀) → 누가 이기나(글로벌 vs 한국, 단정 금지·기회로 서술)
 
----
+**언어 원칙(전 영상 공통 적용)**
+- 숫자는 "범위/정성적 표현"만 사용 (예: "몇 시간이면 방전", "교체 기술이 핵심 승부처")
+- 모든 기업 서술은 "~로 알려졐다", "~시범 운영 중", "~업계는 보고 있다" 톤 유지
+- 결론부 "한국이 이긴다"로 단정하지 않고 질문형으로 열어둠 (CTA와 결합)
 
-## (2) FINAL SCRIPT
-*(Classification tags shown in [brackets] for internal QC — strip brackets from the recorded VO track, but keep this annotated version in the shared doc for the editor/fact-checker.)*
+**발행 전 게이트:** 아래 "9. 최종 QC 체크리스트"의 검증 항목이 모두 체크되기 전에는 업로드 금지.
 
-**[COLD OPEN]**
-"Elon Musk says SpaceX will send an uncrewed fleet to Mars in 2026. [TARGET] Here's what's actually been tested, what's realistically next, and what's still just a plan on a slide."
-
-**[SEGMENT 1 — What Actually Happened]**
-"In June 2024, Starship's fourth test flight brought both the booster and the ship back for soft splashdowns — the first time that happened for this vehicle. [FACT] But it wasn't flawless: the ship lost thermal protection tiles and suffered a burn-through on one of its flaps during reentry. [FACT] Real progress, with real damage — both true at once."
-
-**[SEGMENT 2 — The Next Big Test]**
-"SpaceX has upgraded the launch tower at Starbase to physically catch the returning booster with mechanical arms. [FACT] Whether that catch is attempted — and whether it succeeds — depends on telemetry during descent and a real-time call from the flight director. [FORECAST — high likelihood of attempt, outcome undetermined at time of this report] *(PRODUCTION NOTE: if publishing after this attempt has occurred, replace this line with the verified outcome from a live source — do not reuse this draft language.)*"
-
-**[SEGMENT 3 — The 2026 Mars Window]**
-"Mars and Earth only line up for an efficient launch every 26 months — the next window opens around late 2026. [FACT — orbital mechanics] Musk has said he wants to send up to five uncrewed Starships in that window. [TARGET] If those landings succeed, he's floated crewed missions as early as 2028. [TARGET]"
-
-**[SEGMENT 4 — The Reality Check]**
-"SpaceX's own history is the best data point here: Mars timelines from this company have slipped before, typically by one full launch window or more. [INTERPRETATION, sourced to pattern of past public statements — not a guaranteed outcome] [DISCLAIMER LINE — MANDATORY, READ VERBATIM]: *'While SpaceX targets 2026 for the first uncrewed Mars landings, historic aerospace timelines suggest these milestones are subject to regulatory, technical, and developmental delays.'*"
-
-**[CLOSE]**
-"So: the hardware is flying, the tower can catch a booster, and the 2026 window is real on a calendar. What's not settled is whether SpaceX's ship — or its schedule — will be ready for it. [INTERPRETATION]"
+**롱폼 아웃라인 수정 포인트(Gemini안 대비)**
+- 2장(기술 한계)·3장(빅테크 전략)에서 구체 스펙 수치 전부 제거, "업계 보도/테스트 결과로 알려진 범위" 식 자막 처리 + 화면 하단에 "수치 미확정, 공식 자료 기준 아님" 고지 배너 삽입
+- 4장 "한국 배터리 블루오션"은 "공식 공급계약 확인 안 됨" 자막 1회 고정 노출
+- 그 외 구조(도입-한계-전략-기회-리스크-결론)는 Gemini안 유지
 
 ---
 
-## (3) SCENE-BY-SCENE VISUAL INSTRUCTIONS
+## 2. 최종 대본 (YouTube Shorts / Reels / TikTok, 9:16, 약 50초)
 
-| Time | VO Line Ref | Visual | Label Required |
+> 톤: 신뢰감 있는 뉴스 해설. 숫자 과장 없음. 투자 권유 없음.
+
+**[S1] 0:00–0:03 — HOOK**
+> "백만 대군처럼 보이는 저 로봇들, 사실 오래 못 버팁니다."
+
+**[S2] 0:03–0:10**
+> "걷고, 들고, 춤까지 추지만 — 배터리가 떨어지면 그냥 멈춰 서는 비싼 고철이 됩니다. 로봇 업계가 지금 가장 머리 싸매는 문제, 바로 배터리입니다."
+
+**[S3] 0:10–0:20**
+> "그래서 두 가지 기술이 승부처로 떠올랐습니다. 하나는 '오래 가는 고밀도 배터리', 하나는 '멈추지 않고 빠르게 교체하거나 충전하는 기술'입니다."
+
+**[S4] 0:20–0:30**
+> "현대차는 보스턴다이내믹스의 아틀라스를 공장에서 시범 운영 중이고, 테슬라는 옵티머스에 자체 배터리 기술을 넣고 있습니다. 둘 다 아직 '양산 완전 투입'이 아니라 테스트 단계입니다."
+
+**[S5] 0:30–0:40**
+> "이 싸움에서 한국 배터리 기업들에도 기회가 보입니다. 전기차에 쓰던 고밀도 원통형 배터리 기술을, 로봇에도 적용하려는 움직임이 커지고 있거든요. 다만 특정 로봇 회사와의 공식 공급 계약이 확인된 건 아직 없습니다."
+
+**[S6] 0:40–0:47 — CTA**
+> "전기차 다음은 로봇, 로봇의 심장도 결국 배터리입니다. 더 깊은 테크 분석, 구독하고 받아보세요."
+
+**[S7 자막 전용] 0:47–0:50**
+> 댓글 질문: "로봇 배터리, 한국이 이길까요?"
+
+(내레이션 총 글자수/속도 기준 50초 내외로 조정됨. 실제 녹음 후 ±3초 싱크 조정 필요)
+
+---
+
+## 3. 장면별 비주얼 디렉션
+
+| 씬 | 타임 | 카메라/연출 지시 | 화면 텍스트 |
 |---|---|---|---|
-| 0:00–0:12 | Cold open | Starship Flight 4 launch footage | "Archival footage — SpaceX webcast" |
-| 0:12–1:00 | Segment 1 | Split screen: splashdown clip + close-up of damaged flap (if available from SpaceX stream) | "Real footage" |
-| 1:00–2:15 | Segment 2 | Tower/chopsticks B-roll from Starbase | "Real footage — date stamp required" |
-| 2:15–3:30 | Segment 3 | Orbital mechanics animation (simple graphic, not photoreal) + Musk post screenshot (embedded, not re-hosted) | Graphic clearly original/diagram, not a render of Mars |
-| 3:30–4:30 | Segment 4 | Timeline graphic of past Mars-date slips (text-based, sourced) | "Analysis graphic — see description for sourcing" |
-| 4:30–end | Close | Return to real launch footage, pull wide | "Archival footage" |
-
-**No Mars-surface CGI renders are approved for use** unless explicitly watermarked "CONCEPT RENDER / NOT ACTUAL FOOTAGE" in a persistent lower corner per Gemini's visual warning.
+| S1 | 0:00–0:03 | 로봇이 서 있다가 가슴 인디케이터가 빨갛게 점멸, 정지모션으로 긴장감 | "세계 최강 로봇의 약점?" |
+| S2 | 0:03–0:10 | 로봇 보행/적재 동작 몽타주 → 갑자기 블랙아웃 전환 | "작동 시간, 생각보다 짧다" |
+| S3 | 0:10–0:20 | 분할 화면: ① 배터리 셀 클로즈업 ② 로봇 뒷면 교체 포트 그래픽 | "① 고밀도 배터리  ② 초고속 교체" |
+| S4 | 0:20–0:30 | 자동차 공장 라인 + 로봇 협업 실루엣 (로고 없는 제네릭 디자인) | "시범 운영 중 (양산 아님)" |
+| S5 | 0:30–0:40 | 원통형 배터리 셀 대량 생산 컨베이어 | "한국 배터리, 기회는 있다 (공식 계약 미확인)" |
+| S6 | 0:40–0:47 | 구독 버튼 UI 오버레이 | "구독하고 테크 트렌드 받기" |
+| S7 | 0:47–0:50 | 댓글창 UI 오버레이 | "로봇 배터리, 한국이 이길까요?" |
 
 ---
 
-## (4) B-ROLL / REAL-VS-AI ASSET LIST
+## 4. B-roll(실사) vs AI 생성 구분 리스트
 
-| Asset | Type | Source | Label on screen |
+| 씬 | 실사 Pexels 키워드 (영문) | AI 생성 프롬프트 (영문) | 사용 권장 |
 |---|---|---|---|
-| Flight 4 launch | REAL | SpaceX webcast | "SpaceX" |
-| Flight 4 splashdown | REAL | SpaceX webcast | "SpaceX" |
-| Flap damage close-up | REAL (if obtainable) | SpaceX stream still/clip | "SpaceX" |
-| Starbase tower/chopsticks | REAL | SpaceX/public press footage | "SpaceX, [date]" |
-| Orbital window diagram | ORIGINAL GRAPHIC | In-house | none needed (clearly a diagram) |
-| Mars fleet / landing visualization | **AI/CGI — NOT YET SOURCED** | TBD | **MANDATORY: "CONCEPT RENDER — NOT ACTUAL FOOTAGE"**, persistent throughout shot |
-| Musk X/Twitter post | REAL (embed) | X post, Sept 22 2024 (date per Gemini report — reconfirm before air) | "Source: X @elonmusk — [date]" |
+| S1 | `humanoid robot warehouse`, `robot standing factory` | "A generic sleek humanoid robot standing in a factory, chest indicator light blinking red, no visible brand logos, cinematic lighting, photorealistic, 9:16" | **AI 권장** (실제 BD/테슬라 영상 캡처 금지, 저작권) |
+| S2 | `robot arm warehouse`, `automated logistics robot` | "A generic white humanoid robot lifting a box then powering off, dramatic lighting, no logos, photorealistic, 9:16" | **AI 권장** |
+| S3 | `cylindrical battery cells`, `lithium battery manufacturing` | "Close-up of cylindrical battery cells glowing blue, futuristic clean room, no brand text, 9:16" | **실사 가능** (Pexels generic battery footage 안전) |
+| S4 | `car assembly line robot`, `automated car factory` | "Humanoid robot collaborating with workers on a generic car assembly line, no visible car brand logos, natural light, 9:16" | **AI 권장** (현대차 로고/실제 공장 영상 저작권 리스크 → 제네릭 처리) |
+| S5 | `battery cell production line`, `automated conveyor belt factory` | "Millions of metallic cylindrical battery cells on conveyor belt, clean industrial environment, 8k, 9:16" | **실사 가능** |
+| S6 | `subscribe button phone`, `youtube app smartphone` | "Minimalist UI overlay of subscribe button press, futuristic background, 9:16" | **실사/그래픽 혼합** |
+| S7 | `typing comment smartphone` | "Comment box UI overlay, clean minimal design, 9:16" | **그래픽 자체 제작 권장** |
+
+> **원칙:** 특정 기업의 실제 발표 영상은 "인용 보도" 목적 외 B-roll로 가공 사용하지 않음. 전부 제네릭/논브랜드 AI 생성 또는 범용 스톡으로 대체.
 
 ---
 
-## (5) GRAPHICS SPECS
+## 5. 그래픽 스펙
 
-- **Classification badge system** (appears top-left whenever an on-screen claim is spoken):
-  - FACT = green pill, white text
-  - FORECAST = blue pill
-  - TARGET = orange pill
-  - INTERPRETATION = purple pill
-  - Font: Inter Bold or channel standard, min 32px at 1080p
-  - Duration: on-screen for full duration of the claim being spoken, fade 0.2s
-
-- **Disclaimer card** (Segment 4): full-screen card, white text on dark background, displayed minimum 5 seconds, text = mandatory safe-harbor line verbatim.
-
-- **"CONCEPT RENDER" watermark**: bottom-third, semi-transparent black bar, white uppercase text, persistent for entire duration of any synthetic/CGI shot — not a flash-frame disclaimer.
-
-- **Lower-third credits** for all real footage: "Footage: SpaceX" / "Footage: NASA (Public Domain)" as applicable, 3-second minimum display on first use.
+- **폰트:** 자막 — Pretendard Bold (한글), 가독성 최우선, 외곽선 3px 블랙 + 흰색 채움
+- **색상 팔레트:** 메인 블루(#1E6FFF, 테크 신뢰감) + 경고 레드(#FF3B30, 방전/리스크 강조) + 배경 다크네이비(#0B1021)
+- **하단 고지 배너(필수):** S4, S5 구간에 작게 고정 자막 — "수치·계약 관계는 공식 확인 전, 보도 기준" (12pt, 화면 하단 10% 영역)
+- **로고/워터마크:** 채널 로고 우상단 고정, 투명도 70%
+- **차트(롱폼용):** 작동시간 비교는 "약 X~Y시간" 형태의 **범위 막대그래프**만 사용(점추정 수치 금지), 출처 미확정 항목은 반드시 "비공식 추정" 라벨 부착
 
 ---
 
-## (6) SRT DRAFT (approximate — retime to final VO recording)
+## 6. SRT 초안 (Shorts, 한국어)
 
 ```
 1
-00:00:00,000 --> 00:00:12,000
-Elon Musk says SpaceX will send an uncrewed fleet to Mars in 2026.
-Here's what's actually been tested, what's realistically next,
-and what's still just a plan on a slide.
+00:00:00,000 --> 00:00:03,000
+백만 대군처럼 보이는 저 로봇들, 사실 오래 못 버팁니다.
 
 2
-00:00:12,000 --> 00:00:30,000
-In June 2024, Starship's fourth test flight brought both the
-booster and the ship back for soft splashdowns — the first
-time that happened for this vehicle.
+00:00:03,000 --> 00:00:10,000
+걷고, 들고, 춤까지 추지만 배터리가 떨어지면
+그냥 멈춰 서는 비싼 고철이 됩니다.
 
 3
-00:00:30,000 --> 00:00:45,000
-But it wasn't flawless: the ship lost thermal protection tiles
-and suffered a burn-through on one of its flaps during reentry.
+00:00:10,000 --> 00:00:20,000
+그래서 지금 승부처는 두 가지,
+오래가는 고밀도 배터리와 빠른 교체·충전 기술입니다.
 
 4
-00:00:45,000 --> 00:01:05,000
-Real progress, with real damage — both true at once.
+00:00:20,000 --> 00:00:30,000
+현대차는 아틀라스를 공장에서 시범 운영 중이고
+테슬라도 자체 배터리 기술을 옵티머스에 넣고 있습니다.
+아직 둘 다 테스트 단계입니다.
 
 5
-00:01:05,000 --> 00:01:25,000
-SpaceX has upgraded the launch tower at Starbase to physically
-catch the returning booster with mechanical arms.
+00:00:30,000 --> 00:00:40,000
+한국 배터리 기업들에게도 기회가 보입니다.
+다만 특정 로봇 회사와의 공식 공급 계약은
+아직 확인된 바 없습니다.
 
 6
-00:01:25,000 --> 00:01:50,000
-Whether that catch is attempted — and whether it succeeds —
-depends on telemetry during descent and a real-time call
-from the flight director.
+00:00:40,000 --> 00:00:47,000
+전기차 다음은 로봇, 로봇의 심장도 결국 배터리입니다.
+더 깊은 분석, 구독하고 받아보세요.
 
 7
-00:01:50,000 --> 00:02:15,000
-Mars and Earth only line up for an efficient launch every
-26 months — the next window opens around late 2026.
-
-8
-00:02:15,000 --> 00:02:35,000
-Musk has said he wants to send up to five uncrewed Starships
-in that window.
-
-9
-00:02:35,000 --> 00:02:50,000
-If those landings succeed, he's floated crewed missions
-as early as 2028.
-
-10
-00:02:50,000 --> 00:03:15,000
-SpaceX's own history is the best data point here — Mars
-timelines from this company have slipped before.
-
-11
-00:03:15,000 --> 00:03:35,000
-While SpaceX targets 2026 for the first uncrewed Mars landings,
-historic aerospace timelines suggest these milestones are
-subject to regulatory, technical, and developmental delays.
-
-12
-00:03:35,000 --> 00:04:00,000
-So: the hardware is flying, the tower can catch a booster,
-and the 2026 window is real on a calendar. What's not settled
-is whether SpaceX's ship — or its schedule — will be ready for it.
+00:00:47,000 --> 00:00:50,000
+댓글로 남겨주세요: 로봇 배터리, 한국이 이길까요?
 ```
-*(Note: this SRT is a structural draft tied to script timing estimates, not a final-locked caption file — must be regenerated against the recorded VO.)*
 
 ---
 
-## (7) THUMBNAIL / TITLE OPTIONS
+## 7. 썸네일 / 타이틀 옵션
 
-**Titles (clickbait-screened per Gemini's sensitivity flag):**
-1. "SpaceX's Mars Plan: The Technical Reality Behind the 2026 Target"
-2. "Starship Can Catch a Rocket — Can It Reach Mars by 2026?"
-3. "Fact vs. Target: What SpaceX Has Actually Proven So Far"
-4. "The Real Starship Timeline (Not the Hype)"
+**타이틀 후보 (투자 권유 뉘앙스 없음 확인):**
+1. "로봇이 멈추는 진짜 이유 — 배터리였다"
+2. "휴머노이드 로봇의 약점, 아무도 말 안 해준 이것"
+3. "전기차 다음은 로봇, 승부는 배터리가 가른다"
 
-**Thumbnail concepts:**
-- A: Split image — real Flight 4 launch photo (left) vs. a clearly watermarked "CONCEPT" Mars render (right), bold center text "FACT vs TARGET"
-- B: Starbase tower photo with bold text overlay "2026? Here's what's real."
-- Avoid: any un-labeled Mars-surface image implying it's real footage.
+**썸네일 문구 후보:**
+- "로봇도 방전되면 고철?"
+- "로봇 시대, 진짜 승부처는 배터리"
 
----
-
-## (8) YOUTUBE DESCRIPTION
-
-> SpaceX says it's targeting 2026 to send an uncrewed fleet to Mars — but how much of that is confirmed, and how much is still a goal? This video separates verified facts about Starship's test flights from forecasts, official targets, and analysis.
->
-> ⚠️ Disclaimer: While SpaceX targets 2026 for the first uncrewed Mars landings, historic aerospace timelines suggest these milestones are subject to regulatory, technical, and developmental delays. Some visuals in this video are AI-generated concept renders, clearly labeled, and do not depict real footage.
->
-> Chapters:
-> 0:00 Intro
-> 0:12 What Flight 4 actually proved
-> 1:05 The booster catch attempt
-> 1:50 The 2026 Mars window, explained
-> 2:50 Why SpaceX timelines slip
-> 3:35 Bottom line
->
-> Footage credit: SpaceX public webcasts, NASA (public domain) where applicable.
-> This video reflects information available as of [INSERT PUBLISH-PREP DATE] — later flights or statements may have changed the picture; check current SpaceX/FAA sources for the latest status.
+**썸네일 비주얼:** AI 생성 제네릭 휴머노이드 로봇(로고 없음) + 적색 배터리 경고 아이콘, 배경 다크블루
 
 ---
 
-## (9) FINAL QC CHECKLIST (hard blockers before publish)
+## 8. 영상 설명(Description)
 
-- [ ] **Live-verify current Starship flight count and most recent flight outcome** — do not air "Flight 5" language unconfirmed by this pipeline as if it's settled.
-- [ ] Confirm FAA license status for the flight referenced at time of publish.
-- [ ] Confirm static fire / booster catch outcome via a live, named source before stating any result as fact.
-- [ ] Every on-screen claim has a visible FACT/FORECAST/TARGET/INTERPRETATION badge — no unlabeled claims.
-- [ ] Safe-harbor disclaimer line present verbatim in both VO and description.
-- [ ] All CGI/Mars-render shots carry persistent "CONCEPT RENDER" watermark for full shot duration.
-- [ ] All real footage credited on first use (SpaceX / NASA).
-- [ ] Confirm music track licensing (currently unresolved — open item).
-- [ ] No opinion/interpretation lines (I-01, I-02 style) presented without a "Commentary" label.
-- [ ] Re-confirm Musk's Sept 22, 2024 post content/date directly from X before quoting.
-- [ ] SRT retimed against final recorded VO (current file is a structural draft only).
-- [ ] Legal sign-off on footage usage rights obtained, not assumed.
-- [ ] If real source material is later supplied for this pipeline, this entire package is treated as a template only and must be regenerated against the actual source.
+```
+휴머노이드 로봇이 화려하게 걷고 뛰는 영상 뒤에는
+"배터리"라는 숨은 과제가 있습니다.
+
+로봇이 실제 공장에 들어가려면
+① 오래 가는 고밀도 배터리
+② 멈추지 않는 빠른 교체·충전 기술
+이 두 가지가 먼저 풀려야 합니다.
+
+현대차·테슬라 등 글로벌 기업들은 아직 '시범 운영' 단계이며,
+한국 배터리 기업들에게도 새로운 기회가 열리고 있습니다.
+(※ 특정 기업 간 공식 공급 계약은 아직 확인되지 않았습니다.)
+
+댓글로 알려주세요: 로봇 배터리, 한국이 이길까요?
+
+※ 본 영상은 보도된 정보를 바탕으로 한 뉴스 해설이며,
+특정 종목 매수/매도를 권유하지 않습니다. 투자 판단은 본인 책임입니다.
+
+#로봇 #휴머노이드로봇 #배터리 #2차전지 #테슬라옵티머스 #아틀라스 #LG에너지솔루션 #삼성SDI #로봇산업 #테크뉴스
+```
+
+---
+
+## 9. 최종 QC 체크리스트 (발행 게이트 — 전부 체크 전 업로드 금지)
+
+**사실관계**
+- [ ] "아틀라스 자동 배터리 교체" 관련 문구 전부 삭제 확인
+- [ ] "교체 3분" 수치 전부 삭제 확인
+- [ ] "옵티머스 3세대 효율 40%" 수치 전부 삭제 확인
+- [ ] "LG에너지솔루션 = 핵심 공급자" 단정 문구 → "공식 계약 미확인" 고지로 치환 확인
+- [ ] 현대차 공장 관련 서술이 "시범 운영"으로만 표기되고 "정식 투입/양산"으로 과장되지 않았는지 확인
+- [ ] Agility Digit "Amazon vs GXO" 파트너사명 재검색 후 정확한 명칭으로 수정했는지 확인
+- [ ] 영상 내 모든 구체 수치(시간/kWh/%)가 "범위+보도 기준" 형태인지, 점추정 수치로 단정하지 않았는지 확인
+
+**법적/저작권**
+- [ ] 실제 기업 공식 시연 영상을 가공 없이 B-roll로 사용하지 않았는지 확인
+- [ ] AI 생성 이미지에 실제 브랜드 로고/워드마크가 노출되지 않았는지 확인
+- [ ] 실존 인물(머스크 등) 초상 미사용 확인
+
+**투자 권유 리스크**
+- [ ] "사라/팔아라/수혜주" 등 표현 전체 영상·설명란에서 0건 확인
+- [ ] 설명란 투자 면책 문구 포함 확인
+
+**포맷**
+- [ ] 쇼츠 러닝타임 45~60초 준수
+- [ ] 훅(0~3초)에 미검증 숫자 없음 확인
+- [ ] 자막/음성 싱크, 하단 고지 배너 노출 확인
+
+**발행 보류 조건**
+- [ ] 위 "사실관계" 항목 중 하나라도 **실제 웹 재검색으로 교차 확인되지 않은 경우, 해당 문장은 영상에서 제외**하고 정성적 서술로 대체할 것.

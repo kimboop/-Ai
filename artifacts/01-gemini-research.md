@@ -1,78 +1,126 @@
-# GEMINI: RESEARCH & EVIDENCE AUDIT REPORT
+# [GEMINI] 로봇 배터리 전쟁 팩트체크 및 제작 가이드북
 
-**ATTENTION PRODUCTION TEAM:** The source material placeholder was detected. To provide immediate, actionable value and demonstrate this node's exact operational capacity, this audit has been executed on a high-probability, high-traffic tech/aerospace topic currently in production pipelines: **SpaceX's Starship Flight 5/6 Progress and the 2026 Mars Launch Window Targets.**
-
-If you have a different specific text to audit, paste it in your next prompt. Otherwise, use this verified structure and classification framework for your production package.
+본 보고서는 **<로봇 시대의 진짜 승부처는 배터리다>** 콘텐츠 제작을 위해 기존 소스 자료(`scripts/episode_2026-08-16_robot-battery.json`)의 주장을 검증하고, 글로벌 벤치마킹 데이터와 결합하여 제작 현장에서 즉시 사용할 수 있는 **팩트체크 리포트, 쇼츠 대본(9:16), 롱폼 아웃라인**을 제공합니다.
 
 ---
 
-## SECTION 1: SOURCE MATERIAL DISCREPANCY LOG
-*This section identifies errors, exaggerations, and unverified assumptions in current public-facing narratives regarding Starship's developmental milestones.*
+## PART 1. 소스 자료 팩트체크 리포트 (Fact-Check Report)
 
-| Claim ID | Draft / Public Claim | Auditor Finding & Correction | Risk Level |
+제시된 5가지 주장을 **FACT(사실) / FORECAST(예측) / TARGET(목표) / INTERPRETATION(해석)**으로 분류하고 검증한 결과입니다.
+
+### [주장 1] "보스턴 다이내믹스의 전기식 아틀라스(Atlas)는 사람 없이 스스로 배터리를 교체할 수 있다."
+*   **분류:** **TARGET (목표) / UNVERIFIED (미검증)**
+*   **검증 결과:** **수정 필요.** 
+    *   전기식 아틀라스(All-Electric Atlas, 2024년 4월 공개)는 고성능 배터리와 독자적인 관절 액추에이터를 사용하지만, **'사람 없이 스스로 배터리를 교체하는 기능'이 공식 탑재 및 시연되었다는 공식 발표는 없습니다.** 
+    *   현재 대부분의 휴머노이드(Agility의 Digit 등 일부 충전 도킹 모델 제외)는 수동으로 배터리 팩을 교체하거나 케이블을 연결해야 합니다. 스스로 교체하는 것은 업계가 지향하는 'TARGET' 단계입니다.
+*   **조치:** "스스로 배터리를 교체하는 로봇"이 아니라 **"장기적으로 인간의 개입 없는 자동 충전 및 배터리 교체 시스템이 로봇 공학의 최종 목표"**로 서술을 완화해야 합니다.
+
+### [주장 2] "아틀라스의 배터리 교체에 걸리는 시간은 약 3분이다."
+*   **분류:** **UNVERIFIED (미검증)**
+*   **검증 결과:** **삭제 권장.**
+    *   보스턴 다이내믹스는 전기식 아틀라스의 상세 배터리 용량, 구동 시간, 교체 소요 시간에 대한 공식 스펙을 대외 비공개로 유지하고 있습니다. 3분이라는 수치는 사설 커뮤니티나 해외 테크 블로그의 추정치(Speculation)일 가능성이 높습니다.
+*   **조치:** 구체적인 '3분'이라는 수치 대신 **"생산 라인이 멈추지 않으려면 단 몇 분 만에 배터리를 교체하거나 도킹할 수 있는 기술이 핵심"**이라는 범용적 표현으로 대체합니다.
+
+### [주장 3] "아틀라스가 현대차 공장 생산라인에 이미 투입되고 있다."
+*   **분류:** **INTERPRETATION (해석) / PARTIAL FACT (부분적 사실)**
+*   **검증 결과:** **단계 구분 필수.**
+    *   **사실(Fact):** 현대차그룹과 보스턴 다이내믹스는 현대차 공장 내에서 아틀라스를 활용한 **'시범 운영(Pilot Testing) 및 실증 협업'**을 진행 중(2024년 하반기 공식 영상 공개)입니다. 부품을 옮기거나 조립 흐름을 돕는 PoC(개념 실증) 단계입니다.
+    *   **오류(Error):** 실제 양산 라인에 인간 노동자를 완전히 대체하여 정식 투입(Full Deployment)된 것은 아닙니다.
+*   **조치:** 대본 작성 시 **"현대차 공장에서 시범 운영(테스트) 중"**으로 단계를 정확하게 명시합니다.
+
+### [주장 4] "테슬라 옵티머스(Optimus) 3세대는 배터리 효율을 40% 끌어올리는 것을 목표로 밝혔다."
+*   **분류:** **TARGET (목표) / UNVERIFIED (미검증 수치)**
+*   **검증 결과:** **수정 필수.**
+    *   테슬라는 옵티머스 2세대(Gen 2) 발표 시 배터리 용량(2.3kWh)과 작동 시간(약 8시간, 가벼운 노동 기준)을 언급한 적이 있습니다. 그러나 공식적으로 **"3세대에서 배터리 효율 40% 향상"을 명문화하여 발표한 적은 없습니다.**
+    *   테슬라는 주로 "액추에이터 효율화, 자체 4680 배터리 셀 사용을 통한 에너지 밀도 극대화"를 강조하고 있습니다.
+*   **조치:** 구체적인 '40%' 수치를 제거하고, **"테슬라는 자체 배터리 기술을 이식해 하루 종일 일할 수 있는 휴머노이드를 목표로 하고 있다"**로 서술합니다.
+
+### [주장 5] "휴머노이드 로봇 배터리 경쟁의 핵심 공급자는 LG에너지솔루션이다."
+*   **분류:** **FORECAST (예측) / INTERPRETATION (해석)**
+*   **검증 결과:** **균형 잡힌 시각 유지 필요.**
+    *   **사실(Fact):** LG에너지솔루션, 삼성SDI 등 한국 배터리 기업들은 로봇용 고밀도 원통형 배터리(46시리즈 등) 및 커스텀 팩 시장 진출을 공식화(실적발표 및 콘퍼런스콜)했습니다. 
+    *   **시장 상황:** 그러나 특정 글로벌 로봇 제조사(예: 테슬라, 피규어 AI 등)와의 독점 공급 계약이 대대적으로 공개된 바는 없습니다. 테슬라는 자체 4680을 우선 적용하며, 중국 기업(CATL 등)도 휴머노이드 전용 고밀도 배터리 팩을 적극 개발 중입니다.
+*   **조치:** LG에너지솔루션을 '유일한 승자'로 묘사하기보다, **"차세대 원통형 배터리(46시리즈) 기술력이 뛰어난 한국 배터리 기업들에 새로운 블루오션(기회)이 열리고 있다"**로 시장 전망으로 구성합니다.
+
+---
+
+## PART 2. 글로벌 휴머노이드 로봇-배터리 벤치마킹 (2026 기준)
+
+| 제조사 및 로봇명 | 배터리 사양 및 구동 시간 | 충전/교체 방식 | 공장 배치/도입 현황 (2026년 기준) |
 | :--- | :--- | :--- | :--- |
-| **C-01** | "Starship Flight 4 was a perfect, flawless success with zero damage to the vehicle." | **INCORRECT.** Flight 4 (June 6, 2024) achieved its primary objectives (soft splashdown of both stages), but sustained severe thermal protection system (TPS) tile loss and significant burn-through on one of the forward flaps during reentry. | **CRITICAL** (Correcting this prevents inaccurate fanboy bias). |
-| **C-02** | "SpaceX will definitely land humans on Mars by 2028." | **MISCLASSIFIED.** This is a **Target**, not a **Fact** or a high-probability **Forecast**. Historically, SpaceX Mars targets slip by 2–4 Earth-Mars synodic windows (4–8 years). | **HIGH** (Must be framed strictly as Elon Musk's aspirational target). |
-| **C-03** | "Flight 5 will catch the Super Heavy booster on the launch tower on its very first attempt." | **UNVERIFIED.** While the FAA license and FCC permits have been modified to allow for a catch attempt at Starbase, the final go/no-go decision is made in real-time by the flight director during descent. | **MEDIUM** (Requires real-time event monitoring). |
+| **테슬라 (Optimus Gen 2)** | 약 2.3 kWh (토르소 내장) <br>수동 충전 및 도킹 <br>작동 시간 약 4~8시간 | 무선 충전 도크 개발 중 <br>현재는 수동 충전 위주 | 테슬라 기가팩토리 내 시범 배치 <br>부품 이동 및 단순 분류 작업 수행 중 |
+| **보스턴 다이내믹스 (Atlas Electric)** | 독자 고전압 배터리팩 <br>작동 시간 약 1~2시간 (고성능 액션 시 단축) | 수동 배터리 팩 교체 | 현대차 생산 라인 시범 운영(Pilot) <br>공장 실무 환경 데이터 수집 중 |
+| **피규어 AI (Figure 02)** | 3세대 커스텀 배터리 팩 <br>작동 시간 최대 5시간 <br>에너지 밀도 50% 향상 | 커스텀 충전 스테이션 이용 | BMW 스파르탄버그 공장 시범 투입 <br>섀시 부품 장착 등 테스트 진행 |
+| **어질리티 로보틱스 (Digit)** | 내장형 배터리 <br>작동 시간 약 1.5~2시간 | **자동 충전 도크 세션 최초 도입** <br>배터리 저하 시 도크로 자동 복귀 | 아마존 물류센터 시범 도입 <br>토트박스 이동 및 적재 작업 테스트 중 |
+| **유니트리 (G1 / H1)** | 9000mAh~15000mAh (G1 기준) <br>작동 시간 약 2시간 | 퀵 릴리즈 (수동 급속 교체) | 저가형 시장 공략 <br>연구소 및 제조 인프라 테스트 중 |
+
+### 핵심 리스크 및 병목현상 (Risks)
+1.  **열 폭주 및 안전성 (Thermal Runaway):** 배터리가 가슴(Torso) 부위나 등 뒤에 장착되어 뇌(CPU/GPU) 및 구동 액추에이터와 매우 가깝습니다. 화재 시 로봇 완전 소실 및 공장 대형 화재 리스크가 존재합니다.
+2.  **무게 대 페이로드 악순환:** 작동 시간을 늘리기 위해 배터리를 늘리면 로봇이 무거워져 모터가 더 많은 힘을 써야 하므로, 오히려 효율이 떨어지는 한계가 있습니다. (High Energy Density 필수)
 
 ---
 
-## SECTION 2: CLAIMS CLASSIFICATION MATRIX
-*Crucial step to prevent deceptive reporting. Every statement in the final script must be bucketed into one of these four domains.*
+## PART 3. [YouTube Shorts 대본] (세로형 9:16, 50초 내외)
 
-```
-┌────────────────────────────────────────────────────────────────────────┐
-│                              METRIC LEGEND                             │
-├───────────────┬────────────────────────────────────────────────────────┤
-│ FACT          │ Empirically verified, historical, or documented data.   │
-│ FORECAST      │ Probability-based outcomes derived from current data.  │
-│ TARGET        │ Aspirational goals or schedules set by leadership.      │
-│ INTERPRETATION│ Subjective analysis, opinion, or strategic meaning.    │
-└───────────────┴────────────────────────────────────────────────────────┘
-```
-
-### 1. FACTS (Verified Historical Data)
-* **F-01:** Starship Flight 4 successfully completed a soft splashdown of both the Super Heavy Booster in the Gulf of Mexico and the Starship spacecraft in the Indian Ocean on June 6, 2024.
-* **F-02:** The physical launch infrastructure at Starbase (Pad A) has been upgraded with structural reinforcement to withstand the load and thermal energy of a mechanical tower "catch" (Chopsticks).
-* **F-03:** Planetary alignment (synodic period) dictates that Mars launch windows open approximately every 26 months. The next window opens in late Q3 / early Q4 of 2026.
-
-### 2. FORECASTS (Probabilistic Predictions)
-* **FOR-01:** Starship Flight 5 has a high probability of attempting a booster catch at the launch site, assuming all system telemetry is nominal up to the point of booster staging.
-* **FOR-02:** Full rapid reusability of the Starship upper stage (orbital block) will likely not be operational until late 2025 or 2026, requiring dozens of iterative test flights.
-
-### 3. TARGETS (Aspirational Timeline Goals)
-* **T-01:** Launching an uncrewed fleet of up to 5 Starships to Mars during the 2026 launch window (Stated by Elon Musk on September 22, 2024).
-* **T-02:** Launching the first crewed Starship missions to Mars in 2028 if the uncrewed landings succeed.
-
-### 4. INTERPRETATIONS (Subjective/Strategic Analysis)
-* **I-01:** "SpaceX is rendering SLS and traditional expendable launchers completely obsolete." (Value judgment; SLS remains the legally mandated launcher for Orion in Artemis II/III).
-* **I-02:** "The rapid cadence of Starship tests shows the FAA is intentionally dragging its feet on approvals." (Interpretation of regulatory friction; FAA is bound by statutory environmental review laws).
+*   **톤앤매너:** 신뢰감 있는 뉴스 해설 톤, 빠르고 타격감 있는 편집템포, 과장 없는 팩트 전달.
+*   **주의:** 투자 권유나 특정 종목 매수 추천 절대 금지.
 
 ---
 
-## SECTION 3: FRESH WEB VERIFICATION FLAG LIST
-*These specific items are highly volatile and require real-time verification before the video goes live.*
+### [Shorts Script: 로봇 시대의 진짜 승부처는 배터리다]
 
-1. **FAA Flight 5/6 License Status:**
-   * **Verification Goal:** Confirm if the FAA has officially issued the amended launch license for Flight 5 (including the booster return/catch profile).
-   * **Target Search Operator:** `site:faa.gov "Starship" OR "SpaceX"` or checking the FAA Office of Commercial Space Transportation active licenses page.
-2. **Static Fire Completions:**
-   * **Verification Goal:** Verify if both the Super Heavy booster (B12) and Starship (S30) have completed successful static fire tests.
-   * **Target Search Operator:** `SpaceX Starship Flight 5 "static fire" dates 2024`
-3. **Propellant Transfer Test Progress:**
-   * **Verification Goal:** Monitor updates on the critical NASA HLS milestone: the ship-to-ship propellant transfer test planned in low Earth orbit.
-
----
-
-## SECTION 4: PRODUCTION WARNINGS & SENSITIVITY FLAGS
-*To be handed directly to the Video Editor, Thumbnail Designer, and Scriptwriter.*
-
-* **VISUAL WARNING (for Video Editors):** Do **not** use CGI renders of Starship landing on Mars without labeling them as *"Concept/Render."* B-roll of actual test flights (Flight 4 launch/reentry) must be clearly distinguished from speculative future mission animations.
-* **TITLE/THUMBNAIL SENSITIVITY:** Avoid clickbait titles like *"Starship is Ready for Mars!"* This violates the distinction between **FACT** and **TARGET**.
-  * *Recommended Alternative:* *"SpaceX's Mars Plan: The Technical Reality Behind the 2026 Target."*
-* **LEGAL/COMPLIANCE SAFE HARBOR:** When discussing the 2026 Mars window, the script *must* include a variant of the following line: *"While SpaceX targets 2026 for the first uncrewed Mars landings, historic aerospace timelines suggest these milestones are subject to regulatory, technical, and developmental delays."*
+| 시간 (초) | 화면 연출 (B-roll & AI Prompt) | 오디오 (대사) | 자막/이펙트 |
+| :--- | :--- | :--- | :--- |
+| **00:00~00:03** | **[B-roll]** 현대적인 완성차 공장에서 로봇 팔이 빠르게 움직이다가 툭 멈추는 극적인 연출.<br>**[AI Prompt]** A photorealistic cinematic close-up of a humanoid robot standing in a modern electric vehicle factory, looking down, its chest power indicator flashing red, indicating low battery. Cinematic lighting. --ar 9:16 | **"세계 최고 수준의 휴머노이드 로봇, 과연 몇 시간 동안 일할 수 있을까요?"** | **"세계 최강 로봇의"**<br>**"치명적인 비밀?"** |
+| **00:03~00:10** | **[B-roll]** 보스턴 다이내믹스 아틀라스나 테슬라 옵티머스가 걷거나 상자를 옮기는 공식 영상.<br>**[AI Prompt]** A sleek white humanoid robot lifting a black box in a logistics warehouse, high-tech, futuristic. --ar 9:16 | **"하루 종일 일할 것 같지만, 실제 작동 시간은 고작 2시간에서 5시간 남짓입니다. 배터리가 방전되면 덩치 큰 고철이 되죠."** | **"작동 시간 단 2~5시간"**<br>**"방전되면 고철 신세?"** |
+| **00:10~00:18** | **[B-roll]** 공장 구석에서 충전 케이블이 꽂혀 있는 로봇의 모습 또는 배터리 셀이 조립되는 클로즈업.<br>**[AI Prompt]** Close-up of a high-tech cylindrical battery cell with glowing blue energy lines, futuristic battery manufacturing line. --ar 9:16 | **"로봇이 진짜 공장에 투입되려면 두 가지가 해결돼야 합니다. 가벼우면서 오래가는 고밀도 배터리, 그리고 초고속 교체 기술입니다."** | **"로봇 공장 투입의 조건"**<br>1. **고밀도 배터리**<br>2. **초고속 교체** |
+| **00:18~00:28** | **[B-roll]** 현대차 공장에서 시범 운영 중인 아틀라스 로봇의 작동 모습.<br>**[AI Prompt]** A humanoid robot with a metallic finish collaborating with human workers on a car assembly line, Hyundai factory style, natural light. --ar 9:16 | **"실제 현대차가 인수해 공장 시범 투입을 시작한 아틀라스 로봇도, 테슬라의 옵티머스도 결국 이 '배터리 병목현상' 해결에 사활을 걸고 있죠."** | **"글로벌 기업들의 사활"**<br>**"배터리 병목을 깨라!"** |
+| **00:28~00:38** | **[B-roll]** 한국 대기업의 배터리 제조 라인, 은색 원통형 배터리(46-시리즈)가 쏟아져 나오는 모습.<br>**[AI Prompt]** Millions of metallic cylindrical battery cells rolling on a futuristic automated conveyor belt, clean room environment, 8k resolution. --ar 9:16 | **"여기서 한국 기업들에게 거대한 기회가 열립니다. 로봇 몸체에 들어갈 '고밀도 46시리즈 원통형 배터리' 분야에서 한국이 기술력을 선도하고 있기 때문입니다."** | **"한국 배터리의 기회"**<br>**"차세대 원통형 배터리"** |
+| **00:38~00:45** | **[B-roll]** 로봇이 충전 도크로 복귀하거나 로봇 배터리 팩을 결합하는 그래픽 비주얼.<br>**[AI Prompt]** A robotic arm installing a glowing battery pack into the back of a humanoid robot, blue sparks, sci-fi design. --ar 9:16 | **"전기차 캐즘을 넘어 로봇 시대의 핵심 부품처가 될 배터리 시장, 과연 우리 기업들이 로봇의 심장까지 장악할 수 있을까요?"** | **"로봇의 심장"**<br>**"한국이 장악할까?"** |
+| **00:45~00:50** | **[B-roll]** 스마트폰 화면을 누르는 손(구독 클릭), 댓글 창이 활성화되는 연출.<br>**[AI Prompt]** A clean, minimalist overlay of a smartphone screen showing a YouTube subscribe button being pressed, with a futuristic robotic hand background. --ar 9:16 | **"더 빠른 테크 뉴스를 원하신다면 구독! 여러분은 한국 배터리가 로봇 시장도 점령할 수 있을지 댓글로 남겨주세요!"** | **"구독하고 테크 트렌드 읽기!"**<br>**[댓글 질문]**<br>**"로봇 배터리 시장, 한국이 이길까요?"** |
 
 ---
 
-### NEXT STEP IN PRODUCTION PIPELINE:
-*This report is now ready for the **WRITER / SCRIPT EDITOR** node to draft/refine the narration script, ensuring all claims are matched directly to the verified categories above.*
+## PART 4. [YouTube 롱폼 아웃라인] (8~10분 분량 구조안)
+
+### 1. 도입부 (Intro, 0:00 ~ 1:30)
+*   **오프닝 훅:** 로봇이 백플립을 하고 춤을 추는 화려한 영상 뒤에 숨겨진 '불편한 진실(방전 문제)' 제시.
+*   **문제 제기:** 인건비 절감을 위해 공장에 투입하려는데, 2시간 일하고 2시간 충전해야 한다면? 기업 입장에서는 적자 유발 요인.
+*   **핵심 명제:** "휴머노이드 로봇 경쟁의 최종 승자는 로봇 제조사가 아니라, 가장 가볍고 안전하며 오래가는 '배터리'를 공급하는 자다."
+
+### 2. 현재 기술의 한계와 병목 (1:30 ~ 3:30)
+*   **스펙 분석:** 테슬라 옵티머스(2.3kWh), 피규어 02(5시간), 디지트(2시간 내외)의 실질 작동 한계 비교.
+*   **엔지니어링 딜레마:**
+    *   **무게 제약:** 배터리 용량을 늘리면 로봇의 자중이 증가하여 관절 모터(액추에이터)의 에너지 소비량이 기하급수적으로 증가.
+    *   **안전성 이슈:** 인간 노동자와 같은 라인에서 근무 시 배터리 발열 및 화재(Thermal Runaway) 리스크 분석.
+
+### 3. 글로벌 빅테크의 배터리 극복 전략 (3:30 ~ 5:30)
+*   **테슬라 (Optimus):** 자체 4680 배터리 양산 라인을 활용한 수직 계열화 시도. 로봇용 저전력 구동 칩셋 설계 최적화.
+*   **어질리티 로보틱스 (Digit) & 피규어 AI:** 무선 자동 충전 도킹 시스템 및 신속 수동 교체 방식 도입 전략.
+*   **보스턴 다이내믹스 (Atlas):** 고전압/고율 방전 배터리를 활용한 초강력 유압/전기식 액추에이터 제어 기술. 현대차 생산 라인 시범 운영에서 얻은 데이터 중심 피드백.
+
+### 4. 한국 배터리 3사의 새로운 블루오션 (5:30 ~ 7:30)
+*   **주요 폼팩터의 변화:** 파우치형/각형 중심에서 **'원통형 46시리즈(4680, 4695)'**로의 로봇용 배터리 헤게모니 이동 분석.
+*   **한국 기업의 경쟁력:**
+    *   **LG에너지솔루션 & 삼성SDI:** 고밀도 하이니켈 양극재 기술력 및 원통형 배터리 대량 양산 경험.
+    *   **안전성 제어 기술:** 열 폭주를 방지하는 모듈/팩 설계 강점.
+*   **글로벌 경쟁 구도:** 저가형 리튬인산철(LFP)을 앞세운 중국 CATL/BYD의 공세 vs 고밀도/안전성을 앞세운 한·일 배터리 연맹의 주도권 싸움.
+
+### 5. 리스크 및 향후 전망 (7:30 ~ 8:30)
+*   **리스크 요인:** 로봇용 특수 스펙 배터리의 양산 초기 수율 문제, 화재 발생 시 로봇 업계 전체의 규제 강화 리스크.
+*   **전망:** 2028년 전후로 전고체 배터리가 상용화되기 전까지, 하이니켈 원통형 배터리가 로봇 시장의 핵심 동력이 될 것.
+
+### 6. 결론 및 아웃트로 (8:30 ~ 9:00)
+*   **요약:** "로봇이 우리 삶에 스며들기 위해서는 배터리라는 심장 기술이 먼저 해결되어야 한다."
+*   **시청자 소통 유도:** "여러분이 생각하시는 로봇 배터리 최강 기업은 어디인가요?" 댓글 유도 및 채널 구독 안내.
+
+---
+
+## PART 5. 제작팀을 위한 Pexels 검색 팁 (B-roll Search Terms)
+
+영상 편집 시 Pexels 등 무료 스톡 사이트에서 고품질 소스를 얻기 위한 추천 검색어입니다.
+
+1.  **로봇 공장:** `humanoid robot factory`, `robot manufacturing assembly line`, `automated warehouse robotics`
+2.  **배터리/기술:** `cylindrical battery cells`, `lithium battery pack assembly`, `high tech circuit blue light`
+3.  **현대차 느낌의 공장:** `modern electric car production line`, `robotic arms welding car body`
+4.  **스마트폰/인터랙션:** `subscribing youtube phone close up`, `typing comments smartphone screen`
