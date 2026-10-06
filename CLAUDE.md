@@ -59,26 +59,33 @@ This file is only for notes specific to Claude Code.
   파트너십, 리콜/사고 등 리스크 이슈 포함)을 리서치 단계(Gemini)에서 함께 수집해
   비교 기준으로 삼는다.
 
-# AI 협업 파이프라인 가이드 (Gemini → Claude)
+# AI 협업 파이프라인 가이드 (Claude 메인 → Gemini 서포트, 인스타그램 릴스)
+
+파이프라인의 산출물은 **인스타그램 릴스**(세로 9:16, 90초 이하 권장) 전용이다.
+유튜브 롱폼용으로 되돌리려면 `input.md`의 Task와
+`orchestrator/ai_collaboration.py`의 프롬프트를 함께 바꿔야 한다.
 
 ## 구성 파일
 
 | 파일 | 역할 |
 |---|---|
 | `.github/workflows/three-ai-collaboration.yml` | 파이프라인을 실행하는 GitHub Actions 워크플로 |
-| `orchestrator/ai_collaboration.py` | 실제 Gemini → Claude 호출 로직 |
+| `orchestrator/ai_collaboration.py` | 실제 Claude → Gemini 호출 로직 |
 | `input.md` | 파이프라인에 넣을 소스 자료 (기본 입력 파일) |
-| `artifacts/01-gemini-research.md` | Gemini 리서치/팩트체크 리포트 (자동 생성) |
-| `artifacts/02-final-package.md` | Claude가 만든 최종 산출물 (자동 생성) |
+| `artifacts/01-claude-lead-draft.md` | Claude가 만든 릴스 제작 초안 (자동 생성) |
+| `artifacts/02-final-reels-package.md` | Gemini가 갭을 채운 최종 산출물 (자동 생성) |
 
 ## 흐름
 
-1. **Gemini** — 리서치 및 증거 감사관 역할. 소스 자료의 모순, 검증 필요 포인트, 출처
-   품질 문제를 찾아 구조화된 팩트체크 리포트를 만든다.
-2. **Claude** — 시니어 편집자 겸 최종 오케스트레이터 역할. Gemini 리포트를 바탕으로
-   소스를 대조해 정확한 수정 사항, 서사적 리스크, 저작권 리스크를 짚어내고, 최종
-   프로덕션 패키지(대본, 장면별 지시, B-roll 리스트, 그래픽 스펙, SRT 초안, 썸네일/제목
-   옵션, 설명글, 최종 QC 체크리스트)를 완성한다.
+1. **Claude(메인)** — 리드 프로듀서 겸 1차 저작자 역할. 소스 자료를 바탕으로 릴스
+   제작 패키지 전체(훅, 타임스탬프 대본, 샷 리스트, 자막/온스크린 텍스트, 캡션 초안,
+   해시태그, 트렌딩 오디오 방향, 커버 프레임, CTA, QC 체크리스트)를 직접 작성한다.
+   스스로 검증할 수 없는 항목(실시간 트렌딩 오디오명, 최신 해시태그 성과, 최신
+   수치/사실 등)은 지어내지 않고 `[VERIFY-GEMINI: ...]` 마커로 명시적으로 표시한다.
+2. **Gemini(서포트)** — Claude의 창작·구조적 선택은 그대로 두고, 문서 안의
+   `[VERIFY-GEMINI: ...]` 마커만 리서치로 채운 뒤 최종 QC(팩트 라벨링 일관성,
+   저작권/음원 라이선스 리스크, 커뮤니티 가이드라인 리스크, 해시태그·캡션 정합성)를
+   수행해 최종 산출물을 완성한다.
 
 OpenAI(GPT) 3단계는 원래 있었지만 결제 문제로 제거했다. 필요해지면
 `orchestrator/ai_collaboration.py`에 `openai()` 함수를 다시 추가하고, 워크플로에
