@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Two-model collaboration runner: Gemini -> Claude.
+"""Multi-model collaboration runner: Gemini -> Claude -> (optional) ChatGPT.
 
 Input: a UTF-8 markdown/text file.
-Output: artifacts/01-gemini-research.md and artifacts/02-final-package.md.
+Output: artifacts/01-gemini-research.md, artifacts/02-final-package.md and,
+when OPENAI_API_KEY is set, artifacts/03-chatgpt-distribution.md.
 Secrets are supplied only through environment variables.
 """
 import json, os, sys, time, urllib.request, urllib.error
@@ -50,7 +51,16 @@ def claude(text):
                 {"model":model,"max_tokens":12000,"messages":[{"role":"user","content":text}]})
     return "\n".join(x.get("text", "") for x in data.get("content", []) if x.get("type") == "text")
 
-base = f"""You are one member of a two-AI production team.\n\nSOURCE MATERIAL:\n{source}\n\nDo not invent facts. Separate FACT / FORECAST / TARGET / INTERPRETATION. Flag anything needing fresh web verification. Return actionable production-ready output."""
+def chatgpt(text):
+    key = os.environ["OPENAI_API_KEY"]
+    model = os.getenv("OPENAI_MODEL") or "gpt-5"
+    data = post("https://api.openai.com/v1/responses",
+                {"Authorization": f"Bearer {key}"},
+                {"model": model, "input": text})
+    return "\n".join(c.get("text", "") for item in data.get("output", []) if item.get("type") == "message"
+                     for c in item.get("content", []) if c.get("type") == "output_text")
+
+base = f"""You are one member of a multi-AI production team.\n\nSOURCE MATERIAL:\n{source}\n\nDo not invent facts. Separate FACT / FORECAST / TARGET / INTERPRETATION. Flag anything needing fresh web verification. Return actionable production-ready output."""
 
 gemini_report = gemini(base + "\n\nROLE: GEMINI — research and evidence auditor. Find contradictions, missing verification points, and source-quality problems. Produce a structured fact-check report.")
 (Path(OUT / "01-gemini-research.md")).write_text(gemini_report, encoding="utf-8")
@@ -58,3 +68,16 @@ gemini_report = gemini(base + "\n\nROLE: GEMINI — research and evidence audito
 final = claude(base + f"\n\nGEMINI REPORT:\n{gemini_report}\n\nROLE: CLAUDE — senior editor and final orchestrator. Reconcile the source with Gemini's report, identify exact corrections, narrative risks, and legal/copyright risks, then produce the final production package. Keep verified facts intact, resolve conflicts conservatively, label uncertainty, and output: (1) corrected production plan, (2) final script, (3) scene-by-scene visual instructions, (4) B-roll/real-vs-AI list, (5) graphics specs, (6) SRT draft, (7) thumbnail/title options, (8) description, (9) final QC checklist. Do not claim a source was verified unless the supplied reports support it.")
 (Path(OUT / "02-final-package.md")).write_text(final, encoding="utf-8")
 print("DONE: artifacts/02-final-package.md")
+
+# ChatGPT stage is opt-in: it was removed once over billing, so a missing key
+# or a failed call must never cost us the Claude package written above.
+if not os.getenv("OPENAI_API_KEY"):
+    print("SKIP: OPENAI_API_KEY not set, ChatGPT stage skipped")
+    sys.exit(0)
+try:
+    distribution = chatgpt(base + f"\n\nFINAL PACKAGE (from Claude):\n{final}\n\nROLE: CHATGPT — distribution and monetization strategist plus independent red-team reviewer. Do not change verified facts or add new claims. Output: (1) red-team review: any factual, legal or tone problems still left in the final package, each with the exact fix; (2) hook variants for the first 0-3 seconds (5 options); (3) platform-specific packaging for YouTube long-form, YouTube Shorts, Instagram Reels and TikTok — title, caption, hashtags, pinned comment and CTA for each; (4) thumbnail text A/B pairs; (5) upload checklist and best posting times with reasoning labeled as INTERPRETATION.")
+except Exception as e:  # noqa: BLE001 - optional stage, report and keep Claude's output
+    print(f"::warning::ChatGPT stage failed, Claude package kept: {e}")
+    sys.exit(0)
+(Path(OUT / "03-chatgpt-distribution.md")).write_text(distribution, encoding="utf-8")
+print("DONE: artifacts/03-chatgpt-distribution.md")

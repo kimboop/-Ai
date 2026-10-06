@@ -59,7 +59,7 @@ This file is only for notes specific to Claude Code.
   파트너십, 리콜/사고 등 리스크 이슈 포함)을 리서치 단계(Gemini)에서 함께 수집해
   비교 기준으로 삼는다.
 
-# AI 협업 파이프라인 가이드 (Gemini → Claude)
+# AI 협업 파이프라인 가이드 (Gemini → Claude → ChatGPT)
 
 ## 구성 파일
 
@@ -70,6 +70,7 @@ This file is only for notes specific to Claude Code.
 | `input.md` | 파이프라인에 넣을 소스 자료 (기본 입력 파일) |
 | `artifacts/01-gemini-research.md` | Gemini 리서치/팩트체크 리포트 (자동 생성) |
 | `artifacts/02-final-package.md` | Claude가 만든 최종 산출물 (자동 생성) |
+| `artifacts/03-chatgpt-distribution.md` | ChatGPT 배포·수익화 패키지 + 레드팀 리뷰 (선택, 자동 생성) |
 
 ## 흐름
 
@@ -80,9 +81,14 @@ This file is only for notes specific to Claude Code.
    프로덕션 패키지(대본, 장면별 지시, B-roll 리스트, 그래픽 스펙, SRT 초안, 썸네일/제목
    옵션, 설명글, 최종 QC 체크리스트)를 완성한다.
 
-OpenAI(GPT) 3단계는 원래 있었지만 결제 문제로 제거했다. 필요해지면
-`orchestrator/ai_collaboration.py`에 `openai()` 함수를 다시 추가하고, 워크플로에
-`OPENAI_API_KEY` 시크릿과 가드 체크(`test -n "$OPENAI_API_KEY" || ...`)를 복원하면 된다.
+3. **ChatGPT (선택)** — 배포·수익화 전략가 겸 독립 레드팀 리뷰어. Claude 최종 패키지에
+   남은 사실/법적/톤 문제를 짚고, 0~3초 훅 변형, 플랫폼별(유튜브 롱폼·쇼츠·릴스·틱톡)
+   제목·캡션·해시태그·고정 댓글·CTA, 썸네일 A/B 문구, 업로드 체크리스트를 만든다.
+
+ChatGPT 단계는 예전에 결제 문제로 한 번 제거됐던 이력이 있어서 **옵트인**으로 설계했다.
+`OPENAI_API_KEY` 시크릿이 없으면 건너뛰고, 호출이 실패해도 경고만 남긴 채 Claude 패키지는
+그대로 유지된다(워크플로 실패로 처리하지 않음). 그래서 워크플로에 OpenAI 가드 체크는
+일부러 넣지 않았다.
 
 ## 실행 방법
 
@@ -99,12 +105,16 @@ OpenAI(GPT) 3단계는 원래 있었지만 결제 문제로 제거했다. 필요
 - `GEMINI_API_KEY` — https://aistudio.google.com 의 "Get API key"에서 발급 (Vertex AI
   콘솔에서 발급한 키는 이 REST 호출 방식과 호환되지 않아 404가 난다)
 - `ANTHROPIC_API_KEY` — https://console.anthropic.com/settings/keys
+- `OPENAI_API_KEY` (선택) — https://platform.openai.com/api-keys . ChatGPT Plus 구독과
+  API 결제는 별개라서, API 크레딧/결제수단이 등록돼 있어야 동작한다(429
+  `insufficient_quota`가 나면 이 문제다).
 
 **Variables** (같은 페이지의 Variables 탭 — 평문, 민감정보 아님):
 
 - `GEMINI_MODEL` — 권장값 `gemini-flash-latest` (특정 버전 대신 별칭을 쓰면 모델이
   세대교체돼도 코드/설정을 안 건드려도 됨)
 - `CLAUDE_MODEL` — 권장값 `claude-sonnet-5`
+- `OPENAI_MODEL` (선택) — 기본값 `gpt-5`. 더 새 모델이 나오면 이 변수만 바꾼다.
 
 ## 겪었던 함정들 (읽고 반복하지 말 것)
 
