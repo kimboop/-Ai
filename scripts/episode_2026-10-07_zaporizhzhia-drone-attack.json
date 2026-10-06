@@ -1,0 +1,29 @@
+{
+  "title": "유럽 최대 원전에 드론 공격... 사망자 발생",
+  "scenes": [
+    {
+      "script": "우크라이나 드론이 러시아가 점령 중인 자포리자 원전을 공격했습니다. 유럽 최대 원자력 발전소입니다.",
+      "broll_query": "nuclear power plant exterior"
+    },
+    {
+      "script": "실험실 건물과 방사성폐기물 처리시설, 두 곳이 피격됐다고 러시아 측이 밝혔습니다.",
+      "broll_query": "industrial laboratory building facility"
+    },
+    {
+      "script": "이 과정에서 직원들에게 음식을 배달하던 민간인 한 명이 숨졌습니다.",
+      "broll_query": "worker night shift warehouse"
+    },
+    {
+      "script": "국제원자력기구 IAEA는 드론이 외부 방사선 관리 실험실을 노렸다고 공식 확인했습니다.",
+      "broll_query": "scientist laboratory radiation safety"
+    },
+    {
+      "script": "그로시 IAEA 사무총장은 원전 인근 공격이 핵 안전에 위협이 될 수 있다고 경고했습니다.",
+      "broll_query": "press conference podium speech"
+    },
+    {
+      "script": "러시아 측은 핵 안전에는 위협이 없다고 주장했지만, 우크라이나는 아직 공식 입장을 밝히지 않았습니다.",
+      "broll_query": "drone flying night sky"
+    }
+  ]
+}
