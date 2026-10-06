@@ -1,104 +1,115 @@
-# CLAUDE — SENIOR EDITOR / FINAL ORCHESTRATOR REVIEW
-
-## Reconciliation Verdict
-
-**Status: 🛑 PRODUCTION BLOCKED — NO SOURCE MATERIAL SUPPLIED**
-
-I concur fully with Gemini's audit. The `SOURCE MATERIAL` field contains only the unfilled template placeholder text ("Replace this file with the material to research, fact-check, edit, and turn into a production package"). There are:
-
-- Zero raw claims to classify
-- Zero quotes to verify
-- Zero topic, subject, niche, or angle specified
-- No script, article, transcript, or outline of any kind
-
-**I will not fabricate a topic, claims, script, or sources to fill this gap.** Doing so would violate the core rule ("Do not invent sources or verification results") and would hand you a package built on invented content — the opposite of what a fact-checked YouTube pipeline is for. Any deliverable below that looks like "content" is explicitly a **structural template**, not real production copy.
+# CLAUDE — Senior Editor / Final Orchestrator
+## Reconciliation Report & Production Package
 
 ---
 
-## 1. Corrected Production Plan
+## 0. RECONCILIATION WITH GEMINI
 
-| Step | Status | Action Required |
+**Gemini's assessment is confirmed and adopted without modification.**
+
+I independently reviewed the `SOURCE MATERIAL` block. It contains only the unmodified template scaffold:
+
+> *"Replace this file with the material to research, fact-check, edit, and turn into a production package."*
+
+No topic, claim, transcript, article, quote, statistic, name, date, or narrative exists anywhere in the input. There is nothing to reconcile *content-wise* because there are two inputs to compare (source material vs. Gemini's report), and one of them is empty. Gemini did not hallucinate a topic to compensate — that is the correct behavior and I am ratifying it as senior editor.
+
+**Verdict:** 🔴 **PRODUCTION BLOCKED AT INTAKE STAGE.** This is a hard stop, not a soft caveat.
+
+---
+
+## 1. CORRECTIONS TO GEMINI'S REPORT
+
+None required. Gemini's audit is accurate, appropriately conservative, and correctly refused to fabricate a claim table. I will not override a correct "no data" finding just to produce a fuller-looking deliverable — doing so would violate the explicit rule: *"Do not invent facts."*
+
+One addition, not a correction:
+- Gemini flagged the *hallucination risk* downstream. I'm escalating this to a **legal/copyright risk** as well (below), since a fabricated "production-ready" package could include invented quotes, invented statistics, or invented real-person/brand references — each of which carries defamation, misattribution, or IP exposure if published.
+
+---
+
+## 2. NARRATIVE RISK ASSESSMENT
+
+| Risk | Likelihood if we proceed anyway | Severity |
 |---|---|---|
-| Source ingestion | ❌ Missing | User must paste raw material: article, notes, transcript, links, or a clear topic + key claims |
-| Gemini fact-audit | ⏸ Ready, idle | Will activate the moment text lands |
-| Claude reconciliation | ⏸ Ready, idle | Will cross-check Gemini's ledger, resolve conflicts, and build package |
-| Script/visuals/graphics/SRT | ⛔ Cannot start | Cannot write a script with no subject matter — would be invention |
+| AI invents a topic/story to fill the template | High | Critical — violates core rule, destroys channel credibility if caught |
+| Invented facts get voiced in a final script and published | High (if forced output) | Critical — misinformation liability |
+| Thumbnail/title promise content that doesn't exist | High | High — platform policy risk (clickbait/misleading metadata) |
+| Fabricated "verification" status presented as real | Medium | Critical — explicitly forbidden by task rules |
 
-**Bottleneck:** Single point of failure is the missing input. Nothing downstream can be legitimately produced.
+## 3. LEGAL / COPYRIGHT RISK ASSESSMENT
+
+| Risk | Status |
+|---|---|
+| Use of real names/brands/quotes not actually sourced | **N/A currently** — none supplied. Any such content I generated now would be fabricated and unsafe to publish. |
+| B-roll/stock footage licensing | Cannot be assessed — no visual references or claims exist to source footage against. |
+| Defamation exposure from invented claims about real people/companies | **Avoided** by refusing to invent content. |
+| Copyright of any "source" text | Cannot assess — no source text was provided to check for copyrighted passages, lyrics, images, etc. |
+
+**Conclusion:** The only safe, defensible action is to refuse to simulate a finished episode and instead deliver infrastructure that is instantly usable the moment real material arrives.
 
 ---
 
-## 2–7. Final Script / Visuals / B-roll / Graphics / SRT / Thumbnails
+## 4. CLASSIFICATION (per task rules)
 
-**Not producible from current input.** Below is the **intake-ready template scaffold** for each, so that once material is supplied, turnaround is immediate (same session).
+- **FACT:** The input field contains only placeholder instructional text. No verifiable claims exist.
+- **FORECAST:** If this pipeline proceeds to script/thumbnail/description generation without real source material, the output will necessarily contain invented content, breaching the project's core integrity rule.
+- **TARGET:** Obtain actual source material (article, transcript, notes, links, or stated topic) before any content deliverable is produced.
+- **INTERPRETATION:** This is almost certainly an operator error — the pipeline was run before pasting research into the template.
 
-### Script Template Structure (ready to fill)
-```
-[HOOK - 0:00-0:15] — Requires: strongest VERIFIED claim from ledger
-[SETUP - 0:15-1:00] — Requires: context facts, all tagged FACT/VERIFIED
-[BODY - modular by claim] — Each beat = 1 row from CLAIM AUDIT TABLE
-[FORECAST/TARGET callouts] — Must be voiced as "X projects..." / "Y aims to..." not stated as fact
-[CTA/OUTRO]
-```
+---
 
-### Scene-by-Scene Visual Instructions Template
-```
-| Scene # | Script Line Ref | Visual Direction | Real Footage / AI-Generated / Stock | Source of Visual (if real) |
-```
+## 5. ACTIONABLE DELIVERABLES (Scaffold Mode)
 
-### B-roll / Real-vs-AI List Template
-```
-| Asset | Type (Real/AI/Stock) | License Status | Needs Verification? |
-```
-⚠️ Flag: any real archival footage, photos, or third-party clips must have **usage rights confirmed** before use — this is a legal/copyright checkpoint, not optional.
+Since items 1–9 were requested, I'm delivering them as **ready-to-fill production templates**, not fabricated content. This is the actionable, production-ready artifact available right now: the moment source material is supplied, these fill in with zero structural rework.
 
-### Graphics Specs Template
+### (1) Corrected Production Plan
 ```
-| Graphic | Data Shown | Source Cited On-Screen | Confidence Label (Fact/Forecast/Target) |
+STATUS: BLOCKED — awaiting source material
+STEP 1: User supplies source material (article/transcript/notes/links)
+STEP 2: Gemini re-runs 3-Pass Audit (Claim Extraction → Source Verification → Bias Check)
+STEP 3: Claude reconciles audit vs. source, flags conflicts/uncertainty
+STEP 4: Claude produces real script + visuals + metadata using ONLY verified/labeled content
+STEP 5: QC pass before publish
 ```
 
-### SRT Draft
-Cannot generate timecoded captions with no script. Template:
-```
+### (2) Final Script
+`[PENDING — cannot write a script with zero verified facts or topic]`
+
+### (3) Scene-by-Scene Visual Instructions
+`[PENDING — dependent on script]`
+
+### (4) B-roll / Real-vs-AI List
+`[PENDING — cannot classify footage needs for a nonexistent script]`
+
+### (5) Graphics Specs
+`[PENDING — lower-thirds, charts, and citations depend on actual claims/data]`
+
+### (6) SRT Draft
+```srt
 1
-00:00:00,000 --> 00:00:03,000
-[Line pending source material]
+00:00:00,000 --> 00:00:05,000
+[NO SCRIPT AVAILABLE — SOURCE MATERIAL NOT SUPPLIED]
 ```
 
-### Thumbnail/Title Options
-Cannot ethically propose click-optimized titles/thumbnails with no verified claim to anchor them to — risk of **clickbait/misinformation liability** if titles are generated before facts exist.
+### (7) Thumbnail / Title Options
+`[PENDING — producing titles now would be clickbait with no backing content, a policy and trust risk]`
+
+### (8) Description
+`[PENDING]`
+
+### (9) Final QC Checklist (usable immediately — applies to NEXT submission)
+- [ ] Source material actually pasted (not template placeholder)
+- [ ] Every factual claim in script traceable to a labeled source
+- [ ] FACT / FORECAST / TARGET / INTERPRETATION tags applied to every claim
+- [ ] All claims requiring fresh web verification explicitly flagged (not silently assumed true)
+- [ ] No invented quotes, stats, or named entities
+- [ ] Conflicting primary sources preserved as uncertainty, not resolved by guessing
+- [ ] Thumbnail/title claims match actual video content (no overpromise)
+- [ ] B-roll/stock usage checked for licensing; AI-generated visuals labeled as such
+- [ ] SRT timing matches final script edit (regenerate after any script change)
+- [ ] Legal pass: no defamation/misattribution risk in final cut
 
 ---
 
-## 8. Description
+## 6. IMMEDIATE NEXT STEP
 
-Cannot draft — would require real claims, timestamps, and citations to link.
-
----
-
-## 9. Final QC Checklist (this applies right now)
-
-- [ ] ❌ Source material provided — **BLOCKING**
-- [ ] ❌ Claims extracted and tagged (FACT/FORECAST/TARGET/INTERPRETATION)
-- [ ] ❌ Each FACT has a citable source
-- [ ] ❌ Each FORECAST states methodology + range + who made it
-- [ ] ❌ Each TARGET names the announcing entity + baseline date
-- [ ] ❌ Conflicting reports flagged, not silently resolved
-- [ ] ❌ Web-verification-needed items listed with search queries
-- [ ] ❌ Copyright/licensing check on all real B-roll
-- [ ] ❌ No invented sources anywhere in package
-- [ ] ❌ Script/visuals/thumbnail/description internally consistent with ledger
-
-**0/10 passed.** Package cannot ship.
-
----
-
-## ACTIONABLE NEXT STEP (what will unblock this immediately)
-
-Paste one of the following, and both Gemini and I will execute the full pipeline in this same session:
-
-1. A raw article/press release/transcript, **or**
-2. A topic + bullet list of the specific claims/numbers/quotes you want covered, **or**
-3. A link/citation list plus your intended angle and target runtime
-
-Once received: Gemini runs claim extraction + tagging + verification flags → I reconcile, resolve conflicts conservatively, and deliver all 9 deliverables as real, source-grounded production copy — not templates.
+**Paste the actual source material** (article, transcript, notes, or topic brief) in place of the template text. On receipt, Gemini runs the 3-Pass Audit, and I reconcile + build the real package (1–9) using only verified or clearly-labeled-uncertain content.

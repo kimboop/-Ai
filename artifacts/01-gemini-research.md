@@ -1,54 +1,51 @@
-# EVIDENCE AUDIT & FACT-CHECK REPORT
-**Auditor:** Gemini (Research & Evidence Auditor)  
-**Status:** ⚠️ **INPUT MATERIAL PENDING / TEMPLATE ACTIVE**  
-**Alert:** The `SOURCE MATERIAL` section contains placeholder text (`Replace this file with the material to research...`). No raw claims or script drafts were provided for live verification.
-
-Below is the operational audit framework, taxonomy, and structured audit ledger ready to process your source material the moment it is provided.
+### **FACT-CHECK & EVIDENCE AUDIT REPORT**
+**Role:** GEMINI (Research & Evidence Auditor)  
+**Status:** 🔴 **BLOCKING** (Missing Source Material Input)
 
 ---
 
-## 1. Claim Classification Taxonomy
+### **1. META-EVALUATION OF SOURCE INPUT**
 
-Every discrete statement in the source material will be categorized into one of four operational buckets:
-
-| Tag | Category | Definition & Handling Rule |
+| Metric | Status / Value | Description |
 | :--- | :--- | :--- |
-| **`[FACT]`** | Empirical / Historical | Verifiable via records, primary documentation, or consensus historical data. Must have direct citation. |
-| **`[FORECAST]`** | Predictive Projection | Modeling, analyst estimates, or probabilistic outcomes. Must state methodology, range, and confidence limits. |
-| **`[TARGET]`** | Official Objective | Goals set by an entity (e.g., corporate revenue target, net-zero deadline). Must cite the announcing entity and baseline date. |
-| **`[INTERPRETATION]`** | Opinion / Analysis | Subjective framing, editorial narrative, or value judgments. Must be clearly attributed to the speaker/author, not stated as fact. |
+| **Input Status** | 🛑 **EMPTY** | The provided `SOURCE MATERIAL` contains only the default template placeholder instructions: *"Replace this file with the material to research..."* |
+| **Audit Feasibility**| **0%** | No facts, data points, or narratives are currently present to verify, cross-reference, or audit. |
+| **Critical Blocker** | **YES** | The production pipeline is halted. The next AI roles (Writer/Editor) cannot generate a script, storyboard, or metadata without source text. |
 
 ---
 
-## 2. Evidence Verification Status Tags
+### **2. META-CLASSIFICATION (FACT / FORECAST / TARGET / INTERPRETATION)**
 
-* **`[VERIFIED]`**: Corroborated by high-tier primary sources (regulatory filings, peer-reviewed data, official transcripts).
-* **`[NEEDS_WEB_VERIFICATION]`**: Plausible, but requires fresh web verification for recent updates, exact statistics, or moving baselines.
-* **`[UNVERIFIED / CONFLICT]`**: Conflicting reports across reputable outlets or primary documentation is missing.
-* **`[DEBUNKED / REJECT]`**: Factually inaccurate, mathematically inconsistent, or demonstrably false. Must be cut from production.
+To maintain structural integrity for the next steps in our multi-AI pipeline, we classify the current state of this project as follows:
+
+*   **FACT:** The prompt sent to this AI contains only template instructions and no factual claims, assertions, historical accounts, or data sets.
+*   **FORECAST:** If the team attempts to generate a YouTube package from this template without supplying source material, the downstream AIs will be forced to hallucinate or invent a topic, violating the core rule: *"Do not invent facts."*
+*   **TARGET:** The immediate acquisition of the raw text, article, transcript, or topic guidelines intended for this episode's production.
+*   **INTERPRETATION:** The user likely executed the prompt before pasting their research documents or topic notes into the placeholder section.
 
 ---
 
-## 3. Structured Audit Ledger (Production Template)
+### **3. THE GEMINI AUDIT FRAMEWORK (Ready for Deploy)**
 
-When you supply the text, the audit will be returned in this actionable table format:
+Once you provide the actual source material, I will run it through the following **Three-Pass Audit Protocol**:
 
-```markdown
-### CLAIM AUDIT TABLE
-
-| # | Raw Claim / Script Line | Taxonomy Class | Audit Status | Evidence / Source Check | Required Production Action |
-|---|---|---|---|---|---|
-| 1 | "[Exact quote from source]" | FACT / FORECAST / TARGET / INTERPRETATION | VERIFIED / NEEDS_WEB_VERIFICATION / CONFLICT / REJECT | [Primary Source / Reference / Discrepancy details] | [Exact rewrite, visual on-screen citation, or CUT command] |
+```
+[PASS 1: Claim Extraction] ──> Isolate all hard assertions, statistics, dates, and quotes.
+[PASS 2: Source Verification] ──> Check against peer-reviewed journals, primary sources, or high-authority reporting.
+[PASS 3: Bias & Conflict Check] ──> Identify half-truths, unproven forecasts, or biased interpretations.
 ```
 
+The resulting output will look like this structured table:
+
+| Claimed Fact | Source / Reference | Verification Status | Action Required |
+| :--- | :--- | :--- | :--- |
+| *Example: "Company X grew 500% in 2023."* | *SEC Filings / Press Release* | *⚠️ UNVERIFIED (Needs fresh web search)* | *Confirm if 500% refers to revenue, profit, or user base.* |
+
 ---
 
-## 4. Immediate Next Step
+### **4. ACTIONABLE NEXT STEPS**
 
-Please paste your raw script, article, notes, or topic outline. 
+To unblock the production pipeline, please perform the following step:
 
-Upon receipt, I will immediately execute:
-1. **Line-by-line claim extraction** and taxonomy tagging.
-2. **Contradiction and ambiguity screening**.
-3. **Fresh web verification flagging** (with search queries provided for live checks).
-4. **Actionable production notes** for the second AI (Scriptwriter/Producer) to assemble the final YouTube package.
+1. **Provide the Source Text:** Reply to this message by pasting your raw research, article, script draft, or notes directly into the chat. 
+2. **Re-Run the Pipeline:** Once you supply the text, I will immediately run the audit, separate the elements (Fact, Forecast, Target, Interpretation), and hand off clean data to the next AI in the production chain.
