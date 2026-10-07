@@ -11,7 +11,7 @@
 | 제작 방식 | 완전 자동화 — `scripts/video_generator.py` + 매일 아침 자동 루틴(트리거) | Claude가 대본·기획 초안을 쓰고 사람이 검수/녹음해서 마무리 |
 | 소재 | 전쟁·재난·국제 이슈 등 세계 뉴스 중 조회수 잠재력 높은 것 | 경제 뉴스가 내 지갑/생활에 미치는 영향 |
 | 톤 | 차분한 뉴스 앵커체. 사실/미확인 주장 엄격 분리. 제목은 사실 기반 안에서 임팩트 있게(공포·충격 등 감정 반응도 선택 기준에 포함) | 친근한 설명형. **과장·공포 마케팅 금지**. 속보 경쟁 안 함 |
-| 파일 규칙 | `scripts/episode_<YYYY-MM-DD>_<슬러그>.json` (video_generator.py가 바로 읽는 실제 렌더링 입력) | `scripts/<YYYY-MM-DD>_쇼츠_주제.md` / `_롱폼_주제.md` (사람이 다듬을 초안 — 자동 렌더링 안 됨) |
+| 파일 규칙 | `scripts/episode_<YYYY-MM-DD>_<슬러그>.json` (video_generator.py가 바로 읽는 실제 렌더링 입력) | `economy/scripts/<YYYY-MM-DD>_쇼츠_주제.md` / `_롱폼_주제.md` (사람이 다듬을 초안 — 자동 렌더링 안 됨). 기획은 `economy/plans/`, 성과 기록은 `economy/tracking.csv` |
 | 상세 규칙 | 이 파일 아래 "AI 협업 파이프라인 가이드" + `scripts/README.md` | `@youtube-guide.md` (아래 임포트) |
 
 **판단 기준**: 요청이 "오늘 세계 뉴스 영상 만들어줘"류면 트랙 A 규칙(이 파일 + scripts/README.md)을,
