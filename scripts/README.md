@@ -280,11 +280,20 @@ MCP 연결(`mcp__vidIQ__*`)로 업로드 이후 번거로운 작업(제목/설�
    제목/업로드 시각으로 사용자에게 확인 후 진행한다.
 3. `vidiq_update_video`로 title/description/tags/`privacyStatus: "public"`을
    한 번에 반영한다.
-4. 썸네일 PNG를 읽어서 base64 data URI(`data:image/png;base64,...`)로 변환한
-   뒤 `vidiq_update_video_thumbnail`의 `thumbnail` 파라미터로 전달한다
-   (`thumbnailFile`은 OpenAI 첨부파일 전용이라 여기선 못 쓴다 — 로컬 파일은
-   `thumbnail`에 data URI로 넣는 방식만 가능, PNG 2MiB 이하).
-5. 완료되면 최종 영상 링크를 사용자에게 보고한다.
+4. 썸네일은 **`thumbnail_path`의 PNG를 그대로 `git add`/`commit`/`push`해서
+   저장소에 올리고, `https://raw.githubusercontent.com/kimboop/-Ai/<브랜치>/<경로>`
+   URL을 `vidiq_update_video_thumbnail`의 `thumbnail` 파라미터에 HTTPS URL로
+   전달한다.** (레포가 public이라 인증 없이 바로 서빙된다.) 전달 전에 `curl`로
+   그 URL을 받아서 원본 PNG와 `sha256sum`이 같은지 확인한다.
+   base64 data URI 방식(`data:image/png;base64,...`)은 썸네일이 ~100KB만
+   돼도 base64 문자열이 10만 자가 넘어가서, 이걸 도구 호출 파라미터에 직접
+   옮겨 적다가 한 글자라도 깨지면 썸네일이 손상된다 — 2026-10-07 실제
+   테스트에서 이 위험을 발견하고 git 커밋 경유 방식으로 바꿨다. data URI는
+   레포에 커밋하기 애매한 경우(예: 레포가 private)에만 최후 수단으로 쓴다
+   (`thumbnailFile`은 OpenAI 첨부파일 전용이라 여기선 못 쓴다).
+5. 완료되면 `vidiq_user_videos`로 `privacyStatus`가 `public`으로 바뀌었는지
+   재확인하고, 최종 영상 링크(`https://www.youtube.com/watch?v=<videoId>`)를
+   사용자에게 보고한다.
 
 완전 자동 업로드(사람이 파일을 올리는 과정까지 없애는 것)를 원하면 별도로
 Google OAuth 앱 + `videos.insert` 연동이 필요하다 — 아직 안 만들었다.
