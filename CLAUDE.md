@@ -126,6 +126,15 @@ OpenAI(GPT) 3단계는 원래 있었지만 결제 문제로 제거했다. 필요
   문제일 가능성부터 의심할 것 — 실제로 잘못된 키는 400을 반환하지 404를 반환하지 않는다.
 - **Gemini 무료 티어 503**: 특히 `-latest` 별칭은 트래픽이 몰릴 때 일시적으로 503을
   반환하는 일이 흔하다. `post()`의 재시도 로직이 이걸 흡수하도록 설계돼 있다.
+- **읽기 타임아웃은 `HTTPError`가 아니다**: 2026-10-07 실제 라이브 실행에서
+  `TimeoutError`("The read operation timed out")가 발생했는데, 당시 `post()`가
+  `except urllib.error.HTTPError`만 잡고 있어서 재시도 한 번도 없이 1차 시도에서
+  그대로 올라왔다 — 심지어 `run()`의 Gemini 실패 폴백(except 블록)도 똑같이
+  `HTTPError`만 잡고 있어서 폴백 파일조차 안 쓰이고 그냥 죽었다. `post()`와
+  `run()` 양쪽 다 `except (urllib.error.HTTPError, TimeoutError,
+  urllib.error.URLError)`로 넓혀서 고쳤다 (`HTTPError`가 `URLError`의 서브클래스라
+  순서상 먼저 잡아야 함에 주의). 네트워크 호출에 예외 처리를 추가할 때는 상태코드
+  기반 에러만 생각하지 말고 타임아웃/연결 끊김도 항상 같이 챙길 것.
 - **API 키를 채팅/커밋에 붙여넣지 않기**: 디버깅 중 키가 필요하면 GitHub Actions
   워크플로 안에서 길이/앞뒤 몇 글자만 출력하거나, 실제 호출 결과(상태 코드 + 응답
   본문)만 출력하는 임시 디버그 스텝을 추가했다가 원인을 찾으면 바로 되돌리는 방식을

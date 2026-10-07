@@ -68,6 +68,33 @@ class PostRetryTests(unittest.TestCase):
         self.assertEqual(mock_urlopen.call_count, 1, "400 is not retryable, must not retry")
         mock_sleep.assert_not_called()
 
+    @patch("ai_collaboration.time.sleep")
+    @patch("ai_collaboration.urllib.request.urlopen")
+    def test_read_timeout_retries_then_succeeds(self, mock_urlopen, mock_sleep):
+        # Regression test: a live run hit a plain read TimeoutError (not an
+        # HTTPError) and the retry loop didn't catch it at all, so it
+        # propagated on the very first attempt with zero retries.
+        ok_response = unittest.mock.MagicMock()
+        ok_response.read.return_value = b'{"ok": true}'
+        ok_response.__enter__.return_value = ok_response
+        mock_urlopen.side_effect = [TimeoutError("The read operation timed out"), ok_response]
+
+        result = ac.post("https://example/api", {}, {})
+
+        self.assertEqual(result, {"ok": True})
+        self.assertEqual(mock_urlopen.call_count, 2)
+        mock_sleep.assert_called_once()
+
+    @patch("ai_collaboration.time.sleep")
+    @patch("ai_collaboration.urllib.request.urlopen")
+    def test_read_timeout_raises_after_exhausting_retries(self, mock_urlopen, mock_sleep):
+        mock_urlopen.side_effect = TimeoutError("The read operation timed out")
+
+        with self.assertRaises(TimeoutError):
+            ac.post("https://example/api", {}, {}, retries=3, backoff=1)
+
+        self.assertEqual(mock_urlopen.call_count, 3)
+
 
 # --------------------------------------------------------------------------
 # claude()/gemini() 응답 파싱 — 각 API 고유의 JSON 모양을 올바르게 추출하는지
@@ -143,6 +170,26 @@ class RunPipelineMockedTests(unittest.TestCase):
         self.assertIn("GEMINI SUPPORT PASS UNAVAILABLE", fallback)
         self.assertIn(mock_claude.return_value, fallback)
         self.assertIn("429", fallback)
+
+    @patch("ai_collaboration.gemini")
+    @patch("ai_collaboration.claude")
+    def test_gemini_timeout_also_falls_back_without_losing_claude_draft(self, mock_claude, mock_gemini):
+        # Regression test: a live run (2026-10-07) hit a TimeoutError from
+        # gemini() -- not an HTTPError -- and this except clause used to only
+        # catch HTTPError, so it propagated uncaught: no fallback file, no
+        # "Gemini is unavailable" notice, just a bare crash.
+        mock_claude.return_value = "draft with [VERIFY-GEMINI: trending audio name]"
+        mock_gemini.side_effect = TimeoutError("The read operation timed out")
+
+        with self.assertRaises(TimeoutError):
+            ac.run(self.input_path)
+
+        draft = (self.out_dir / "01-claude-lead-draft.md").read_text(encoding="utf-8")
+        fallback = (self.out_dir / "02-final-reels-package.md").read_text(encoding="utf-8")
+        self.assertIn("VERIFY-GEMINI", draft)
+        self.assertIn("GEMINI SUPPORT PASS UNAVAILABLE", fallback)
+        self.assertIn(mock_claude.return_value, fallback)
+        self.assertIn("timed out", fallback)
 
 
 if __name__ == "__main__":

@@ -16,20 +16,30 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "artifacts"
 
+RETRYABLE_STATUS = (429, 500, 502, 503, 504)
 
-def post(url, headers, payload, retries=4, backoff=10):
+
+def post(url, headers, payload, retries=4, backoff=10, timeout=300):
     req = urllib.request.Request(url, data=json.dumps(payload).encode(), headers={**headers, "Content-Type":"application/json"}, method="POST")
     for attempt in range(retries):
         try:
-            with urllib.request.urlopen(req, timeout=180) as r:
+            with urllib.request.urlopen(req, timeout=timeout) as r:
                 return json.loads(r.read().decode())
         except urllib.error.HTTPError as e:
-            if e.code in (429, 503) and attempt < retries - 1:
-                wait = backoff * (2 ** attempt)
-                print(f"{url} returned {e.code}, retrying in {wait}s (attempt {attempt + 1}/{retries})")
-                time.sleep(wait)
-                continue
-            raise
+            if e.code not in RETRYABLE_STATUS or attempt == retries - 1:
+                raise
+            reason = e.code
+        # Slow model responses surface as read timeouts or dropped connections,
+        # not HTTP errors; they're just as transient, so retry them too. (This
+        # bit us for real: a live run hit a plain read timeout, which isn't an
+        # HTTPError, so it skipped retries and propagated on the first try.)
+        except (TimeoutError, urllib.error.URLError) as e:
+            if attempt == retries - 1:
+                raise
+            reason = type(e).__name__
+        wait = backoff * (2 ** attempt)
+        print(f"{url} failed ({reason}), retrying in {wait}s (attempt {attempt + 1}/{retries})")
+        time.sleep(wait)
 
 
 def claude(text):
@@ -68,16 +78,22 @@ def run(input_path: Path) -> None:
     # to save, and exit non-zero so CI still flags that the support pass is owed.
     try:
         final = gemini(base + f"\n\nCLAUDE'S DRAFT:\n{claude_draft}\n\nROLE: GEMINI — support researcher. Do not rewrite Claude's creative or structural choices. Find every `[VERIFY-GEMINI: ...]` marker in the draft and replace it with a researched, sourced answer — or, if it truly cannot be verified without live web access, say so plainly and note it as a pre-publish TODO instead of fabricating a value. Then run a final QC pass: confirm FACT/FORECAST/TARGET/INTERPRETATION labeling is consistent, flag any copyright/music-licensing or Instagram community-guideline risk, and confirm the hashtags/caption stay consistent with the script. Return the complete final Reels production package with every marker resolved, plus a short 'QC & Supplement Notes' section summarizing what you filled in and any remaining risk.")
-    except urllib.error.HTTPError as e:
+    except (urllib.error.HTTPError, TimeoutError, urllib.error.URLError) as e:
+        # Mirror post()'s retryable set here too -- a read timeout or dropped
+        # connection that survives retries must still land in the fallback,
+        # not bypass it as an unhandled exception (that would both drop the
+        # "Gemini is unavailable" notice and leave the old final package
+        # stale instead of visibly marked as needing a re-run).
+        reason = f"{e.code} {e.reason}" if isinstance(e, urllib.error.HTTPError) else (str(e) or type(e).__name__)
         fallback = (
             "# ⚠️ GEMINI SUPPORT PASS UNAVAILABLE\n\n"
-            f"Gemini failed after retries ({e.code} {e.reason}). Claude's draft below is "
+            f"Gemini failed after retries ({reason}). Claude's draft below is "
             "unchanged and still has open `[VERIFY-GEMINI: ...]` markers -- resolve those "
             "manually or re-run the pipeline once Gemini is available again.\n\n---\n\n"
             + claude_draft
         )
         (OUT / "02-final-reels-package.md").write_text(fallback, encoding="utf-8")
-        print(f"WROTE FALLBACK: artifacts/02-final-reels-package.md (Gemini failed: {e.code} {e.reason})")
+        print(f"WROTE FALLBACK: artifacts/02-final-reels-package.md (Gemini failed: {reason})")
         raise
 
     (OUT / "02-final-reels-package.md").write_text(final, encoding="utf-8")
