@@ -104,6 +104,32 @@ Pixabay 호출은 별도 SDK 없이 표준 라이브러리(`urllib`)로 직접 �
 - `VIDEO_FPS` (기본 30), `VIDEO_PRESET` (기본 `medium`), `VIDEO_RENDER_THREADS`
   (기본 CPU 코어 수), `FFMPEG_BINARY`
 
+## 구글 드라이브 자동 업로드 (선택, 2026-10-08~)
+
+GitHub Actions에서 매번 Artifacts를 찾아 들어가서 다운로드하는 게 번거로워서,
+렌더링이 끝나면 영상·썸네일을 구글 드라이브 폴더에도 자동으로 올리는 단계를
+`render-shorts.yml`에 추가했다. **설정 전까지는 조용히 건너뛴다** (기존
+GitHub Artifacts 업로드는 그대로 동작하니 렌더링 자체가 막히지는 않는다).
+
+### 설정 방법 (한 번만)
+1. [Google Cloud Console](https://console.cloud.google.com) → 프로젝트 생성(또는 기존 프로젝트) → **API 및 서비스 → 라이브러리**에서 "Google Drive API" 사용 설정
+2. **API 및 서비스 → 사용자 인증 정보 → 사용자 인증 정보 만들기 → 서비스 계정** 생성
+3. 생성한 서비스 계정 → **키 → 키 추가 → 새 키 만들기 → JSON** → 다운로드
+4. 구글 드라이브에 영상 저장용 폴더를 새로 만들고, 그 폴더를 **공유**해서 3번 JSON 파일의
+   `client_email` 값(서비스 계정 이메일)에 **편집자** 권한을 준다
+5. 그 폴더를 열어 URL의 폴더 ID(`drive.google.com/drive/folders/<폴더ID>`)를 복사
+6. 저장소 Settings → Secrets and variables → Actions:
+   - **Secrets 탭**에 `GDRIVE_SA_KEY_JSON` — 3번 JSON 파일 내용 전체
+   - **Variables 탭**에 `GDRIVE_FOLDER_ID` — 5번 폴더 ID
+
+### 동작 방식
+- `render-shorts.yml`의 "Check Google Drive credentials are set" 스텝이 두 값이
+  모두 있는지 확인하고, 없으면 나머지 구글 드라이브 관련 스텝을 전부 건너뛴다.
+- 둘 다 있으면 `scripts/upload_to_drive.py output/*.mp4 output/thumbnails/*.png`를
+  실행해서 서비스 계정으로 인증 후 Drive API v3 `files.create`로 업로드한다.
+- 서비스 계정 키는 scope가 `drive.file`(이 앱으로 만든 파일만 접근 가능)로
+  제한돼 있어, 사용자 드라이브의 다른 파일에는 접근할 수 없다.
+
 ## 대본 JSON 스키마
 
 ```json

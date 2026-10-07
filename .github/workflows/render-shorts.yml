@@ -64,3 +64,27 @@ jobs:
             output/*.mp4
             output/thumbnails/*.png
           if-no-files-found: error
+
+      - name: Check Google Drive credentials are set
+        id: check_gdrive
+        env:
+          GDRIVE_SA_KEY_JSON: ${{ secrets.GDRIVE_SA_KEY_JSON }}
+          GDRIVE_FOLDER_ID: ${{ vars.GDRIVE_FOLDER_ID }}
+        run: |
+          if [ -n "$GDRIVE_SA_KEY_JSON" ] && [ -n "$GDRIVE_FOLDER_ID" ]; then
+            echo "has_credentials=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_credentials=false" >> "$GITHUB_OUTPUT"
+            echo "GDRIVE_SA_KEY_JSON 시크릿 또는 GDRIVE_FOLDER_ID 변수가 아직 설정되지 않아 구글 드라이브 업로드를 건너뜁니다 (GitHub Artifacts는 위에서 정상 업로드됨)."
+          fi
+
+      - name: Install Google Drive upload dependencies
+        if: steps.check_gdrive.outputs.has_credentials == 'true'
+        run: pip install google-api-python-client google-auth
+
+      - name: Upload to Google Drive
+        if: steps.check_gdrive.outputs.has_credentials == 'true'
+        env:
+          GDRIVE_SA_KEY_JSON: ${{ secrets.GDRIVE_SA_KEY_JSON }}
+          GDRIVE_FOLDER_ID: ${{ vars.GDRIVE_FOLDER_ID }}
+        run: python scripts/upload_to_drive.py output/*.mp4 output/thumbnails/*.png
