@@ -1,0 +1,29 @@
+{
+  "title": "흑해서 상선 2척 드론 공격...NATO 해역 초긴장",
+  "scenes": [
+    {
+      "script": "흑해 한복판에서 화물선 두 척이 동시에 드론 공격을 받았습니다. 불가리아 해안에서 약 110킬로미터 떨어진 해상이었습니다.",
+      "broll_query": "cargo ship at sea night"
+    },
+    {
+      "script": "토고 선적 알파와탄호는 심각한 손상을 입고 침몰했고, 밀을 싣고 있던 팔라우 선적 아블호는 화재에 휩싸였습니다.",
+      "broll_query": "ship fire ocean smoke"
+    },
+    {
+      "script": "불가리아 페리가 선원 18명을 구조했습니다. 터키인 11명과 인도인 7명이었고, 중상자 2명은 항구도시 바르나 병원으로 이송됐습니다.",
+      "broll_query": "rescue ferry sailors sea"
+    },
+    {
+      "script": "라데프 불가리아 총리는 명백한 국제해상법 위반이라고 규탄했지만, 공격 주체는 아직 밝히지 않았습니다. 젤렌스키 우크라이나 대통령은 러시아 소행이라 주장했으나, 불가리아 당국은 이를 아직 확인하지 않았습니다.",
+      "broll_query": "press conference podium flags"
+    },
+    {
+      "script": "불가리아는 긴급 안보리를 소집했고, 폰데어라이엔 EU 집행위원장은 민간 선박 공격을 용납할 수 없다고 밝혔습니다.",
+      "broll_query": "european union meeting room"
+    },
+    {
+      "script": "하루 전에도 흑해에서 터키 선적 화물선이 드론 공격을 받아 침몰해 2명이 숨졌습니다. 라데프 총리는 전쟁이 더 넓게 번질 수 있다고 경고했습니다.",
+      "broll_query": "black sea coastline map"
+    }
+  ]
+}
