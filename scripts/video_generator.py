@@ -302,11 +302,24 @@ SAMPLE_EPISODE = {
 # --------------------------------------------------------------------------
 # 렌더링
 # --------------------------------------------------------------------------
+def compute_scene_starts(durations: list[float]) -> list[float]:
+    """각 씬의 (서로 다를 수 있는) 실제 길이를 기준으로 누적 시작 시각을 구한다.
+    자막 클립의 with_start()가 이 값을 써야 음성과 어긋나지 않는다 — 씬 개수로
+    균등 분할한 고정값을 쓰면 문장 길이가 다른 씬부터 타이밍이 틀어진다."""
+    starts = []
+    cursor = 0.0
+    for d in durations:
+        starts.append(cursor)
+        cursor += d
+    return starts
+
+
 def generate_premium_shorts(episode: dict[str, Any], pixabay_key: str, voice: str,
                              output_path: Path, work_dir: Path, resume: bool,
                              fps: int, preset: str, threads: int) -> None:
     import numpy as np
-    from moviepy import ColorClip, CompositeVideoClip, ImageClip, concatenate_videoclips
+    from moviepy import (AudioFileClip, ColorClip, CompositeVideoClip, ImageClip,
+                          concatenate_audioclips, concatenate_videoclips)
 
     title = episode.get("title", "글로벌 핵심 이슈 리포트")
     scenes = episode["scenes"]
@@ -316,30 +329,39 @@ def generate_premium_shorts(episode: dict[str, Any], pixabay_key: str, voice: st
     title_font = resolve_font("SHORTS_FONT_EXTRABOLD", "NanumGothicExtraBold.ttf")
 
     work_dir.mkdir(parents=True, exist_ok=True)
-    full_text = " ".join(s["script"] for s in scenes)
-    text_hash = hashlib.sha256(full_text.encode()).hexdigest()[:16]
-    voice_path = work_dir / "voice.mp3"
-    state_path = work_dir / "state.json"
-    state = json.loads(state_path.read_text(encoding="utf-8")) if state_path.exists() else {}
 
-    if resume and voice_path.exists() and state.get("voice_hash") == text_hash:
-        LOG.info("Reusing cached narration (%s)", voice_path)
-    else:
-        LOG.info("Synthesizing narration with voice=%s", voice)
-        synthesize_narration(full_text, voice, voice_path)
-        state["voice_hash"] = text_hash
-        state_path.write_text(json.dumps(state, indent=2), encoding="utf-8")
+    # 내레이션은 씬별로 따로 합성한다 (예전엔 전체 대본을 한 번에 합성한 뒤
+    # duration을 씬 개수로 균등 분할했는데, 씬마다 문장 길이가 다르면 실제
+    # 발화 길이도 다르기 때문에 자막/배경이 뒤로 갈수록 오디오와 어긋났다 —
+    # 자막-음성 타이밍 불일치 버그. 씬별로 합성해서 각자의 실제 길이를 쓴다).
+    # 파일명에 씬 인덱스+스크립트 해시를 넣어 캐시 키로 쓰므로, 한 씬의
+    # 대본만 바뀌어도 그 씬만 재합성하면 된다 (예전엔 대본 아무 한 글자만
+    # 바뀌어도 전체 내레이션을 다시 합성했다).
+    narration_dir = work_dir / "narration"
+    narration_dir.mkdir(parents=True, exist_ok=True)
+    scene_audio_clips = []
+    for idx, scene in enumerate(scenes):
+        script_text = scene["script"]
+        scene_hash = hashlib.sha256(script_text.encode()).hexdigest()[:16]
+        scene_voice_path = narration_dir / f"scene_{idx}_{scene_hash}.mp3"
+        if resume and scene_voice_path.exists():
+            LOG.info("Reusing cached narration for scene %d (%s)", idx, scene_voice_path)
+        else:
+            LOG.info("Synthesizing narration for scene %d with voice=%s", idx, voice)
+            synthesize_narration(script_text, voice, scene_voice_path)
+        scene_audio_clips.append(AudioFileClip(str(scene_voice_path)))
 
-    from moviepy import AudioFileClip
-    audio_clip = AudioFileClip(str(voice_path))
-    total_duration = audio_clip.duration
-    scene_duration = total_duration / len(scenes)
+    scene_durations = [clip.duration for clip in scene_audio_clips]
+    total_duration = sum(scene_durations)
+    audio_clip = concatenate_audioclips(scene_audio_clips)
 
+    scene_starts = compute_scene_starts(scene_durations)
     downloads_dir = work_dir / "downloads"
     video_clips = []
     subtitle_clips = []
 
     for idx, scene in enumerate(scenes):
+        scene_duration = scene_durations[idx]
         query = scene.get("broll_query", "news background vertical")
         clip = fetch_background_clip(query, scene_duration, pixabay_key, downloads_dir)
         if clip is None:
@@ -349,7 +371,7 @@ def generate_premium_shorts(episode: dict[str, Any], pixabay_key: str, voice: st
         sub_img = create_subtitle_image(scene["script"], subtitle_font)
         subtitle_clips.append(
             ImageClip(np.array(sub_img))
-            .with_start(idx * scene_duration)
+            .with_start(scene_starts[idx])
             .with_duration(scene_duration)
             .with_position(("center", "center"))
         )
@@ -376,6 +398,8 @@ def generate_premium_shorts(episode: dict[str, Any], pixabay_key: str, voice: st
         final_video.close()
         audio_clip.close()
         for clip in video_clips:
+            clip.close()
+        for clip in scene_audio_clips:
             clip.close()
 
     LOG.info("완성: %s", output_path)

@@ -71,6 +71,23 @@ class PickPixabayVideoFileTests(unittest.TestCase):
             vg.pick_pixabay_video_file({})
 
 
+class ComputeSceneStartsTests(unittest.TestCase):
+    def test_unequal_durations_produce_cumulative_offsets(self):
+        # 회귀 테스트: 예전엔 전체 내레이션 길이를 씬 개수로 균등 분할해서
+        # 자막 시작 시각을 구했다 — 문장 길이가 다르면 (실제로는 거의 항상
+        # 다르다) 두 번째 씬부터 음성과 자막이 어긋나는 버그였다.
+        self.assertEqual(vg.compute_scene_starts([1.0, 2.5, 0.5]), [0.0, 1.0, 3.5])
+
+    def test_equal_durations_matches_old_even_split_behavior(self):
+        self.assertEqual(vg.compute_scene_starts([2.0, 2.0, 2.0]), [0.0, 2.0, 4.0])
+
+    def test_single_scene_starts_at_zero(self):
+        self.assertEqual(vg.compute_scene_starts([3.3]), [0.0])
+
+    def test_empty_list(self):
+        self.assertEqual(vg.compute_scene_starts([]), [])
+
+
 class ValidateEpisodeTests(unittest.TestCase):
     def test_rejects_empty_scenes(self):
         with self.assertRaises(ValueError):
@@ -253,7 +270,7 @@ class GeneratePremiumShortsMockedTests(unittest.TestCase):
 
         self.assertTrue(output.exists())
         self.assertGreater(output.stat().st_size, 0)
-        mock_tts.assert_called_once()
+        self.assertEqual(mock_tts.call_count, 2, "내레이션은 씬마다 따로 합성해야 한다 (자막-음성 타이밍 동기화)")
         self.assertEqual(mock_fetch_bg.call_count, 2)
 
     @patch("video_generator.synthesize_narration")
@@ -271,6 +288,38 @@ class GeneratePremiumShortsMockedTests(unittest.TestCase):
                                     work_dir, resume=True, fps=10, preset="ultrafast", threads=2)
 
         mock_tts.assert_called_once()  # 두 번째 실행은 캐시된 내레이션을 재사용해야 한다
+
+    @patch("video_generator.synthesize_narration")
+    @patch("video_generator.fetch_background_clip")
+    def test_resume_only_resynthesizes_the_changed_scene(self, mock_fetch_bg, mock_tts):
+        # 내레이션을 씬별로 캐싱하므로, 한 씬의 대본만 바뀌면 그 씬만
+        # 재합성해야 한다 — 예전엔 전체 대본을 한 덩어리로 해시했어서 아무
+        # 씬이나 한 글자만 바뀌어도 모든 씬을 처음부터 다시 합성했다.
+        mock_tts.side_effect = self._fake_tts
+        mock_fetch_bg.side_effect = self._fake_bg
+        work_dir = self.root / "cache"
+
+        episode_v1 = {
+            "title": "제목",
+            "scenes": [
+                {"script": "안 바뀌는 첫 문장", "broll_query": "q1"},
+                {"script": "바뀔 예정인 문장", "broll_query": "q2"},
+            ],
+        }
+        vg.generate_premium_shorts(episode_v1, "dummy-key", "ko-KR-SunHiNeural", self.root / "out1.mp4",
+                                    work_dir, resume=True, fps=10, preset="ultrafast", threads=2)
+        self.assertEqual(mock_tts.call_count, 2)
+
+        episode_v2 = {
+            "title": "제목",
+            "scenes": [
+                {"script": "안 바뀌는 첫 문장", "broll_query": "q1"},
+                {"script": "완전히 달라진 두 번째 문장", "broll_query": "q2"},
+            ],
+        }
+        vg.generate_premium_shorts(episode_v2, "dummy-key", "ko-KR-SunHiNeural", self.root / "out2.mp4",
+                                    work_dir, resume=True, fps=10, preset="ultrafast", threads=2)
+        self.assertEqual(mock_tts.call_count, 3, "바뀐 씬 하나만 재합성해야 한다")
 
 
 if __name__ == "__main__":
