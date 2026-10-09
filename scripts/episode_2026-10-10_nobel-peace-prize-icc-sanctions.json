@@ -1,0 +1,32 @@
+{
+  "title": "노벨평화상 받자마자 美 ICC에 전면 제재",
+  "upload_title": "노벨평화상 수상 몇 시간 만에...美, ICC에 전면 제재 선언 [속보]",
+  "description": "올해 노벨평화상은 국제형사재판소(ICC) 출신 인권 변호사 나비 필라이에게 돌아갔습니다. 노벨위원회는 전쟁범죄·인종학살 기소를 이끈 공로를 인정했습니다. 수상 발표 몇 시간 뒤 마코 루비오 미국 국무장관은 ICC와의 모든 거래를 금지하는 전면 제재를 발표했습니다. ICC는 '법치주의에 대한 공격'이라 반발했고, 트럼프 대통령과 이스라엘은 각각 이번 수상 자체를 비판했습니다.\n\n※ 각 기관·인물의 공식 발표와 반응을 사실 그대로 전달하며, 서로 다른 입장을 구분해 전달합니다.",
+  "hashtags": ["노벨평화상", "ICC", "나비필라이", "국제뉴스", "속보"],
+  "scenes": [
+    {
+      "script": "올해 노벨평화상이 국제형사재판소 출신 인권 변호사 나비 필라이에게 돌아갔습니다. 수상 발표 몇 시간 만에 미국이 ICC에 대한 전면 제재를 선언했습니다.",
+      "broll_query": "nobel medal dark background dramatic lighting"
+    },
+    {
+      "script": "노벨위원회는 필라이가 전쟁범죄와 인종학살 기소를 이끈 공로를 인정했습니다. 필라이는 2003년부터 2008년까지 ICC 재판관을 지냈습니다.",
+      "broll_query": "international courthouse exterior night dramatic"
+    },
+    {
+      "script": "몇 시간 뒤 마코 루비오 미국 국무장관은 ICC와의 모든 거래를 금지하는 전면 제재를 발표했습니다. 국무부는 ICC에 6개월의 유예 기간을 뒀다고 밝혔습니다.",
+      "broll_query": "government building silhouette dusk dramatic lighting"
+    },
+    {
+      "script": "ICC는 이번 조치를 법치주의에 대한 공격이라고 반발했고, 업무는 계속하겠다고 밝혔습니다. 트럼프 대통령은 노벨위원회가 상의 품위를 떨어뜨렸다고 비판했습니다.",
+      "broll_query": "flags international organization overcast dramatic"
+    },
+    {
+      "script": "이스라엘도 이번 수상을 상의 노골적인 정치적 무기화라고 규탄했습니다. 필라이는 작년 유엔 조사위원회를 이끌며 이스라엘의 가자지구 제노사이드 결론을 낸 바 있습니다.",
+      "broll_query": "world map middle east conflict dark"
+    },
+    {
+      "script": "평화상 수상과 동시에 미국과 국제형사재판소의 정면 충돌이 시작된 셈입니다. 6개월 뒤 ICC가 어떤 상황에 놓일지가 다음 관전 포인트입니다.",
+      "broll_query": "courthouse silhouette night documentary style"
+    }
+  ]
+}
