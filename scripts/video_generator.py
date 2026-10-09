@@ -162,13 +162,33 @@ def create_subtitle_image(text: str, font_path: str, size: tuple = TARGET_SIZE, 
     return img
 
 
-def create_title_image(title_text: str, font_path: str, size: tuple = TARGET_SIZE, font_size: int = 44):
+def create_title_image(title_text: str, font_path: str, size: tuple = TARGET_SIZE, font_size: int = 56):
     from PIL import Image, ImageDraw, ImageFont
 
     img = Image.new("RGBA", size, (0, 0, 0, 0))
     draw = ImageDraw.Draw(img)
     font = ImageFont.truetype(font_path, font_size)
-    bbox = draw.textbbox((0, 0), title_text, font=font)
+
+    # 글자 수가 아니라 실제 렌더링 픽셀 너비로 줄바꿈한다 — 폰트 크기를 키운
+    # 뒤에도 긴 제목이 캔버스 밖으로 잘리지 않게 하기 위함
+    # (make_thumbnail.py의 _wrap_to_width와 동일한 접근).
+    max_width = int(size[0] * 0.86)
+    words = title_text.split(" ")
+    lines: list[str] = []
+    current = ""
+    for word in words:
+        candidate = f"{current} {word}".strip()
+        bbox = draw.textbbox((0, 0), candidate, font=font)
+        if bbox[2] - bbox[0] <= max_width or not current:
+            current = candidate
+        else:
+            lines.append(current)
+            current = word
+    if current:
+        lines.append(current)
+    wrapped_text = "\n".join(lines)
+
+    bbox = draw.multiline_textbbox((0, 0), wrapped_text, font=font, align="center")
     text_w, text_h = bbox[2] - bbox[0], bbox[3] - bbox[1]
     x = (size[0] - text_w) // 2
     y = int(size[1] * 0.08)
@@ -177,7 +197,7 @@ def create_title_image(title_text: str, font_path: str, size: tuple = TARGET_SIZ
         [x - pad_x, y - pad_y, x + text_w + pad_x, y + text_h + pad_y],
         radius=12, fill=TITLE_PANEL, outline=TITLE_BORDER, width=1,
     )
-    draw.text((x, y), title_text, font=font, fill=(248, 250, 252, 255))
+    draw.multiline_text((x, y), wrapped_text, font=font, fill=(248, 250, 252, 255), align="center")
     return img
 
 

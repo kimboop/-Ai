@@ -170,6 +170,35 @@ class SubtitleAndTitleCardTests(unittest.TestCase):
         self.assertEqual(img.size, vg.TARGET_SIZE)
         self.assertEqual(img.mode, "RGBA")
 
+    def test_long_title_wraps_within_canvas_width(self):
+        from PIL import Image, ImageDraw, ImageFont
+
+        title = "● 크라마토르스크 버스 거리 폭격...최소 33명 사망"
+        font_size = 56
+        font = ImageFont.truetype(self.title_font, font_size)
+        draw = ImageDraw.Draw(Image.new("RGBA", vg.TARGET_SIZE))
+        max_width = int(vg.TARGET_SIZE[0] * 0.86)
+
+        vg.create_title_image(title, self.title_font, font_size=font_size)
+
+        words = title.split(" ")
+        lines, current = [], ""
+        for word in words:
+            candidate = f"{current} {word}".strip()
+            bbox = draw.textbbox((0, 0), candidate, font=font)
+            if bbox[2] - bbox[0] <= max_width or not current:
+                current = candidate
+            else:
+                lines.append(current)
+                current = word
+        if current:
+            lines.append(current)
+        self.assertGreater(len(lines), 1, "long title should wrap onto multiple lines")
+        for line in lines:
+            bbox = draw.textbbox((0, 0), line, font=font)
+            self.assertLessEqual(bbox[2] - bbox[0], max_width,
+                                  f"line {line!r} overflows the canvas width")
+
 
 # --------------------------------------------------------------------------
 # 썸네일 — 긴 한 줄 제목이 캔버스 밖으로 잘리던 버그의 회귀 테스트

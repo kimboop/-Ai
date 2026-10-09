@@ -3,27 +3,27 @@
   "scenes": [
     {
       "script": "우크라이나 동부 도시에서 버스가 다니던 거리에 러시아 유도폭탄이 떨어졌습니다. 최소 33명이 숨졌습니다.",
-      "broll_query": "city street emergency scene"
+      "broll_query": "city street rubble debris aftermath dark"
     },
     {
       "script": "크라마토르스크에서 발생한 이번 공격은 올해 우크라이나 민간인을 대상으로 한 공격 중 가장 치명적인 사례로 꼽힙니다.",
-      "broll_query": "bus stop urban street"
+      "broll_query": "bus wreckage night emergency response"
     },
     {
       "script": "우크라이나 비상대응청은 사망자 33명, 부상자는 최소 18명이라고 밝혔습니다. 버스 두 대에서 화재가 발생했습니다.",
-      "broll_query": "fire smoke street"
+      "broll_query": "fire smoke street night documentary"
     },
     {
       "script": "필라시킨 도네츠크주 지사는 크라마토르스크와 슬로뱐스크의 대중교통 운행을 전면 중단시켰습니다.",
-      "broll_query": "government official press statement"
+      "broll_query": "ukraine flag silhouette overcast dark"
     },
     {
       "script": "젤렌스키 대통령은 이번 공격에 반드시 대응하겠다고 밝혔고, 사망자 수가 더 늘어날 수 있다고 말했습니다.",
-      "broll_query": "president speech podium"
+      "broll_query": "military silhouette ukraine dramatic lighting"
     },
     {
       "script": "러시아 측은 민간인을 노리지 않았다는 입장이지만, 우크라이나는 이번 공격이 동부 요새 도시들에 대한 공격 강화의 일환이라고 보고 있습니다.",
-      "broll_query": "map eastern europe conflict"
+      "broll_query": "map eastern europe conflict dark"
     }
   ]
 }
