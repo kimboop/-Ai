@@ -55,6 +55,9 @@ jobs:
             --title "$TITLE" \
             --kicker "테크 이슈" \
             --output "output/thumbnails/${STEM}.png"
+          python scripts/make_upload_info.py \
+            --episode "${{ github.event.inputs.episode_file }}" \
+            --output "output/thumbnails/${STEM}.upload.txt"
 
       - name: Upload rendered video + thumbnail
         uses: actions/upload-artifact@v4
@@ -63,6 +66,7 @@ jobs:
           path: |
             output/*.mp4
             output/thumbnails/*.png
+            output/thumbnails/*.txt
           if-no-files-found: error
 
       - name: Check Google Drive credentials are set

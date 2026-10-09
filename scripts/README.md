@@ -176,6 +176,9 @@ GitHub Artifacts 업로드는 그대로 동작하니 렌더링 자체가 막히�
 ```json
 {
   "title": "글로벌 핵심 이슈 리포트",
+  "upload_title": "글로벌 핵심 이슈 리포트...끝까지 봐야 하는 이유 [속보]",
+  "description": "YouTube 업로드용 설명. 사실/미확인 주장을 구분해서 쓴다.",
+  "hashtags": ["해시태그1", "해시태그2"],
   "scenes": [
     {
       "script": "오늘의 첫 번째 소식입니다.",
@@ -190,10 +193,22 @@ GitHub Artifacts 업로드는 그대로 동작하니 렌더링 자체가 막히�
 ```
 
 - `script`: 필수. 해당 씬에서 읽을 대사 — 전체 씬의 `script`를 이어붙여
-  Edge-TTS로 한 번에 합성하고, 합성된 오디오 길이를 씬 개수로 나눠 씬별
-  길이를 정한다(원본 프로토타입과 동일한 방식).
+  Edge-TTS로 한 번에(single pass) 합성해서 자연스러운 억양을 유지하고,
+  WordBoundary 이벤트(단어별 실제 발화 시각)로 각 씬이 전체 오디오의 어느
+  지점에서 시작하는지 역산해 자막/B-roll 타이밍을 맞춘다(균등 분할 아님 —
+  `locate_scene_starts_from_word_events` 참고). 이 역산이 실패하면 균등
+  분할로 폴백하면서 경고 로그(`Could not align subtitles...`)를 남긴다.
 - `broll_query`: 선택. 해당 씬의 B-roll을 찾을 Pixabay 검색어. 생략 시
-  `"news background vertical"`.
+  `"news background vertical"`. 2026-10-09부터 어둡고 심각한 톤의 수식어
+  (dark, night, overcast, dramatic lighting, smoke, rubble, silhouette 등)를
+  넣는 걸 기본으로 한다 — 밝은 기업 스톡사진 느낌("press conference
+  podium" 등)은 사안의 심각성과 안 맞고 유치해 보인다는 피드백 때문.
+- `upload_title` / `description` / `hashtags`: 전부 선택. `title`은 영상 내
+  타이틀바·썸네일 헤드라인용 작업용 제목이라 YouTube 업로드 제목과 다를 수
+  있다(예: 검색 키워드가 되는 지명·숫자를 업로드 제목에만 추가). 이 셋을
+  채워두면 `make_upload_info.py`가 썸네일 옆에 바로 복붙 가능한 텍스트
+  파일을 만든다 — 비워두면 "직접 작성 필요" 안내만 남고 빈 채로 넘어가지
+  않는다.
 
 ## 사용법
 
@@ -234,6 +249,19 @@ python scripts/make_thumbnail.py \
 | `--work-dir` | 내레이션/B-roll 캐시 위치 커스터마이즈 |
 | `--voice` | Edge-TTS 보이스 오버라이드 |
 | `--fps` / `--preset` / `--threads` | 인코딩 옵션 |
+
+### 업로드 정보 (제목/설명/해시태그)
+
+`scripts/make_upload_info.py`는 episode JSON의 `upload_title`/`description`/
+`hashtags`를 읽어서 썸네일과 같은 폴더에 복붙용 텍스트 파일을 만든다.
+`render-shorts.yml`이 썸네일 생성 직후 자동으로 실행하므로 보통 직접 돌릴
+일은 없지만, 로컬에서 미리보기할 때는 다음과 같이 쓴다.
+
+```bash
+python scripts/make_upload_info.py \
+  --episode scripts/episode-name.json \
+  --output output/thumbnails/episode-name.upload.txt
+```
 
 ## 테스트
 

@@ -149,6 +149,35 @@ class ValidateEpisodeTests(unittest.TestCase):
 
 
 # --------------------------------------------------------------------------
+# 업로드 정보(제목/설명/해시태그) 텍스트 파일 — 순수 문자열 포매팅, 의존성 없음
+# --------------------------------------------------------------------------
+class MakeUploadInfoTests(unittest.TestCase):
+    def setUp(self):
+        import make_upload_info as mui
+        self.mui = mui
+
+    def test_prefers_upload_title_over_title(self):
+        text = self.mui.format_upload_info({
+            "title": "작업용 제목", "upload_title": "최종 업로드 제목",
+            "description": "설명입니다", "hashtags": ["a", "b"],
+        })
+        self.assertIn("최종 업로드 제목", text)
+        self.assertNotIn("작업용 제목", text)
+
+    def test_falls_back_to_title_when_no_upload_title(self):
+        text = self.mui.format_upload_info({"title": "작업용 제목"})
+        self.assertIn("작업용 제목", text)
+
+    def test_normalizes_hashtags_without_leading_hash(self):
+        text = self.mui.format_upload_info({"title": "t", "hashtags": ["우크라이나전쟁", "#속보"]})
+        self.assertIn("#우크라이나전쟁 #속보", text)
+
+    def test_missing_description_and_hashtags_leave_a_todo_note_not_blank(self):
+        text = self.mui.format_upload_info({"title": "t"})
+        self.assertIn("직접 작성 필요", text)
+
+
+# --------------------------------------------------------------------------
 # 자막/타이틀 카드 — 실제 PIL 렌더링, 네트워크는 안 씀 (폰트만 필요)
 # --------------------------------------------------------------------------
 @_needs_media_deps
