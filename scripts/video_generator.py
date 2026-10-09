@@ -256,18 +256,34 @@ def fetch_background_clip(query: str, scene_duration: float, api_key: str, cache
 # --------------------------------------------------------------------------
 # TTS
 # --------------------------------------------------------------------------
-def synthesize_narration(text: str, voice: str, dest: Path, retries: int = 3, backoff: int = 5) -> None:
+def synthesize_narration(text: str, voice: str, dest: Path, rate: str = "+0%",
+                          retries: int = 3, backoff: int = 5) -> list[tuple[str, float]]:
+    """전체 대본을 한 번에(single pass) 합성한다 — 씬별로 따로 합성하면 문장과
+    문장 사이의 자연스러운 억양·호흡이 끊겨 부자연스럽게 들린다. 대신
+    WordBoundary 이벤트((단어 텍스트, 시작 초) 목록, 발화 순서)를 같이 받아서
+    돌려준다 — 호출자가 이걸로 각 씬 텍스트가 실제 오디오의 어느 시점에서
+    시작하는지 역산할 수 있어서, 씬을 쪼개지 않고도 자막 타이밍을 맞출 수 있다
+    (locate_scene_starts_from_word_events 참고)."""
     import edge_tts
 
-    async def _make():
-        comm = edge_tts.Communicate(text, voice, rate="+0%")
-        await comm.save(str(dest))
+    async def _make() -> list[tuple[str, float]]:
+        comm = edge_tts.Communicate(text, voice, rate=rate, boundary="WordBoundary")
+        audio_chunks: list[bytes] = []
+        events: list[tuple[str, float]] = []
+        async for chunk in comm.stream():
+            if chunk["type"] == "audio":
+                audio_chunks.append(chunk["data"])
+            elif chunk["type"] == "WordBoundary":
+                # offset/duration은 100ns 단위("ticks")로 온다 — 초 단위로 변환.
+                events.append((chunk["text"], chunk["offset"] / 10_000_000))
+        dest.write_bytes(b"".join(audio_chunks))
+        return events
 
     for attempt in range(retries):
         try:
-            asyncio.run(_make())
+            events = asyncio.run(_make())
             if dest.exists() and dest.stat().st_size > 0:
-                return
+                return events
             raise RuntimeError("edge-tts produced an empty file")
         except Exception as e:  # noqa: BLE001 - transient network/service errors
             if attempt < retries - 1:
@@ -303,9 +319,10 @@ SAMPLE_EPISODE = {
 # 렌더링
 # --------------------------------------------------------------------------
 def compute_scene_starts(durations: list[float]) -> list[float]:
-    """각 씬의 (서로 다를 수 있는) 실제 길이를 기준으로 누적 시작 시각을 구한다.
-    자막 클립의 with_start()가 이 값을 써야 음성과 어긋나지 않는다 — 씬 개수로
-    균등 분할한 고정값을 쓰면 문장 길이가 다른 씬부터 타이밍이 틀어진다."""
+    """각 씬의 (서로 다를 수 있는) 길이를 기준으로 누적 시작 시각을 구한다.
+    씬 개수로 균등 분할한 고정값보다 정확하지만, 이것도 "씬 길이"가 정확해야
+    맞는다 — word-boundary 타이밍을 못 구했을 때의 폴백으로만 쓴다
+    (locate_scene_starts_from_word_events 참고)."""
     starts = []
     cursor = 0.0
     for d in durations:
@@ -314,12 +331,56 @@ def compute_scene_starts(durations: list[float]) -> list[float]:
     return starts
 
 
+def compute_scene_char_offsets(scripts: list[str]) -> list[int]:
+    """각 씬 스크립트가 전체 내레이션 텍스트(" ".join(scripts))에서 몇 번째
+    문자부터 시작하는지 구한다. generate_premium_shorts()가 실제로 join하는
+    방식(스페이스 1칸)과 반드시 같은 규칙을 써야 한다."""
+    offsets = []
+    cursor = 0
+    for s in scripts:
+        offsets.append(cursor)
+        cursor += len(s) + 1  # +1: 다음 스크립트와 이어붙일 때의 join 스페이스
+    return offsets
+
+
+def locate_scene_starts_from_word_events(
+    full_text: str,
+    scene_char_starts: list[int],
+    word_events: list[tuple[str, float]],
+) -> list[float] | None:
+    """edge-tts의 WordBoundary 이벤트(발화 순서대로 정렬된 (단어 텍스트, 시작
+    초) 목록)로 각 씬이 실제 오디오에서 몇 초에 시작하는지 구한다. 단어
+    텍스트를 full_text에서 순서대로 찾아가며 "문자 위치 → 시각" 대응표를
+    만들고, 각 씬의 시작 문자 위치 이상인 첫 단어의 시각을 그 씬의 시작으로
+    쓴다. 이벤트가 비었거나 텍스트를 못 찾으면(edge-tts 출력이 예상과
+    다르면) None을 돌려줘서 호출자가 균등 분할로 안전하게 폴백하게 한다."""
+    if not word_events:
+        return None
+
+    word_positions: list[tuple[int, float]] = []
+    cursor = 0
+    for word_text, offset_sec in word_events:
+        pos = full_text.find(word_text, cursor)
+        if pos == -1:
+            return None
+        word_positions.append((pos, offset_sec))
+        cursor = pos + len(word_text)
+
+    scene_starts = []
+    for char_start in scene_char_starts:
+        match = next((t for p, t in word_positions if p >= char_start), None)
+        if match is None:
+            match = word_positions[-1][1]
+        scene_starts.append(match)
+    return scene_starts
+
+
 def generate_premium_shorts(episode: dict[str, Any], pixabay_key: str, voice: str,
                              output_path: Path, work_dir: Path, resume: bool,
-                             fps: int, preset: str, threads: int) -> None:
+                             fps: int, preset: str, threads: int,
+                             tts_rate: str = "+0%") -> None:
     import numpy as np
-    from moviepy import (AudioFileClip, ColorClip, CompositeVideoClip, ImageClip,
-                          concatenate_audioclips, concatenate_videoclips)
+    from moviepy import AudioFileClip, ColorClip, CompositeVideoClip, ImageClip, concatenate_videoclips
 
     title = episode.get("title", "글로벌 핵심 이슈 리포트")
     scenes = episode["scenes"]
@@ -330,32 +391,48 @@ def generate_premium_shorts(episode: dict[str, Any], pixabay_key: str, voice: st
 
     work_dir.mkdir(parents=True, exist_ok=True)
 
-    # 내레이션은 씬별로 따로 합성한다 (예전엔 전체 대본을 한 번에 합성한 뒤
-    # duration을 씬 개수로 균등 분할했는데, 씬마다 문장 길이가 다르면 실제
-    # 발화 길이도 다르기 때문에 자막/배경이 뒤로 갈수록 오디오와 어긋났다 —
-    # 자막-음성 타이밍 불일치 버그. 씬별로 합성해서 각자의 실제 길이를 쓴다).
-    # 파일명에 씬 인덱스+스크립트 해시를 넣어 캐시 키로 쓰므로, 한 씬의
-    # 대본만 바뀌어도 그 씬만 재합성하면 된다 (예전엔 대본 아무 한 글자만
-    # 바뀌어도 전체 내레이션을 다시 합성했다).
+    # 내레이션은 전체 대본을 한 번에(single pass) 합성한다. 씬별로 따로
+    # 합성했더니 자막 타이밍은 맞았지만 문장 사이 자연스러운 억양·호흡이
+    # 끊겨 부자연스럽게 들린다는 피드백을 받았다. 대신 WordBoundary
+    # 이벤트(실제 발화 시각)를 받아서 각 씬 텍스트가 전체 오디오의 어느
+    # 시점에서 시작하는지 역산한다 — 씬을 쪼개지 않고도 자막-음성 타이밍을
+    # 맞추는 방법이다.
+    full_text = " ".join(s["script"] for s in scenes)
     narration_dir = work_dir / "narration"
     narration_dir.mkdir(parents=True, exist_ok=True)
-    scene_audio_clips = []
-    for idx, scene in enumerate(scenes):
-        script_text = scene["script"]
-        scene_hash = hashlib.sha256(script_text.encode()).hexdigest()[:16]
-        scene_voice_path = narration_dir / f"scene_{idx}_{scene_hash}.mp3"
-        if resume and scene_voice_path.exists():
-            LOG.info("Reusing cached narration for scene %d (%s)", idx, scene_voice_path)
-        else:
-            LOG.info("Synthesizing narration for scene %d with voice=%s", idx, voice)
-            synthesize_narration(script_text, voice, scene_voice_path)
-        scene_audio_clips.append(AudioFileClip(str(scene_voice_path)))
+    text_hash = hashlib.sha256(full_text.encode()).hexdigest()[:16]
+    voice_path = narration_dir / f"voice_{text_hash}.mp3"
+    events_path = narration_dir / f"voice_{text_hash}.events.json"
 
-    scene_durations = [clip.duration for clip in scene_audio_clips]
-    total_duration = sum(scene_durations)
-    audio_clip = concatenate_audioclips(scene_audio_clips)
+    if resume and voice_path.exists() and events_path.exists():
+        LOG.info("Reusing cached narration (%s)", voice_path)
+        word_events = [tuple(e) for e in json.loads(events_path.read_text(encoding="utf-8"))]
+    else:
+        LOG.info("Synthesizing narration (single pass, %d scenes) with voice=%s", len(scenes), voice)
+        word_events = synthesize_narration(full_text, voice, voice_path, rate=tts_rate)
+        events_path.write_text(json.dumps(word_events, ensure_ascii=False), encoding="utf-8")
 
-    scene_starts = compute_scene_starts(scene_durations)
+    audio_clip = AudioFileClip(str(voice_path))
+    total_duration = audio_clip.duration
+
+    scene_char_starts = compute_scene_char_offsets([s["script"] for s in scenes])
+    scene_starts = locate_scene_starts_from_word_events(full_text, scene_char_starts, word_events)
+    if scene_starts is None:
+        LOG.warning(
+            "Could not align subtitles to narration via word-boundary timestamps "
+            "(unexpected edge-tts output) — falling back to an equal split across "
+            "scenes, which can drift out of sync for scenes of very different lengths."
+        )
+        scene_starts = compute_scene_starts([total_duration / len(scenes)] * len(scenes))
+
+    scene_durations = [
+        max(
+            (scene_starts[i + 1] if i + 1 < len(scene_starts) else total_duration) - scene_starts[i],
+            0.3,
+        )
+        for i in range(len(scene_starts))
+    ]
+
     downloads_dir = work_dir / "downloads"
     video_clips = []
     subtitle_clips = []
@@ -399,8 +476,6 @@ def generate_premium_shorts(episode: dict[str, Any], pixabay_key: str, voice: st
         audio_clip.close()
         for clip in video_clips:
             clip.close()
-        for clip in scene_audio_clips:
-            clip.close()
 
     LOG.info("완성: %s", output_path)
 
@@ -438,6 +513,9 @@ def main() -> int:
     parser.add_argument("--work-dir", type=Path, default=None,
                          help="Cache dir for narration/B-roll downloads (default: output/.cache/<input-stem>)")
     parser.add_argument("--voice", default=os.environ.get("SHORTS_TTS_VOICE", "ko-KR-SunHiNeural"))
+    parser.add_argument("--tts-rate", default=os.environ.get("SHORTS_TTS_RATE", "+0%"),
+                         help="Edge-TTS speaking-rate adjustment, e.g. -5%% for a slightly slower, "
+                              "less rushed delivery (default: +0%%)")
     parser.add_argument("--no-resume", action="store_true", help="Ignore cached narration/B-roll and refetch")
     parser.add_argument("--fps", type=int, default=int(os.environ.get("VIDEO_FPS", 30)))
     parser.add_argument("--preset", default=os.environ.get("VIDEO_PRESET", "medium"))
@@ -488,7 +566,7 @@ def main() -> int:
     try:
         generate_premium_shorts(episode, pixabay_key, args.voice, output, work_dir,
                                  resume=not args.no_resume, fps=args.fps,
-                                 preset=args.preset, threads=args.threads)
+                                 preset=args.preset, threads=args.threads, tts_rate=args.tts_rate)
     except Exception as e:  # noqa: BLE001 - top-level command boundary
         LOG.error("Render failed: %s", e)
         LOG.error("Cached narration/B-roll in %s are reused on the next run.", work_dir)

@@ -72,10 +72,11 @@ class PickPixabayVideoFileTests(unittest.TestCase):
 
 
 class ComputeSceneStartsTests(unittest.TestCase):
+    """compute_scene_starts()는 word-boundary 타이밍을 못 구했을 때 쓰는
+    균등-분할 폴백이다 (generate_premium_shorts 참고) — 정상 경로는
+    LocateSceneStartsFromWordEventsTests가 검증한다."""
+
     def test_unequal_durations_produce_cumulative_offsets(self):
-        # 회귀 테스트: 예전엔 전체 내레이션 길이를 씬 개수로 균등 분할해서
-        # 자막 시작 시각을 구했다 — 문장 길이가 다르면 (실제로는 거의 항상
-        # 다르다) 두 번째 씬부터 음성과 자막이 어긋나는 버그였다.
         self.assertEqual(vg.compute_scene_starts([1.0, 2.5, 0.5]), [0.0, 1.0, 3.5])
 
     def test_equal_durations_matches_old_even_split_behavior(self):
@@ -86,6 +87,52 @@ class ComputeSceneStartsTests(unittest.TestCase):
 
     def test_empty_list(self):
         self.assertEqual(vg.compute_scene_starts([]), [])
+
+
+class ComputeSceneCharOffsetsTests(unittest.TestCase):
+    def test_offsets_account_for_join_space(self):
+        # generate_premium_shorts()가 " ".join(...)으로 전체 내레이션 텍스트를
+        # 만들므로, 오프셋도 그 스페이스 1칸을 반드시 반영해야 locate_scene_
+        # starts_from_word_events()의 문자 위치 매칭이 맞아떨어진다.
+        self.assertEqual(vg.compute_scene_char_offsets(["안녕", "반가워요"]), [0, 3])
+
+    def test_single_scene(self):
+        self.assertEqual(vg.compute_scene_char_offsets(["하나"]), [0])
+
+    def test_empty_list(self):
+        self.assertEqual(vg.compute_scene_char_offsets([]), [])
+
+
+class LocateSceneStartsFromWordEventsTests(unittest.TestCase):
+    def test_matches_word_positions_to_scene_boundaries(self):
+        scripts = ["첫 문장 입니다", "두번째 문장 입니다"]
+        full_text = " ".join(scripts)
+        scene_char_starts = vg.compute_scene_char_offsets(scripts)
+        word_events = [
+            ("첫", 0.0), ("문장", 0.3), ("입니다", 0.6),
+            ("두번째", 1.0), ("문장", 1.3), ("입니다", 1.6),
+        ]
+        starts = vg.locate_scene_starts_from_word_events(full_text, scene_char_starts, word_events)
+        self.assertEqual(starts, [0.0, 1.0])
+
+    def test_handles_repeated_words_via_sequential_search(self):
+        # "문장"과 "입니다"가 두 씬 모두에 등장한다 — 첫 번째 발생 위치에
+        # 멈추지 않고 순서대로 다음 발생을 찾아가야 한다.
+        scripts = ["문장 입니다", "문장 입니다"]
+        full_text = " ".join(scripts)
+        scene_char_starts = vg.compute_scene_char_offsets(scripts)
+        word_events = [("문장", 0.0), ("입니다", 0.4), ("문장", 0.9), ("입니다", 1.3)]
+        starts = vg.locate_scene_starts_from_word_events(full_text, scene_char_starts, word_events)
+        self.assertEqual(starts, [0.0, 0.9])
+
+    def test_returns_none_when_events_empty(self):
+        self.assertIsNone(vg.locate_scene_starts_from_word_events("텍스트", [0], []))
+
+    def test_returns_none_when_word_not_found_in_text(self):
+        # edge-tts가 예상과 다른 텍스트를 돌려주는 상황 — 억지로 맞추지 않고
+        # None을 돌려줘서 호출자가 균등 분할로 안전하게 폴백하게 한다.
+        starts = vg.locate_scene_starts_from_word_events("안녕하세요", [0], [("없는단어", 0.0)])
+        self.assertIsNone(starts)
 
 
 class ValidateEpisodeTests(unittest.TestCase):
@@ -245,6 +292,12 @@ class GeneratePremiumShortsMockedTests(unittest.TestCase):
     @staticmethod
     def _fake_tts(text, voice, dest, **kw):
         _make_fake_audio(dest, duration=0.6)
+        # 진짜 edge-tts처럼 (단어, 시작 초) 이벤트를 돌려준다 — 정확한 매칭
+        # 로직 자체는 LocateSceneStartsFromWordEventsTests가 따로 검증하므로,
+        # 여기선 "파이프라인이 반환값을 제대로 흘려보내는지"만 확인하면 된다.
+        words = text.split(" ")
+        step = 0.6 / max(len(words), 1)
+        return [(w, i * step) for i, w in enumerate(words)]
 
     @staticmethod
     def _fake_bg(query, duration, headers, cache_dir):
@@ -270,7 +323,7 @@ class GeneratePremiumShortsMockedTests(unittest.TestCase):
 
         self.assertTrue(output.exists())
         self.assertGreater(output.stat().st_size, 0)
-        self.assertEqual(mock_tts.call_count, 2, "내레이션은 씬마다 따로 합성해야 한다 (자막-음성 타이밍 동기화)")
+        mock_tts.assert_called_once()  # 전체 대본을 한 번에(single pass) 합성해야 자연스럽다
         self.assertEqual(mock_fetch_bg.call_count, 2)
 
     @patch("video_generator.synthesize_narration")
@@ -287,14 +340,15 @@ class GeneratePremiumShortsMockedTests(unittest.TestCase):
         vg.generate_premium_shorts(episode, "dummy-key", "ko-KR-SunHiNeural", self.root / "out2.mp4",
                                     work_dir, resume=True, fps=10, preset="ultrafast", threads=2)
 
-        mock_tts.assert_called_once()  # 두 번째 실행은 캐시된 내레이션을 재사용해야 한다
+        mock_tts.assert_called_once()  # 두 번째 실행은 캐시된 내레이션(+이벤트)을 재사용해야 한다
 
     @patch("video_generator.synthesize_narration")
     @patch("video_generator.fetch_background_clip")
-    def test_resume_only_resynthesizes_the_changed_scene(self, mock_fetch_bg, mock_tts):
-        # 내레이션을 씬별로 캐싱하므로, 한 씬의 대본만 바뀌면 그 씬만
-        # 재합성해야 한다 — 예전엔 전체 대본을 한 덩어리로 해시했어서 아무
-        # 씬이나 한 글자만 바뀌어도 모든 씬을 처음부터 다시 합성했다.
+    def test_resume_resynthesizes_when_any_scene_text_changes(self, mock_fetch_bg, mock_tts):
+        # 내레이션은 전체 대본을 한 번에 합성하므로(자연스러운 억양을 위해),
+        # 캐시도 전체 대본 해시로 건다 — 씬 하나만 바뀌어도 다시 합성해야
+        # 한다. (씬 단위로 부분 캐싱하면 다시 자막-음성 타이밍 불일치로
+        # 이어질 수 있다 — 예전 버그가 바로 이거였다.)
         mock_tts.side_effect = self._fake_tts
         mock_fetch_bg.side_effect = self._fake_bg
         work_dir = self.root / "cache"
@@ -308,7 +362,7 @@ class GeneratePremiumShortsMockedTests(unittest.TestCase):
         }
         vg.generate_premium_shorts(episode_v1, "dummy-key", "ko-KR-SunHiNeural", self.root / "out1.mp4",
                                     work_dir, resume=True, fps=10, preset="ultrafast", threads=2)
-        self.assertEqual(mock_tts.call_count, 2)
+        self.assertEqual(mock_tts.call_count, 1)
 
         episode_v2 = {
             "title": "제목",
@@ -319,7 +373,7 @@ class GeneratePremiumShortsMockedTests(unittest.TestCase):
         }
         vg.generate_premium_shorts(episode_v2, "dummy-key", "ko-KR-SunHiNeural", self.root / "out2.mp4",
                                     work_dir, resume=True, fps=10, preset="ultrafast", threads=2)
-        self.assertEqual(mock_tts.call_count, 3, "바뀐 씬 하나만 재합성해야 한다")
+        self.assertEqual(mock_tts.call_count, 2, "씬 하나만 바뀌어도 전체 대본을 다시 합성해야 한다")
 
 
 if __name__ == "__main__":

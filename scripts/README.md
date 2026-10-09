@@ -37,19 +37,24 @@
 
 ## 아키텍처 메모
 
-- **상태 유지(Stateful)**: 내레이션은 씬별로 따로 합성해서
-  `output/.cache/<episode>/narration/scene_<순번>_<대본 해시>.mp3`에, B-roll은
-  검색어별로 `downloads/`에 캐싱한다. 재실행 시 바뀌지 않은 씬·검색어는 다시
-  합성·다운로드하지 않는다 — 대본 한 씬만 고쳐도 다른 씬까지 전부 다시
-  합성되던 예전 방식(전체 대본을 한 덩어리로 해시)에서, 씬 단위로 캐시
-  무효화 범위를 좁혔다. Pixabay/Edge-TTS 쿼터를 불필요하게 태우지 않기
-  위함이다.
-- **자막-음성 동기화**: 내레이션을 씬별로 따로 합성하는 이유가 하나 더
-  있다 — 예전엔 전체 대본을 한 번에 합성한 뒤 그 길이를 씬 개수로 균등
-  분할해서 각 자막의 시작 시각을 구했는데, 씬마다 문장 길이가 다르면
-  (거의 항상 다르다) 뒤로 갈수록 자막과 음성이 어긋났다. 지금은 각 씬의
-  실제 합성 길이를 그대로 쓰고 `compute_scene_starts()`로 누적 시작 시각을
-  구하므로 항상 맞는다.
+- **상태 유지(Stateful)**: 내레이션은 전체 대본을 한 번에(single pass)
+  합성해서 `output/.cache/<episode>/narration/voice_<대본 해시>.mp3`(+ 같은
+  이름의 `.events.json`)에, B-roll은 검색어별로 `downloads/`에 캐싱한다.
+  재실행 시 대본·검색어가 안 바뀌면 다시 합성·다운로드하지 않는다. 씬 하나만
+  바뀌어도 전체 내레이션을 다시 합성하는데, 이건 의도한 트레이드오프다 —
+  아래 "자막-음성 동기화·자연스러움" 참고.
+- **자막-음성 동기화·자연스러움**: 처음엔 전체 대본을 한 번에 합성한 뒤
+  길이를 씬 개수로 균등 분할해서 자막 시작 시각을 구했다 — 씬마다 문장
+  길이가 다르면(거의 항상 다르다) 뒤로 갈수록 자막과 음성이 어긋나는
+  버그였다. 그다음엔 씬별로 따로 합성해서 고쳤는데, 이번엔 문장 사이
+  자연스러운 억양·호흡이 끊겨 부자연스럽게 들린다는 피드백을 받았다.
+  지금은 **전체 대본을 한 번에 합성하면서(자연스러운 운율 유지) edge-tts의
+  `WordBoundary` 이벤트(단어별 실제 발화 시각)를 같이 받는다** —
+  `synthesize_narration()`이 `(단어 텍스트, 시작 초)` 목록을 돌려주고,
+  `locate_scene_starts_from_word_events()`가 각 씬 스크립트의 시작 문자
+  위치를 그 목록에서 찾아 실제 시작 시각을 역산한다. 매칭이 실패하면(예상
+  못 한 edge-tts 출력 등) `None`을 돌려주고, 그땐 `compute_scene_starts()`로
+  균등 분할 폴백(덜 정확하지만 렌더링은 계속 성공)으로 떨어진다.
 - **재시도**: Pixabay 검색·다운로드는 `orchestrator/ai_collaboration.py`의
   `post()`와 같은 429/503 지수 백오프(최대 4회)를 쓴다. Edge-TTS 합성도
   일시적 오류에 3회까지 재시도한다.
@@ -130,7 +135,12 @@ Pixabay 호출은 별도 SDK 없이 표준 라이브러리(`urllib`)로 직접 �
 
 선택 환경변수:
 - `SHORTS_TTS_VOICE` — Edge-TTS 보이스 (기본 `ko-KR-SunHiNeural`). 사용 가능한
-  보이스 목록: `edge-tts --list-voices`
+  보이스 목록: `edge-tts --list-voices` (이 샌드박스에선 egress 프록시가
+  Edge-TTS 웹소켓을 막아서 안 됨 — GitHub Actions 등 네트워크 제약 없는
+  환경에서 확인할 것)
+- `SHORTS_TTS_RATE` — Edge-TTS 말하기 속도 조절 (기본 `+0%`). 예: `-5%`로
+  살짝 느리게 하면 덜 급하게 들릴 수 있다. `--tts-rate` CLI 플래그로도
+  줄 수 있다.
 - `SHORTS_FONT_BOLD` / `SHORTS_FONT_EXTRABOLD` — 폰트 경로 오버라이드
 - `VIDEO_FPS` (기본 30), `VIDEO_PRESET` (기본 `medium`), `VIDEO_RENDER_THREADS`
   (기본 CPU 코어 수), `FFMPEG_BINARY`
