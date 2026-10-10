@@ -1,0 +1,36 @@
+{
+  "title": "호날두, 포르투갈 대표팀 떠났다",
+  "upload_title": "호날두, 대표팀 훈련장 이탈…최대 6개월 출전정지 위기",
+  "description": "크리스티아누 호날두가 지난 9월 30일 덴마크전 선발 제외 통보를 받은 뒤 포르투갈 대표팀 훈련장을 떠났습니다. 조르제 제주스 감독은 불화설을 부인했지만, 호날두는 10월 6일 성명에서 제주스가 노르웨이전 출전 약속을 어겼다고 주장하며 이탈에 대해 사과했습니다. 포르투갈축구협회 규정상 최대 6개월 출전정지와 벌금이 가능해 징계위원회 심의 결과가 주목됩니다. ※ 확정된 사실(이탈·사과 성명)과 아직 결정되지 않은 징계 수위·다음 소집 포함 여부는 구분해 전달합니다.",
+  "hashtags": ["호날두", "포르투갈", "축구", "국가대표", "국제뉴스"],
+  "scenes": [
+    {
+      "script": "세계 최고의 축구 스타가, 자기 나라 대표팀 훈련장을 그냥 떠나버렸습니다.",
+      "broll_query": "soccer stadium empty dramatic lighting night"
+    },
+    {
+      "script": "지난 9월 30일, 크리스티아누 호날두는 덴마크전 선발 제외 통보를 받은 몇 시간 뒤 포르투갈 대표팀 훈련장을 이탈했습니다.",
+      "broll_query": "football training pitch overcast dramatic"
+    },
+    {
+      "script": "조르제 제주스 감독은 기자회견에서 불화설을 부인했습니다. 하지만 선발에서는 제외하겠다는 입장을 분명히 했습니다.",
+      "broll_query": "sports press conference dramatic lighting indoor"
+    },
+    {
+      "script": "열흘 뒤인 10월 6일, 호날두는 입장문을 냈습니다. 제주스 감독이 노르웨이전 출전 약속을 어겼다고 주장하면서도, 무단이탈에 대해서는 사과했습니다.",
+      "broll_query": "soccer player silhouette stadium lights night"
+    },
+    {
+      "script": "포르투갈축구협회 규정에 따르면 이런 경우 최소 1개월에서 최대 6개월까지 출전정지가 가능하고, 벌금도 함께 부과될 수 있습니다.",
+      "broll_query": "red card referee soccer dramatic lighting"
+    },
+    {
+      "script": "아직 징계위원회의 최종 결정은 나오지 않았습니다. 이 결정에 따라 호날두가 다음 A매치에 나설 수 있을지도 갈릴 전망입니다. 결과가 나오는 대로 다음 소식으로 전해드리겠습니다.",
+      "broll_query": "football fans crowd stadium night cinematic"
+    },
+    {
+      "script": "사실 기반 세계뉴스를 매일 전해드립니다. 구독과 좋아요, 알림설정까지 해두시면 소식을 가장 먼저 받아보실 수 있어요.",
+      "broll_query": "city skyline night calm"
+    }
+  ]
+}
