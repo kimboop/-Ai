@@ -533,9 +533,10 @@ def main() -> int:
     parser.add_argument("--work-dir", type=Path, default=None,
                          help="Cache dir for narration/B-roll downloads (default: output/.cache/<input-stem>)")
     parser.add_argument("--voice", default=os.environ.get("SHORTS_TTS_VOICE", "ko-KR-SunHiNeural"))
-    parser.add_argument("--tts-rate", default=os.environ.get("SHORTS_TTS_RATE", "+0%"),
+    parser.add_argument("--tts-rate", default=os.environ.get("SHORTS_TTS_RATE", "-8%"),
                          help="Edge-TTS speaking-rate adjustment, e.g. -5%% for a slightly slower, "
-                              "less rushed delivery (default: +0%%)")
+                              "less rushed delivery (default: -8%%, chosen after 2026-10-11 feedback "
+                              "that the narration sounded too rushed/harsh at the normal rate)")
     parser.add_argument("--no-resume", action="store_true", help="Ignore cached narration/B-roll and refetch")
     parser.add_argument("--fps", type=int, default=int(os.environ.get("VIDEO_FPS", 30)))
     parser.add_argument("--preset", default=os.environ.get("VIDEO_PRESET", "medium"))

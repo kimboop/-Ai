@@ -138,9 +138,10 @@ Pixabay 호출은 별도 SDK 없이 표준 라이브러리(`urllib`)로 직접 �
   보이스 목록: `edge-tts --list-voices` (이 샌드박스에선 egress 프록시가
   Edge-TTS 웹소켓을 막아서 안 됨 — GitHub Actions 등 네트워크 제약 없는
   환경에서 확인할 것)
-- `SHORTS_TTS_RATE` — Edge-TTS 말하기 속도 조절 (기본 `+0%`). 예: `-5%`로
-  살짝 느리게 하면 덜 급하게 들릴 수 있다. `--tts-rate` CLI 플래그로도
-  줄 수 있다.
+- `SHORTS_TTS_RATE` — Edge-TTS 말하기 속도 조절 (기본 `-8%`, 2026-10-11 "음성이
+  너무 급하게/딱딱하게 들린다"는 피드백을 반영해 기존 `+0%`에서 낮춤). 더
+  느리게 하려면 `-15%`처럼, 원래 속도로 되돌리려면 `+0%`처럼 `--tts-rate`
+  CLI 플래그로 오버라이드할 수 있다.
 - `SHORTS_FONT_BOLD` / `SHORTS_FONT_EXTRABOLD` — 폰트 경로 오버라이드
 - `VIDEO_FPS` (기본 30), `VIDEO_PRESET` (기본 `medium`), `VIDEO_RENDER_THREADS`
   (기본 CPU 코어 수), `FFMPEG_BINARY`
