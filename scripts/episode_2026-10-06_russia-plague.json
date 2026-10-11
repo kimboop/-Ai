@@ -1,29 +1,36 @@
 {
   "title": "러시아 연구원 의문사... 페스트 공포 확산",
+  "upload_title": "러시아 연구원 의문사... 페스트 공포 확산 (수정판)",
+  "description": "러시아 이르쿠츠크 항역병연구소 소속 20대 연구원이 9월 29일 입원 후 사망했습니다. 러시아 연방 보건당국(로스포트레브나드조르)은 '원인불명 폐렴'으로 사망 원인을 발표했지만, 부랴티야공화국 수장은 '페스트 가능성'을 언급했다가 발언을 수정해 연방 발표와 결이 다른 입장을 보였습니다. 접촉자 197명이 파악돼 189명이 병원에서 예방 격리됐고, 페스트균 시험관 파손설은 현지 매체 보도일 뿐 러시아 당국이 공식 확인하지 않았습니다. 미 국무부는 질병통제예방센터(CDC)와 함께 상황을 주시하고 있다고 밝혔습니다. ※ 확인된 사실과 (언론·기관별) 일방 주장·미확인 보도를 구분해 전달합니다.",
+  "hashtags": ["러시아", "이르쿠츠크", "페스트", "국무부", "국제뉴스"],
   "scenes": [
     {
       "script": "러시아 시베리아의 한 연구원이 의문사하면서, 전 세계가 촉각을 곤두세우고 있습니다.",
-      "broll_query": "siberia russia winter landscape"
+      "broll_query": "siberia russia winter landscape dark overcast"
     },
     {
-      "script": "사망자는 이르쿠츠크 항역병연구소 소속 20대 연구원. 당국은 원인불명 폐렴으로 사망했다고 발표했습니다.",
-      "broll_query": "medical laboratory scientist research"
+      "script": "사망자는 이르쿠츠크 항역병연구소 소속 20대 연구원. 러시아 연방 보건당국은 원인불명 폐렴으로 사망했다고 발표했습니다.",
+      "broll_query": "medical laboratory scientist research dark"
     },
     {
-      "script": "접촉자 197명이 파악됐고, 이 중 189명이 즉시 병원 세 곳에 예방 격리됐습니다.",
-      "broll_query": "hospital quarantine medical corridor"
+      "script": "접촉자 197명이 파악됐고, 이 중 189명이 병원에서 예방 격리됐습니다.",
+      "broll_query": "hospital quarantine medical corridor dramatic lighting"
     },
     {
-      "script": "소셜미디어에선 페스트균이 든 시험관이 깨졌다는 소문이 퍼지고 있지만, 러시아 당국은 이를 공식 확인하지 않았습니다.",
-      "broll_query": "test tube laboratory virus research"
+      "script": "그런데 부랴티야공화국 수장은 '페스트 가능성'을 언급했다가 발언을 수정했습니다. 연방 보건당국의 '원인불명 폐렴' 발표와는 결이 다른 입장입니다.",
+      "broll_query": "russia government building silhouette night"
     },
     {
-      "script": "백악관도 이 사태를 예의주시하고 있다고 미국 매체가 보도했습니다.",
-      "broll_query": "breaking news studio broadcast"
+      "script": "현지 매체에서는 페스트균이 든 시험관이 깨졌다는 보도가 나왔지만, 이는 독립적으로 확인되지 않았고 러시아 당국은 이 사고설을 공식 부인했습니다.",
+      "broll_query": "test tube laboratory research dark dramatic"
+    },
+    {
+      "script": "미 국무부는 질병통제예방센터, CDC와 함께 이 상황을 주시하고 있다고 밝혔습니다.",
+      "broll_query": "government building washington night dramatic"
     },
     {
       "script": "전문가들은 아직 사람 간 전파 증거는 없다고 말합니다. 하지만 경계는 늦추지 않고 있습니다.",
-      "broll_query": "doctor medical mask hospital"
+      "broll_query": "doctor medical mask hospital dark"
     }
   ]
 }

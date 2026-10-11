@@ -2,5 +2,6 @@ __pycache__/
 *.pyc
 output/.cache/
 output/*.mp4
-output/thumbnails/
+output/thumbnails/*.png
+output/thumbnails/*.upload.txt
 output/scenes/
