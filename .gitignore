@@ -3,3 +3,4 @@ __pycache__/
 output/.cache/
 output/*.mp4
 output/thumbnails/
+output/scenes/
