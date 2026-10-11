@@ -11,6 +11,10 @@ on:
         description: '썸네일도 같이 만들지 여부'
         required: false
         default: 'true'
+      output_file:
+        description: '출력 MP4 경로 오버라이드 (비워두면 기본값 output/<episode-stem>.mp4). 기존 영상을 덮어쓰지 않고 _v2 등으로 구분해서 새로 뽑을 때 사용'
+        required: false
+        default: ''
 
 jobs:
   render:
@@ -44,7 +48,12 @@ jobs:
       - name: Render video
         env:
           PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
-        run: python scripts/video_generator.py "${{ github.event.inputs.episode_file }}"
+        run: |
+          if [ -n "${{ github.event.inputs.output_file }}" ]; then
+            python scripts/video_generator.py "${{ github.event.inputs.episode_file }}" --output "${{ github.event.inputs.output_file }}"
+          else
+            python scripts/video_generator.py "${{ github.event.inputs.episode_file }}"
+          fi
 
       - name: Generate thumbnail
         if: ${{ github.event.inputs.make_thumbnail == 'true' }}
