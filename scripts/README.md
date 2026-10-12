@@ -352,5 +352,14 @@ python scripts/video_generator.py scripts/episode.json   # 실제 대본으로 �
   흔함)는 인증서를 맞춰도 소용없다 — Edge-TTS는 REST가 아니라 웹소켓으로
   통신한다. 이럴 땐 우회하려 하지 말고 위 "실가동 검증 가이드"의 환경에서
   돌릴 것.
+- **Edge-TTS가 `403 Invalid response status`를 낸다 (2026-10-12 발생)**:
+  `requirements.txt`의 `edge-tts>=6.1` 핀이나 우리 코드 문제가 아니라, 마이크로소프트가
+  내부 TTS 웹소켓 호스트/토큰 형식(`Sec-MS-GEC`)을 바꾸면서 생긴 **업스트림 라이브러리
+  전역 장애**다 — [rany2/edge-tts#490](https://github.com/rany2/edge-tts/issues/490)에
+  전 세계 사용자가 같은 에러를 보고 중이고, 이 README를 쓰는 시점까지 공식 수정이
+  안 나왔다. 최신 버전(`pip install -U edge-tts`)을 받아도 소용없다 — 이미 최신판도
+  막혀 있다. 코드로 고칠 수 있는 문제가 아니므로 CI를 계속 재실행하지 말고, 저 이슈가
+  닫히고 새 릴리스가 나올 때까지 기다릴 것 (해당 PR을 다시 열면 `pip install`이 자동으로
+  최신판을 받아간다 — 우리 쪽에서 버전 핀을 바꿀 필요 없음).
 - **렌더링이 중간에 죽었다**: 같은 명령을 다시 실행하면 된다. 내레이션과
   이미 받은 B-roll은 `output/.cache/<episode>/`에서 재사용된다.
