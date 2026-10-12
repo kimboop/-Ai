@@ -352,14 +352,23 @@ python scripts/video_generator.py scripts/episode.json   # 실제 대본으로 �
   흔함)는 인증서를 맞춰도 소용없다 — Edge-TTS는 REST가 아니라 웹소켓으로
   통신한다. 이럴 땐 우회하려 하지 말고 위 "실가동 검증 가이드"의 환경에서
   돌릴 것.
-- **Edge-TTS가 `403 Invalid response status`를 낸다 (2026-10-12 발생)**:
-  `requirements.txt`의 `edge-tts>=6.1` 핀이나 우리 코드 문제가 아니라, 마이크로소프트가
-  내부 TTS 웹소켓 호스트/토큰 형식(`Sec-MS-GEC`)을 바꾸면서 생긴 **업스트림 라이브러리
-  전역 장애**다 — [rany2/edge-tts#490](https://github.com/rany2/edge-tts/issues/490)에
-  전 세계 사용자가 같은 에러를 보고 중이고, 이 README를 쓰는 시점까지 공식 수정이
-  안 나왔다. 최신 버전(`pip install -U edge-tts`)을 받아도 소용없다 — 이미 최신판도
-  막혀 있다. 코드로 고칠 수 있는 문제가 아니므로 CI를 계속 재실행하지 말고, 저 이슈가
-  닫히고 새 릴리스가 나올 때까지 기다릴 것 (해당 PR을 다시 열면 `pip install`이 자동으로
-  최신판을 받아간다 — 우리 쪽에서 버전 핀을 바꿀 필요 없음).
+- **Edge-TTS가 `403 Invalid response status`를 낸다 (2026-10-11~ 전 세계 발생,
+  2026-10-12 우회 패치 적용)**: 원인은 마이크로소프트가 Edge 155부터 Read Aloud
+  합성 엔드포인트를 `speech.platform.bing.com`에서 `api.msedgeservices.com`으로
+  지역별 단계적으로 옮기는 중이라, 예전 호스트가 지역에 따라 403을 내는 것 —
+  `requirements.txt`의 버전 핀이나 우리 코드 문제가 아니다.
+  [rany2/edge-tts#490](https://github.com/rany2/edge-tts/issues/490)에 전 세계
+  사용자가 같은 에러를 보고 중이고, 이 글을 쓰는 시점(PyPI 최신판 7.2.8)까지
+  공식 릴리스로는 해결이 안 됐다. 다만 수정 PR
+  [rany2/edge-tts#491](https://github.com/rany2/edge-tts/pull/491)이 올라와 있고
+  (미병합, 저자·댓글러가 실제로 동작 확인) — `video_generator.py`의
+  `_patch_edge_tts_for_2026_10_host_migration()`가 그 PR의 `constants.py` 변경을
+  런타임에 그대로 적용한다(새 호스트 `api.msedgeservices.com` + 기존
+  TrustedClientToken을 `Ocp-Apim-Subscription-Key` 쿼리 파라미터로 전달). 이미
+  `synthesize_narration()` 맨 앞에서 자동으로 걸리므로 추가 설정 불필요 — 이
+  패치를 적용한 뒤에도 403이 또 나면(예: 새 호스트도 막히는 지역/상황) 코드
+  문제가 아니라 그 시점의 네트워크/지역 상황이니 바로 보고할 것. 업스트림이
+  정식 릴리스를 내면(`pip install -U edge-tts`로 확인) 이 우회 패치 함수와
+  호출부를 지울 것 — 영구 패치가 아니라 임시 우회다.
 - **렌더링이 중간에 죽었다**: 같은 명령을 다시 실행하면 된다. 내레이션과
   이미 받은 B-roll은 `output/.cache/<episode>/`에서 재사용된다.
