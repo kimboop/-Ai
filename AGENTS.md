@@ -1,10 +1,12 @@
 # Agent Collaboration Guide
 
 Shared source of truth for any AI coding agent working in this repository
-(Claude Code, Gemini CLI, or others). `CLAUDE.md` and `GEMINI.md` each
-import this file with `@AGENTS.md` and add only tool-specific notes below
-that import — project facts and workflow rules belong here, not duplicated
-in both.
+(Claude Code, Gemini CLI, ChatGPT/Codex, or others). `CLAUDE.md` and
+`GEMINI.md` each import this file with `@AGENTS.md` and add only
+tool-specific notes below that import. OpenAI Codex (ChatGPT's coding agent)
+reads `AGENTS.md` natively and has no import syntax, so its notes live in the
+"Codex (ChatGPT) notes" section at the bottom of this file. Project facts and
+workflow rules belong here, not duplicated per tool.
 
 ## Project facts
 
@@ -24,6 +26,11 @@ commands, directory layout, conventions.)_
   (tests, docs, boilerplate). Also used as a second opinion: Claude can
   shell out non-interactively (`gemini -p "<prompt>"`) to cross-check a
   design or diff before finalizing it.
+- **ChatGPT / Codex**: audience-facing copy and monetization packaging
+  (hooks, titles, captions, CTAs, platform-specific variants), plus an
+  independent red-team review of finished output. Claude can cross-check
+  non-interactively with `codex exec "<prompt>"`, the same way it uses
+  `gemini -p`.
 - This is a default, not a hard rule — either agent can pick up any task
   when the other is unavailable or the task doesn't fit the split. When in
   doubt, follow the branch-ownership and handoff rules below rather than
@@ -32,7 +39,7 @@ commands, directory layout, conventions.)_
 ## Cross-agent workflow
 
 - **Branch naming**: `<agent>/<short-task-slug>` (e.g. `claude/add-auth`,
-  `gemini/fix-cache-bug`) so it's obvious which agent owns a branch.
+  `gemini/fix-cache-bug`, `codex/tune-hooks`) so it's obvious which agent owns a branch.
 - **Before starting work**, check open branches/PRs for one already in
   flight on the same area, from either agent, to avoid duplicate or
   conflicting work.
@@ -46,8 +53,18 @@ commands, directory layout, conventions.)_
 ## Shared tooling
 
 - MCP servers used by both agents should be declared once conceptually and
-  configured identically in `.claude/settings.json` and
-  `.gemini/settings.json`, so both see the same tools and data instead of
-  drifting apart.
+  configured identically in `.claude/settings.json`,
+  `.gemini/settings.json` and Codex's `[mcp_servers.<name>]` tables in
+  `~/.codex/config.toml`, so every agent sees the same tools and data
+  instead of drifting apart.
 - Keep this file and the tool-specific files free of secrets — MCP server
   configs should reference environment variables, never hardcode tokens.
+
+## Codex (ChatGPT) notes
+
+- Codex picks up this file automatically; there is no `CODEX.md`.
+- Non-interactive runs (CI, or Claude/Gemini asking for a second opinion):
+  `codex exec "<prompt>"`. Like `gemini -p`, each run starts with no memory,
+  so keep prompts self-contained.
+- The automated content pipeline also has an optional ChatGPT stage via the
+  OpenAI API (separate from Codex); see the pipeline guide in `CLAUDE.md`.

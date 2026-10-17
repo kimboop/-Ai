@@ -1,0 +1,36 @@
+{
+  "title": "허리케인 '이사이아스' 美 남부 상륙...최소 4명 사망",
+  "upload_title": "120년 만에 가장 늦은 허리케인이 美 걸프 해안 상륙...4명 사망·수십만 정전",
+  "description": "2026년 대서양 허리케인 시즌의 첫 허리케인 '이사이아스'가 10월 9일 밤 카테고리 2 강도(최대풍속 시간당 169km)로 미국 플로리다 데스틴 인근에 상륙했습니다. 상륙 이후 최소 4명이 숨졌습니다(플로리다 2명, 앨라배마 2명). 앨라배마에서는 쓰러진 나무가 집을 덮쳐 첫 사망자가 발생했고, 플로리다 월튼 카운티에서는 도로 일부가 유실됐습니다. 플로리다와 앨라배마는 비상사태를 선포했습니다. ※ 정전 피해 규모는 매체마다 집계가 달라 다르게 보도됐습니다.",
+  "hashtags": ["허리케인이사이아스", "플로리다", "앨라배마", "미국", "국제뉴스"],
+  "scenes": [
+    {
+      "script": "120년 만입니다. 올해 대서양 첫 허리케인이, 역대 가장 늦게 만들어졌습니다.",
+      "broll_query": "hurricane satellite view ocean storm dramatic dark"
+    },
+    {
+      "script": "허리케인 '이사이아스'는 10월 9일 밤, 카테고리 2 강도로 플로리다 데스틴 인근에 상륙했습니다. 최고 풍속은 시간당 169km였습니다.",
+      "broll_query": "hurricane landfall night wind rain coast dramatic"
+    },
+    {
+      "script": "상륙 이후 최소 4명이 숨졌습니다. 플로리다에서 2명, 앨라배마에서 2명이 확인됐습니다.",
+      "broll_query": "storm damage fallen tree house night emergency dark"
+    },
+    {
+      "script": "앨라배마에서는 쓰러진 나무가 집을 덮쳐 첫 사망자가 발생했고, 플로리다 월튼 카운티에서는 도로 일부가 유실됐습니다.",
+      "broll_query": "flooded road washed out debris night documentary"
+    },
+    {
+      "script": "정전 피해 규모는 매체마다 다르게 보도됐습니다. 토요일 밤 기준 수십만 가구가 전기 없이 밤을 보냈고, 대부분 플로리다에 집중됐습니다.",
+      "broll_query": "power lines down storm damage dark night"
+    },
+    {
+      "script": "플로리다와 앨라배마는 비상사태를 선포했고, 이사이아스는 이후 열대성 저기압으로 약화됐습니다.",
+      "broll_query": "emergency response storm aftermath dramatic lighting dark"
+    },
+    {
+      "script": "사실 기반 세계뉴스를 매일 전해드립니다. 구독과 좋아요, 알림설정까지 해두시면 소식을 가장 먼저 받아보실 수 있어요.",
+      "broll_query": "city skyline night calm"
+    }
+  ]
+}
