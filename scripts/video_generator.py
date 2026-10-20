@@ -276,6 +276,42 @@ def fetch_background_clip(query: str, scene_duration: float, api_key: str, cache
 # --------------------------------------------------------------------------
 # TTS
 # --------------------------------------------------------------------------
+_EDGE_TTS_403_PATCH_APPLIED = False
+
+
+def _patch_edge_tts_for_2026_10_host_migration() -> None:
+    """2026-10-11부터 전 세계적으로 edge-tts가 403을 내는 문제의 우회 패치.
+
+    원인: 마이크로소프트가 Edge 155부터 Read Aloud 합성 엔드포인트를
+    speech.platform.bing.com에서 api.msedgeservices.com으로 옮기는 중이고
+    (지역별 단계적 전환), 예전 호스트는 이제 지역에 따라 403을 낸다.
+    edge-tts는 이 글을 쓰는 시점(7.2.8, PyPI 최신판)까지 아직 새 호스트로
+    안 옮겨서 공식 릴리스로 해결이 안 됨 — 수정 PR은 있지만 병합 전:
+    https://github.com/rany2/edge-tts/pull/491 (저자·댓글러 확인 동작함).
+    그 PR의 constants.py 변경을 그대로 반영한다 — 기존 TrustedClientToken을
+    그대로 쓰되 쿼리 파라미터 이름만 Ocp-Apim-Subscription-Key로 바꿔서
+    새 호스트에 보낸다. 음성 목록(VOICE_LIST)은 안 건드린다 — 그쪽은 여전히
+    예전 호스트로 정상 동작한다고 PR에 적혀 있음.
+
+    업스트림이 새 릴리스를 내면(requirements.txt의 edge-tts 핀을 올릴 때)
+    이 함수와 호출부를 지울 것 — 영구 패치가 아니라 임시 우회다.
+    """
+    global _EDGE_TTS_403_PATCH_APPLIED
+    if _EDGE_TTS_403_PATCH_APPLIED:
+        return
+    from edge_tts import communicate as _edge_communicate
+    from edge_tts import constants as _edge_constants
+
+    new_wss_url = (
+        "wss://api.msedgeservices.com/tts/cognitiveservices/websocket/v1"
+        f"?Ocp-Apim-Subscription-Key={_edge_constants.TRUSTED_CLIENT_TOKEN}"
+    )
+    _edge_constants.WSS_URL = new_wss_url
+    _edge_communicate.WSS_URL = new_wss_url
+    _EDGE_TTS_403_PATCH_APPLIED = True
+    LOG.info("edge-tts 2026-10 호스트 이전 우회 패치 적용: WSS_URL -> api.msedgeservices.com")
+
+
 def synthesize_narration(text: str, voice: str, dest: Path, rate: str = "+0%",
                           retries: int = 3, backoff: int = 5) -> list[tuple[str, float]]:
     """전체 대본을 한 번에(single pass) 합성한다 — 씬별로 따로 합성하면 문장과
@@ -285,6 +321,8 @@ def synthesize_narration(text: str, voice: str, dest: Path, rate: str = "+0%",
     시작하는지 역산할 수 있어서, 씬을 쪼개지 않고도 자막 타이밍을 맞출 수 있다
     (locate_scene_starts_from_word_events 참고)."""
     import edge_tts
+
+    _patch_edge_tts_for_2026_10_host_migration()
 
     async def _make() -> list[tuple[str, float]]:
         comm = edge_tts.Communicate(text, voice, rate=rate, boundary="WordBoundary")
@@ -533,9 +571,10 @@ def main() -> int:
     parser.add_argument("--work-dir", type=Path, default=None,
                          help="Cache dir for narration/B-roll downloads (default: output/.cache/<input-stem>)")
     parser.add_argument("--voice", default=os.environ.get("SHORTS_TTS_VOICE", "ko-KR-SunHiNeural"))
-    parser.add_argument("--tts-rate", default=os.environ.get("SHORTS_TTS_RATE", "+0%"),
+    parser.add_argument("--tts-rate", default=os.environ.get("SHORTS_TTS_RATE", "-8%"),
                          help="Edge-TTS speaking-rate adjustment, e.g. -5%% for a slightly slower, "
-                              "less rushed delivery (default: +0%%)")
+                              "less rushed delivery (default: -8%%, chosen after 2026-10-11 feedback "
+                              "that the narration sounded too rushed/harsh at the normal rate)")
     parser.add_argument("--no-resume", action="store_true", help="Ignore cached narration/B-roll and refetch")
     parser.add_argument("--fps", type=int, default=int(os.environ.get("VIDEO_FPS", 30)))
     parser.add_argument("--preset", default=os.environ.get("VIDEO_PRESET", "medium"))

@@ -25,8 +25,11 @@
   쟁점인 사안. 무죄추정 원칙 위반·명예훼손 리스크 때문.
 - **비공인(일반인)이 신원 특정될 수 있는 사안**: 성범죄·가정폭력·아동 관련
   사건 등 피해자 2차 가해 위험이 있는 경우.
-- **국가 단위 이하의 로컬 개별 사건**: 트랙 A는 애초에 "세계 핫뉴스" 전용이라
-  특정 시·군·구 단위 개별 사건은 범위 밖.
+- **국가 단위 이하의 로컬 개별 사건**: 국내·해외 구분 없이, 특정 시·군·구
+  단위에서 벌어진 국가적 파급력 없는 개별 사건(범죄·사고 등)은 범위 밖
+  (2026-10-12부터 트랙 A가 국내 핫뉴스까지 다루게 됐지만, "로컬 개별 사건
+  제외" 기준 자체는 그대로 유지 — 국내 뉴스도 국가 단위 이상 파급력이
+  있어야 후보가 된다).
 - **제보·목격담·전언 중심 소재**: 공식 발표·법원 판결·국제기구 확인 없이
   "제보자에 따르면", "CCTV를 봤다는 사람에 따르면" 수준에만 의존하는 사안
   (여러 매체가 같은 제보를 받아쓴 것도 "교차검증 2곳"으로 안 침).
@@ -138,9 +141,10 @@ Pixabay 호출은 별도 SDK 없이 표준 라이브러리(`urllib`)로 직접 �
   보이스 목록: `edge-tts --list-voices` (이 샌드박스에선 egress 프록시가
   Edge-TTS 웹소켓을 막아서 안 됨 — GitHub Actions 등 네트워크 제약 없는
   환경에서 확인할 것)
-- `SHORTS_TTS_RATE` — Edge-TTS 말하기 속도 조절 (기본 `+0%`). 예: `-5%`로
-  살짝 느리게 하면 덜 급하게 들릴 수 있다. `--tts-rate` CLI 플래그로도
-  줄 수 있다.
+- `SHORTS_TTS_RATE` — Edge-TTS 말하기 속도 조절 (기본 `-8%`, 2026-10-11 "음성이
+  너무 급하게/딱딱하게 들린다"는 피드백을 반영해 기존 `+0%`에서 낮춤). 더
+  느리게 하려면 `-15%`처럼, 원래 속도로 되돌리려면 `+0%`처럼 `--tts-rate`
+  CLI 플래그로 오버라이드할 수 있다.
 - `SHORTS_FONT_BOLD` / `SHORTS_FONT_EXTRABOLD` — 폰트 경로 오버라이드
 - `VIDEO_FPS` (기본 30), `VIDEO_PRESET` (기본 `medium`), `VIDEO_RENDER_THREADS`
   (기본 CPU 코어 수), `FFMPEG_BINARY`
@@ -348,5 +352,23 @@ python scripts/video_generator.py scripts/episode.json   # 실제 대본으로 �
   흔함)는 인증서를 맞춰도 소용없다 — Edge-TTS는 REST가 아니라 웹소켓으로
   통신한다. 이럴 땐 우회하려 하지 말고 위 "실가동 검증 가이드"의 환경에서
   돌릴 것.
+- **Edge-TTS가 `403 Invalid response status`를 낸다 (2026-10-11~ 전 세계 발생,
+  2026-10-12 우회 패치 적용)**: 원인은 마이크로소프트가 Edge 155부터 Read Aloud
+  합성 엔드포인트를 `speech.platform.bing.com`에서 `api.msedgeservices.com`으로
+  지역별 단계적으로 옮기는 중이라, 예전 호스트가 지역에 따라 403을 내는 것 —
+  `requirements.txt`의 버전 핀이나 우리 코드 문제가 아니다.
+  [rany2/edge-tts#490](https://github.com/rany2/edge-tts/issues/490)에 전 세계
+  사용자가 같은 에러를 보고 중이고, 이 글을 쓰는 시점(PyPI 최신판 7.2.8)까지
+  공식 릴리스로는 해결이 안 됐다. 다만 수정 PR
+  [rany2/edge-tts#491](https://github.com/rany2/edge-tts/pull/491)이 올라와 있고
+  (미병합, 저자·댓글러가 실제로 동작 확인) — `video_generator.py`의
+  `_patch_edge_tts_for_2026_10_host_migration()`가 그 PR의 `constants.py` 변경을
+  런타임에 그대로 적용한다(새 호스트 `api.msedgeservices.com` + 기존
+  TrustedClientToken을 `Ocp-Apim-Subscription-Key` 쿼리 파라미터로 전달). 이미
+  `synthesize_narration()` 맨 앞에서 자동으로 걸리므로 추가 설정 불필요 — 이
+  패치를 적용한 뒤에도 403이 또 나면(예: 새 호스트도 막히는 지역/상황) 코드
+  문제가 아니라 그 시점의 네트워크/지역 상황이니 바로 보고할 것. 업스트림이
+  정식 릴리스를 내면(`pip install -U edge-tts`로 확인) 이 우회 패치 함수와
+  호출부를 지울 것 — 영구 패치가 아니라 임시 우회다.
 - **렌더링이 중간에 죽었다**: 같은 명령을 다시 실행하면 된다. 내레이션과
   이미 받은 B-roll은 `output/.cache/<episode>/`에서 재사용된다.
