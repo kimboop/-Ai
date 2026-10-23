@@ -1,0 +1,36 @@
+{
+  "title": "호날두, 포르투갈 대표팀 떠났다",
+  "upload_title": "호날두, 포르투갈 대표팀 잠정 출전정지…최종 징계 수위는 미정",
+  "description": "크리스티아누 호날두가 지난 9월 30일 포르투갈 대표팀 캠프를 떠났습니다. 호날두는 10월 6일 성명에서 제주스 감독이 약속을 어겼다고 주장하는 한편, 캠프를 떠난 것은 자신의 책임이라며 팀 동료들에게 사과했습니다. 제주스 감독은 호날두와 합의한 사실이 없다고 밝혔습니다. 포르투갈축구협회는 10월 9일 징계 절차를 시작했고, 10월 10일 호날두를 잠정 출전정지했습니다. 규정상 최종 징계는 1~6개월 출전정지와 벌금이 가능하며, 수위는 아직 결정되지 않았습니다.\n※ 확정된 사실(이탈·사과·잠정 정지)과 호날두·제주스 감독 각각의 주장, 아직 정해지지 않은 최종 징계는 구분해 전달합니다.\n\n참고: [Euronews](https://www.euronews.com/2026/10/10/cristiano-ronaldo-suspended-by-portuguese-fa-for-leaving-training-camp), [Al Jazeera](https://www.aljazeera.com/sports/2026/10/10/ronaldo-suspended-by-portugal-fa-after-leaving-camp-and-criticizing-coach)",
+  "hashtags": ["호날두", "포르투갈", "축구", "국가대표", "국제뉴스"],
+  "scenes": [
+    {
+      "script": "세계 최고의 축구 스타가, 자기 나라 대표팀 캠프를 그냥 떠나버렸습니다.",
+      "broll_query": "soccer stadium empty dramatic lighting night"
+    },
+    {
+      "script": "지난 9월 30일, 크리스티아누 호날두는 포르투갈 대표팀 캠프를 떠났습니다.",
+      "broll_query": "football training pitch overcast dramatic"
+    },
+    {
+      "script": "10월 6일, 호날두는 입장문을 내고 제주스 감독이 약속을 어겼다고 주장하는 한편, 캠프를 떠난 것은 자신의 책임이라며 사과했습니다.",
+      "broll_query": "soccer player silhouette stadium lights night"
+    },
+    {
+      "script": "제주스 감독은 호날두와 합의한 사실이 없다고 밝혔습니다.",
+      "broll_query": "sports press conference dramatic lighting indoor"
+    },
+    {
+      "script": "포르투갈축구협회는 10월 9일 징계 절차를 시작했고, 10월 10일 호날두를 잠정 출전정지했습니다.",
+      "broll_query": "sports federation building night dramatic"
+    },
+    {
+      "script": "규정상 최종 징계는 1개월에서 6개월까지 출전정지와 벌금이 가능하지만, 수위는 아직 결정되지 않았습니다. 결과가 나오는 대로 다음 소식으로 전해드리겠습니다.",
+      "broll_query": "red card referee soccer dramatic lighting"
+    },
+    {
+      "script": "사실 기반 세계뉴스를 매일 전해드립니다. 구독과 좋아요, 알림설정까지 해두시면 소식을 가장 먼저 받아보실 수 있어요.",
+      "broll_query": "city skyline night calm"
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "title": "노벨평화상 수상 몇 시간 뒤...美, ICC에 제재",
+  "upload_title": "노벨평화상 수상 몇 시간 만에...美, ICC 제재 발표 (수정판)",
+  "description": "노르웨이 노벨위원회는 2026년 노벨평화상을 전 유엔 인권최고대표이자 전 국제형사재판소(ICC) 재판관인 나비 필라이에게 수여한다고 발표했습니다. 위원회는 '평화와 국제법 증진을 위한 노력'을 수상 이유로 들며 필라이가 더 포괄적인 국제 법질서로 나아가는 길을 이끌었다고 평가했습니다. 발표 몇 시간 뒤 마코 루비오 미국 국무장관은 ICC를 '불량 법정'이라 부르며 ICC에 대한 제재를 발표하고 '조각조각 해체하겠다'고 밝혔습니다. 제재의 구체적 범위와 유예기간은 매체마다 보도가 엇갈려 특정하지 않았습니다. ICC는 이번 조치가 법원 업무를 방해하고 협력자들을 위협하려는 의도라고 반발하며 업무는 계속하겠다고 밝혔습니다. 필라이는 작년 유엔 조사위원회를 이끌며 이스라엘의 가자지구 제노사이드 결론을 낸 바 있습니다. ※ 각 기관의 공식 발표만 다루며, 출처가 확인되지 않은 반응(트럼프 대통령·이스라엘 정부의 수상 자체에 대한 비판 등)은 포함하지 않았습니다.\n\n참고: [NBC News](https://www.nbcnews.com/world/north-america/us-hits-international-criminal-court-sanctions-nobel-peace-prize-rcna602542), [UN News](https://news.un.org/en/story/2026/10/1168558)",
+  "hashtags": ["노벨평화상", "ICC", "나비필라이", "미국", "국제뉴스"],
+  "scenes": [
+    {
+      "script": "올해 노벨평화상이 전 유엔 인권최고대표 나비 필라이에게 돌아갔습니다. 수상 발표 몇 시간 만에 미국이 ICC에 제재를 발표했습니다.",
+      "broll_query": "nobel medal dark background dramatic lighting"
+    },
+    {
+      "script": "노벨위원회는 평화와 국제법 증진을 위한 노력을 수상 이유로 들며, 필라이가 더 포괄적인 국제 법질서로 나아가는 길을 이끌었다고 평가했습니다. 필라이는 르완다국제형사재판소와 ICC 재판관, 유엔 인권최고대표를 지냈습니다.",
+      "broll_query": "international courthouse exterior night dramatic"
+    },
+    {
+      "script": "마코 루비오 미국 국무장관은 ICC를 불량 법정이라 부르며 조각조각 해체하겠다고 밝히고, ICC에 대한 제재를 발표했습니다.",
+      "broll_query": "government building silhouette dusk dramatic lighting"
+    },
+    {
+      "script": "ICC는 이번 조치가 법원 업무를 방해하고 협력자들을 위협하려는 의도라고 반발하며, 업무는 계속하겠다고 밝혔습니다.",
+      "broll_query": "flags international organization overcast dramatic"
+    },
+    {
+      "script": "필라이는 작년 유엔 조사위원회를 이끌며 이스라엘의 가자지구 제노사이드 결론을 낸 바 있습니다.",
+      "broll_query": "world map middle east conflict dark"
+    },
+    {
+      "script": "평화상 수상과 동시에 미국과 국제형사재판소의 긴장이 고조된 셈입니다. 앞으로 양측이 어떻게 충돌할지가 다음 관전 포인트입니다.",
+      "broll_query": "courthouse silhouette night documentary style"
+    }
+  ]
+}
