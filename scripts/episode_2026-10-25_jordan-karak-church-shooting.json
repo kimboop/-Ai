@@ -1,0 +1,36 @@
+{
+  "title": "요르단 교회서 장례식 중 총격... 7명 사망",
+  "upload_title": "요르단 교회 총격, 장례식 도중 7명 사망",
+  "description": "10월 23일 금요일, 요르단 카라크 지역의 한 그리스 정교회에서 장례 행렬 도중 무장한 남성들이 총격을 가했습니다. 요르단 공공보안국은 7명이 숨지고 34명이 다쳤다고 밝혔으나, 일부 매체는 사망자를 9명, 부상자를 최대 40명으로 보도해 수치가 엇갈립니다. 요르단 내무장관은 이번 공격을 테러로 규정하며 '극단주의자 집단'의 소행이라고 밝혔고, 아직 범인 체포 발표는 없습니다. 요르단 정부는 사흘간의 국가 애도 기간을 선포했습니다.\n\n참고: https://www.cbsnews.com/news/jordan-shooting-greek-orthodox-church-karak/ / https://www.aljazeera.com/news/2026/10/23/at-least-seven-killed-after-gunmen-open-fire-at-church-in-jordan",
+  "hashtags": ["요르단", "카라크", "그리스정교회", "중동", "국제뉴스"],
+  "scenes": [
+    {
+      "script": "요르단의 한 교회에서 장례식 도중 총격이 벌어졌습니다.",
+      "broll_query": "church exterior night silhouette dramatic lighting"
+    },
+    {
+      "script": "10월 23일 금요일, 요르단 카라크 지역의 한 그리스 정교회에서 장례 행렬 도중 무장한 남성들이 총격을 가했습니다.",
+      "broll_query": "funeral procession dark night silhouette documentary"
+    },
+    {
+      "script": "요르단 공공보안국은 7명이 숨지고 34명이 다쳤다고 밝혔습니다. 다른 일부 매체는 사망자를 9명, 부상자를 최대 40명으로 보도해 수치가 엇갈립니다.",
+      "broll_query": "emergency response night ambulance dramatic lighting"
+    },
+    {
+      "script": "목격자들은 복면을 쓴 남성들이 차량으로 도착해 몇 분간 총격을 이어갔다고 전했습니다.",
+      "broll_query": "empty street night vehicle silhouette dramatic documentary"
+    },
+    {
+      "script": "요르단 내무장관은 이번 공격을 테러로 규정하며 '극단주의자 집단'의 소행이라고 밝혔습니다. 일부 매체는 극단주의 이념과의 연관성을 보도했지만, 특정 단체와의 연계는 공식적으로 확인되지 않았습니다.",
+      "broll_query": "government building flag night dramatic lighting silhouette"
+    },
+    {
+      "script": "아직 범인을 체포했다는 발표는 없고, 요르단 정부는 사흘간의 국가 애도 기간을 선포했습니다.",
+      "broll_query": "candle vigil night dark solemn documentary"
+    },
+    {
+      "script": "매일, 확인된 사실만 담아 세계뉴스를 전해드립니다. 구독과 좋아요, 알림설정까지 해두시면 소식을 가장 먼저 받아보실 수 있어요.",
+      "broll_query": "city skyline night calm"
+    }
+  ]
+}
