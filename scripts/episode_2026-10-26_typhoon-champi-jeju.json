@@ -1,0 +1,36 @@
+{
+  "title": "제주로 오나, 일본으로 가나... 태풍 '참피'",
+  "upload_title": "초강력 태풍 '참피', 제주 남쪽 근접... 나라마다 예보 다르다",
+  "description": "제30호 태풍 '참피'가 대만 북동쪽 해상을 지나 북상하고 있습니다. 우리 기상청과 미국 합동태풍경보센터는 일본 규슈 쪽으로 빠져나갈 것으로 예상하지만, 일본 기상청은 제주에 더 가까이 접근한 뒤 대마도 쪽으로 이동할 가능성을 제시해 예보가 엇갈립니다. 우리 기상청은 26일 오전 3시쯔음 태풍이 서귀포 남쪽 약 320킬로미터 해상까지 접근할 것으로 내다봤습니다. 직접 상륙하지 않아도 전면 비구름대 영향으로 제주와 남부지방에는 이미 많은 비가 내렸고, 제주·서귀포해양경찰서는 연안 안전사고 '주의보'를 발령했습니다.\n\n참고: https://www.kyeonggi.com/article/20261021580062 / https://imnews.imbc.com/news/2026/society/article/6859603_36918.html",
+  "hashtags": ["태풍참피", "제주", "서귀포", "기상청", "국제뉴스"],
+  "scenes": [
+    {
+      "script": "태풍이 제주로 오는지, 일본으로 가는지 나라마다 예보가 다릅니다.",
+      "broll_query": "ocean storm clouds dark dramatic lighting aerial"
+    },
+    {
+      "script": "제30호 태풍 '참피'가 대만 북동쪽 해상을 지나 북상하고 있습니다. 우리 기상청과 미국 합동태풍경보센터는 일본 규슈 쪽으로 빠져나갈 것으로 예상하지만, 일본 기상청은 제주에 더 가까이 접근한 뒤 대마도 쪽으로 이동할 가능성을 제시해 예보가 엇갈립니다.",
+      "broll_query": "satellite weather map typhoon dark dramatic"
+    },
+    {
+      "script": "우리 기상청은 26일 오전 3시쯔음 태풍이 서귀포 남쪽 약 320킬로미터 해상까지 접근하고, 그때 최대풍속은 시속 72킬로미터 수준으로 약해질 것으로 내다봤습니다.",
+      "broll_query": "rough sea waves night storm dramatic lighting"
+    },
+    {
+      "script": "태풍이 직접 상륙하지 않아도, 전면 비구름대 영향으로 제주와 남부지방에는 이미 많은 비가 내렸습니다.",
+      "broll_query": "heavy rain street night dramatic documentary"
+    },
+    {
+      "script": "제주해양경찰서와 서귀포해양경찰서는 연안 안전사고 위험예보 '주의보' 단계를 발령했습니다. 제주 앞바다에는 초속 9에서 15미터의 강한 바람과 최고 3.5미터 파도가 예상됩니다.",
+      "broll_query": "coast guard warning flag night dramatic silhouette"
+    },
+    {
+      "script": "태풍 경로는 아직 완전히 확정되지 않았습니다. 정확한 상황은 기상청 최신 예보로 확인하는 게 가장 정확합니다.",
+      "broll_query": "night sky stars cinematic calm dramatic"
+    },
+    {
+      "script": "매일, 확인된 사실만 담아 세계뉴스를 전해드립니다. 구독과 좋아요, 알림설정까지 해두시면 소식을 가장 먼저 받아보실 수 있어요.",
+      "broll_query": "city skyline night calm"
+    }
+  ]
+}

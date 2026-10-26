@@ -11,6 +11,10 @@ on:
         description: '썸네일도 같이 만들지 여부'
         required: false
         default: 'true'
+      output_file:
+        description: '출력 MP4 경로 오버라이드 (비워두면 기본값 output/<episode-stem>.mp4). 기존 영상을 덮어쓰지 않고 _v2 등으로 구분해서 새로 뽑을 때 사용'
+        required: false
+        default: ''
 
 jobs:
   render:
@@ -30,10 +34,10 @@ jobs:
       - name: Install Python dependencies
         run: pip install -r scripts/requirements.txt
 
-      - name: Check PEXELS_API_KEY secret is set
+      - name: Check PIXABAY_API_KEY secret is set
         env:
-          PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
-        run: test -n "$PEXELS_API_KEY" || (echo 'Missing PEXELS_API_KEY secret — Settings > Secrets and variables > Actions > New repository secret' && exit 1)
+          PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
+        run: test -n "$PIXABAY_API_KEY" || (echo 'Missing PIXABAY_API_KEY secret — Settings > Secrets and variables > Actions > New repository secret' && exit 1)
 
       - name: Validate episode JSON
         run: python scripts/video_generator.py "${{ github.event.inputs.episode_file }}" --validate-only
@@ -43,8 +47,13 @@ jobs:
 
       - name: Render video
         env:
-          PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
-        run: python scripts/video_generator.py "${{ github.event.inputs.episode_file }}"
+          PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
+        run: |
+          if [ -n "${{ github.event.inputs.output_file }}" ]; then
+            python scripts/video_generator.py "${{ github.event.inputs.episode_file }}" --output "${{ github.event.inputs.output_file }}"
+          else
+            python scripts/video_generator.py "${{ github.event.inputs.episode_file }}"
+          fi
 
       - name: Generate thumbnail
         if: ${{ github.event.inputs.make_thumbnail == 'true' }}
@@ -55,12 +64,60 @@ jobs:
             --title "$TITLE" \
             --kicker "테크 이슈" \
             --output "output/thumbnails/${STEM}.png"
+          python scripts/make_upload_info.py \
+            --episode "${{ github.event.inputs.episode_file }}" \
+            --output "output/thumbnails/${STEM}.upload.txt"
+
+      # Actions 아티팩트 목록에서 run 번호("shorts-21")만 보고는 어떤 영상인지
+      # 알 수 없다는 피드백(2026-10-10)으로, 영상 제목으로 이름을 짓는다.
+      # upload_title을 우선하고(실제 업로드할 최종 제목), 없으면 title로
+      # 폴백. GitHub 아티팩트 이름이 허용하지 않는 문자(" : < > | * ? 개행)만
+      # 제거한다.
+      - name: Compute artifact name from episode title
+        id: meta
+        run: |
+          python3 - "${{ github.event.inputs.episode_file }}" <<'EOF'
+          import json, os, sys
+
+          with open(sys.argv[1], encoding="utf-8") as f:
+              episode = json.load(f)
+          title = episode.get("upload_title") or episode.get("title") or "untitled"
+          forbidden = '":<>|*?\r\n'
+          safe = "".join(ch for ch in title if ch not in forbidden).strip()
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as f:
+              f.write(f"artifact_name={safe}\n")
+          EOF
 
       - name: Upload rendered video + thumbnail
         uses: actions/upload-artifact@v4
         with:
-          name: shorts-${{ github.run_number }}
+          name: ${{ steps.meta.outputs.artifact_name }}
           path: |
             output/*.mp4
             output/thumbnails/*.png
+            output/thumbnails/*.txt
           if-no-files-found: error
+
+      - name: Check Google Drive credentials are set
+        id: check_gdrive
+        env:
+          GDRIVE_SA_KEY_JSON: ${{ secrets.GDRIVE_SA_KEY_JSON }}
+          GDRIVE_FOLDER_ID: ${{ vars.GDRIVE_FOLDER_ID }}
+        run: |
+          if [ -n "$GDRIVE_SA_KEY_JSON" ] && [ -n "$GDRIVE_FOLDER_ID" ]; then
+            echo "has_credentials=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_credentials=false" >> "$GITHUB_OUTPUT"
+            echo "GDRIVE_SA_KEY_JSON 시크릿 또는 GDRIVE_FOLDER_ID 변수가 아직 설정되지 않아 구글 드라이브 업로드를 건너뜁니다 (GitHub Artifacts는 위에서 정상 업로드됨)."
+          fi
+
+      - name: Install Google Drive upload dependencies
+        if: steps.check_gdrive.outputs.has_credentials == 'true'
+        run: pip install google-api-python-client google-auth
+
+      - name: Upload to Google Drive
+        if: steps.check_gdrive.outputs.has_credentials == 'true'
+        env:
+          GDRIVE_SA_KEY_JSON: ${{ secrets.GDRIVE_SA_KEY_JSON }}
+          GDRIVE_FOLDER_ID: ${{ vars.GDRIVE_FOLDER_ID }}
+        run: python scripts/upload_to_drive.py output/*.mp4 output/thumbnails/*.png

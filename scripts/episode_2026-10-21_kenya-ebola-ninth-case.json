@@ -1,0 +1,36 @@
+{
+  "title": "케냐 에볼라, 9번째 환자 확인",
+  "upload_title": "케냐 에볼라 9번째 환자 확인... \"아직 한 집단 안\"",
+  "description": "케냐 보건부가 10월 20일, 에볼라 9번째 확진자를 발표했습니다. 첫 환자는 콩고민주공화국에서 입국해 10월 5일 나이로비에서 사망했고, 이후 의료진과 가족 등에서 추가 감염이 이어졌습니다. 보건당국은 9명 모두 첫 환자와 연결된 하나의 집단 안에 있으며 지역사회 전파 증거는 없다고 밝혔습니다. 백신이 없는 분디부조 종으로, 콩고민주공화국에서 5월부터 번진 유행과 연결돼 있습니다.\n\n참고: https://www.aljazeera.com/news/2026/10/19/kenya-confirms-eighth-ebola-case-amid-widening-regional-outbreak / https://www.aljazeera.com/news/2026/10/17/kenya-confirms-four-more-ebola-cases-bringing-total-to-seven",
+  "hashtags": ["케냐", "에볼라", "콩고민주공화국", "분디부조바이러스", "국제뉴스"],
+  "scenes": [
+    {
+      "script": "아프리카 케냐에서 에볼라 환자가 열흘 만에 9명으로 늘었습니다.",
+      "broll_query": "quarantine tent hospital night dramatic lighting documentary"
+    },
+    {
+      "script": "케냐 보건부는 10월 20일, 첫 환자의 가까운 가족인 24세 남성이 아홉 번째로 에볼라 양성 판정을 받았다고 밝혔습니다. 이 남성은 격리 중 증상이 나타나 검사를 받았습니다.",
+      "broll_query": "health ministry press briefing podium africa dramatic lighting"
+    },
+    {
+      "script": "케냐의 첫 에볼라 환자는 콩고민주공화국에서 우간다를 거쳐 입국한 케냐 국적자로, 10월 5일 나이로비의 한 병원에서 사망했습니다.",
+      "broll_query": "airport arrival hall dim lighting silhouette documentary"
+    },
+    {
+      "script": "10월 17일에는 환자를 치료한 의료진 3명과 가족 1명이 추가로 확진돼 총 7명이 됐고, 18일에는 환자를 돌본 간병인이 8번째로 확진됐습니다.",
+      "broll_query": "medical worker protective suit hospital corridor dramatic lighting"
+    },
+    {
+      "script": "케냐 보건당국은 9명 모두 첫 환자와 연결된 하나의 집단 안에 있으며, 이 밖으로 퍼졌다는 증거는 아직 없다고 밝혔습니다. 접촉자 135명 가운데 134명이 격리 상태에서 추적되고 있습니다.",
+      "broll_query": "contact tracing clipboard quarantine facility night documentary"
+    },
+    {
+      "script": "이번 에볼라는 백신이 없는 분디부조 종으로, 콩고민주공화국에서 5월부터 번진 유행과 연결돼 있습니다. 케냐 당국은 계속 상황을 지켜보고 있습니다.",
+      "broll_query": "africa map outline dark cinematic calm"
+    },
+    {
+      "script": "매일, 확인된 사실만 담아 세계뉴스를 전해드립니다. 구독과 좋아요, 알림설정까지 해두시면 소식을 가장 먼저 받아보실 수 있어요.",
+      "broll_query": "city skyline night calm"
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "title": "가자지구, 상업물자 반입 중단",
+  "upload_title": "이스라엘 \"가자지구 상업 물자 반입 중단\"...원인 두고 공방",
+  "description": "이스라엘군 민사담당기구 코가트(COGAT)는 10월 15일(현지시간), 가자지구 상인들이 물품 반입 조율을 중단하면서 이스라엘발 상업용 트럭 반입이 끊겼다고 밝혔습니다. 가자지구 민간운송조합장은 이날 상업용 트럭이 단 한 대도 들어오지 않았다고 말했으며, 인도적 지원 트럭과 이집트발 상업물자는 계속 들어왔습니다. 코가트는 하루 트럭 반입량이 약 600대에서 절반 수준인 300대로 줄어들 것이라고 밝혔습니다. 중단의 책임 소재를 두고는 코가트와 하마스, 그리고 일부 매체의 설명이 서로 달라 독립적으로 확인되지 않았습니다. ※ 이 영상은 확인된 사실과 각 주체의 주장을 구분해 전달합니다.",
+  "hashtags": ["가자지구", "이스라엘", "COGAT", "상업물자", "국제뉴스"],
+  "scenes": [
+    {
+      "script": "가자지구로 가는 트럭이 갑자기 멈췄습니다.",
+      "broll_query": "cargo trucks stopped border crossing night dramatic lighting"
+    },
+    {
+      "script": "이스라엘군 민사담당기구 코가트는 10월 15일, 가자지구 상인들이 물품 반입 조율을 중단하면서 상업용 트럭 반입이 끊겼다고 밝혔습니다.",
+      "broll_query": "humanitarian aid trucks border crossing dark dramatic documentary style"
+    },
+    {
+      "script": "가자지구 민간운송조합장은 이날 이스라엘발 상업용 트럭이 단 한 대도 들어오지 않았다고 말했습니다. 인도적 지원 트럭과 이집트발 상업물자는 계속 들어왔습니다.",
+      "broll_query": "empty road border crossing night silhouette dramatic"
+    },
+    {
+      "script": "코가트는 하루 트럭 반입량이 약 600대에서 절반 수준인 300대로 줄어들 것이라고 밝혔습니다.",
+      "broll_query": "cargo boxes warehouse dark dramatic lighting abstract"
+    },
+    {
+      "script": "코가트는 상인들이 하마스가 트럭 한 대당 1만 셰켈을 요구했다고 전했다고 주장했습니다. 하마스 측은 이를 부인하며, 부유한 가자 주민들이 유가족 지원 기금에 내는 자발적 기부라고 밝혔습니다.",
+      "broll_query": "shipping containers industrial port night dramatic lighting"
+    },
+    {
+      "script": "이 사안의 책임 소재를 두고 보도마다 다른 설명이 나오고 있어, 독립적으로 확인되지는 않았습니다.",
+      "broll_query": "documents paperwork desk dark dramatic lighting abstract"
+    },
+    {
+      "script": "매일, 확인된 사실만 담아 세계뉴스를 전해드립니다. 구독과 좋아요, 알림설정까지 해두시면 소식을 가장 먼저 받아보실 수 있어요.",
+      "broll_query": "city skyline night calm"
+    }
+  ]
+}

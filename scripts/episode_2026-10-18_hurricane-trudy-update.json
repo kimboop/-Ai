@@ -1,0 +1,36 @@
+{
+  "title": "허리케인 트루디, 직접 상륙은 피할 듯",
+  "upload_title": "트루디, 멕시코 상륙은 피하나...그래도 300mm 폭우 위험은 여전",
+  "description": "허리케인 트루디를 둘러싼 세기 평가가 보도마다 엇갈립니다. AP는 현지시간 10월 16일 밤 기준 1등급(최대풍속 시속 약 150km)이라고 전했지만, 다른 매체는 16일 새벽 3등급(시속 약 195km)까지 강해졌다고 보도했습니다. 트루디 중심은 토요일 멕시코 해안에 접근해 일요일까지 근접 통과할 전망이며, 콜리마주 만사니요~할리스코주 카보코리엔테스 구간에 허리케인 경보가 발령됐습니다. 다만 멕시코 상공에 고기압이 형성되면서 직접 상륙 가능성은 낮아졌다는 분석이 나옵니다. 그래도 미초아칸·콜리마·할리스코 지역에는 최대 300mm의 폭우와 홍수·산사태 위험이 예상됩니다. ※ 세기 수치는 보도마다 다르며, 상륙 여부는 아직 확정되지 않았습니다.",
+  "hashtags": ["허리케인트루디", "멕시코", "콜리마", "할리스코", "국제뉴스"],
+  "scenes": [
+    {
+      "script": "어제 전해드린 허리케인 트루디, 오늘은 상황이 어떻게 바뀌었을까요?",
+      "broll_query": "satellite view hurricane spiral clouds night dramatic lighting"
+    },
+    {
+      "script": "트루디의 세기를 두고 보도가 엇갈립니다. AP는 16일 밤 기준 1등급, 최대풍속 시속 약 150킬로미터라고 전했지만, 다른 매체는 16일 새벽 3등급, 시속 약 195킬로미터까지 강해졌다고 보도했습니다.",
+      "broll_query": "hurricane satellite imagery dark ocean storm dramatic"
+    },
+    {
+      "script": "트루디 중심은 토요일 멕시코 해안에 접근해 일요일까지 근접 통과할 전망이며, 콜리마주 만사니요부터 할리스코주 카보코리엔테스까지 허리케인 경보가 발령됐습니다.",
+      "broll_query": "coastal storm waves night dramatic dark lighting warning"
+    },
+    {
+      "script": "다만 멕시코 상공에 고기압이 형성되면서, 직접 상륙 가능성은 낮아졌다는 분석이 나옵니다.",
+      "broll_query": "weather forecast storm track map abstract dark background"
+    },
+    {
+      "script": "그래도 미초아칸, 콜리마, 할리스코 지역에는 최대 300밀리미터의 폭우가 예상되며, 홍수와 산사태 위험은 여전합니다.",
+      "broll_query": "heavy rain flooding mudslide dark dramatic lighting"
+    },
+    {
+      "script": "실제 경로와 피해 여부는 이번 주말 더 뚜렷해질 전망입니다.",
+      "broll_query": "storm clouds night sky cinematic dramatic"
+    },
+    {
+      "script": "매일, 확인된 사실만 담아 세계뉴스를 전해드립니다. 구독과 좋아요, 알림설정까지 해두시면 소식을 가장 먼저 받아보실 수 있어요.",
+      "broll_query": "city skyline night calm"
+    }
+  ]
+}
